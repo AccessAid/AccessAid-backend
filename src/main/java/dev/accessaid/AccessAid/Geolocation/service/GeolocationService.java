@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 
@@ -18,11 +19,9 @@ public class GeolocationService {
         this.context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
-
-        System.out.println(apiKey);
     }
 
-    public GeolocationResponse getGeolocation(String address) throws Exception {
+    public GeolocationResponse getGeolocationByAddress(String address) throws Exception {
 
         GeocodingResult[] results = GeocodingApi.geocode(context, address).await();
         if (results.length > 0) {
@@ -32,11 +31,26 @@ public class GeolocationService {
             String placeId = results[0].placeId;
 
             GeolocationResponse response = new GeolocationResponse(latitude, longitude, formattedAddress, placeId);
-            System.out.println(response);
             return response;
         } else {
             throw new Exception("No results found");
         }
+    }
+
+    public GeolocationResponse getGeolocationByCoordinates(double latitude, double longitude) throws Exception {
+
+        GeocodingResult[] results = GeocodingApi.reverseGeocode(context, new LatLng(latitude, longitude)).await();
+        if (results.length > 0) {
+            String formattedAddress = results[0].formattedAddress;
+            String placeId = results[0].placeId;
+
+            GeolocationResponse response = new GeolocationResponse(latitude, longitude, formattedAddress, placeId);
+            return response;
+
+        } else {
+            throw new Exception("No results found");
+        }
+
     }
 
 }
