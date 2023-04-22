@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.service.CommentService;
+import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.model.User;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -46,5 +48,19 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public Comment deleteComment(@PathVariable Integer id) {
         return commentService.removeComment(id);
+    }
+
+    @GetMapping("/place/{placeId}")
+    public List<Comment> seeCommentsByPlace(@PathVariable Integer placeId) {
+        Place place = new Place();
+        place.setId(placeId);
+        return commentService.getAllCommentsByPlace(place);
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<Comment> seeCommentsByUser(@PathVariable Integer userId) {
+        User user = new User();
+        user.setId(userId);
+        return commentService.getAllCommentsByUser(user);
     }
 }
