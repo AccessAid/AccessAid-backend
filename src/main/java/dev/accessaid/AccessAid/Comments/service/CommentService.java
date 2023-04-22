@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.repository.CommentRepository;
+import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.model.User;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -52,6 +54,14 @@ public class CommentService {
         }
         commentRepository.deleteCommentById(id);
         return commentToDelete;
+    }
+
+    public List<Comment> getAllCommentsByPlace(Place place) {
+        return commentRepository.findAllCommentsByPlace(place);
+    }
+
+    public List<Comment> getAllCommentsByUser(User user) {
+        return commentRepository.findAllCommentsByUser(user);
     }
 
 }
