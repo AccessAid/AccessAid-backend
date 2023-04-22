@@ -16,7 +16,9 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.service.CommentService;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.model.User;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Comments", description = "Comments by the users about the places")
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
