@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
+import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.model.User;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
@@ -19,5 +21,9 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     void deleteCommentById(Integer id);
 
     <S extends Comment> S save(S comment);
+
+    List<Comment> findAllCommentsByPlace(Place place);
+
+    List<Comment> findAllCommentsByUser(User user);
 
 }
