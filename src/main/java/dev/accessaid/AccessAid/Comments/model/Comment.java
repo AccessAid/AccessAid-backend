@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.Comments.model;
 
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +26,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String comment;
-    Integer user_id;
 
     @ManyToOne
-    @JoinColumn(name = "place")
-    Place place;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    private Place place;
+
 }
