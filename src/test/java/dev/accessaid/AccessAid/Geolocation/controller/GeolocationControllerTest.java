@@ -20,6 +20,11 @@ import dev.accessaid.AccessAid.Geolocation.service.GeolocationService;
 @ExtendWith(MockitoExtension.class)
 public class GeolocationControllerTest {
 
+    private static final String FORMATTED_ADDRESS = "123 Main St, Evanston, IL 60202, USA";
+    private static final double LATITUDE = 42.0339357;
+    private static final double LONGITUDE = -87.6721867;
+    private static final String PLACE_ID = "ChIJDYp7EELQD4gRDzMUL_0DFlU";
+
     @Mock
     private GeolocationService geolocationService;
 
@@ -34,17 +39,17 @@ public class GeolocationControllerTest {
 
     @Test
     public void testGetGeolocationByAddress() throws Exception {
-        String address = "123 Main St, Chicago, IL";
         GeolocationResponse response = new GeolocationResponse();
-        response.setLatitude(42.0339357);
-        response.setLongitude(-87.6721867);
-        response.setFormattedAddress("123 Main St, Evanston, IL 60202, USA");
-        response.setPlaceId("ChIJDYp7EELQD4gRDzMUL_0DFlU");
-        Mockito.when(geolocationService.getGeolocationByAddress(address)).thenReturn(response);
+        response.setLatitude(LATITUDE);
+        response.setLongitude(LONGITUDE);
+        response.setFormattedAddress(FORMATTED_ADDRESS);
+        response.setPlaceId(PLACE_ID);
+        Mockito.when(geolocationService.getGeolocationByAddress(FORMATTED_ADDRESS)).thenReturn(response);
 
         System.out.println(response.getLatitude());
         mockMvc.perform(get("/api/geolocation/byaddress")
-                .param("address", address))
+                .param("address",
+                        FORMATTED_ADDRESS))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.lat").value(response.getLatitude()))
                 .andExpect(jsonPath("$.lng").value(response.getLongitude()))
@@ -56,16 +61,14 @@ public class GeolocationControllerTest {
 
     @Test
     public void testGetGeolocationByCoordinates() throws Exception {
-        double latitude = 42.0339357;
-        double longitude = -87.6721867;
         GeolocationResponse response = new GeolocationResponse();
-        response.setFormattedAddress("123 Main St, Evanston, IL 60202, USA");
-        response.setPlaceId("ChIJDYp7EELQD4gRDzMUL_0DFlU");
-        Mockito.when(geolocationService.getGeolocationByCoordinates(latitude, longitude)).thenReturn(response);
+        response.setFormattedAddress(FORMATTED_ADDRESS);
+        response.setPlaceId(PLACE_ID);
+        Mockito.when(geolocationService.getGeolocationByCoordinates(LATITUDE, LONGITUDE)).thenReturn(response);
 
         mockMvc.perform(get("/api/geolocation/bycoordinates")
-                .param("latitude", String.valueOf(latitude))
-                .param("longitude", String.valueOf(longitude)))
+                .param("latitude", String.valueOf(LATITUDE))
+                .param("longitude", String.valueOf(LONGITUDE)))
                 .andExpect(jsonPath("$.formatted_address").value(response.getFormattedAddress()))
                 .andExpect(jsonPath("$.place_id").value(response.getPlaceId()))
                 .andExpect(status().isOk());
@@ -74,24 +77,22 @@ public class GeolocationControllerTest {
 
     @Test
     public void testGetGeolocationByAddressThrowsException() throws Exception {
-        String address = "123 Main St, Chicago, IL";
-        Mockito.when(geolocationService.getGeolocationByAddress(address)).thenThrow(new Exception());
+        Mockito.when(geolocationService.getGeolocationByAddress(FORMATTED_ADDRESS)).thenThrow(new Exception());
 
         mockMvc.perform(get("/api/geolocation/byaddress")
-                .param("address", address))
+                .param("address",
+                        FORMATTED_ADDRESS))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value("Error"));
     }
 
     @Test
     public void testGetGeolocationByCoordinatesThrowsException() throws Exception {
-        double latitude = 41.8781;
-        double longitude = -87.6298;
-        Mockito.when(geolocationService.getGeolocationByCoordinates(latitude, longitude)).thenThrow(new Exception());
+        Mockito.when(geolocationService.getGeolocationByCoordinates(LATITUDE, LONGITUDE)).thenThrow(new Exception());
 
         mockMvc.perform(get("/api/geolocation/bycoordinates")
-                .param("latitude", String.valueOf(latitude))
-                .param("longitude", String.valueOf(longitude)))
+                .param("latitude", String.valueOf(LATITUDE))
+                .param("longitude", String.valueOf(LONGITUDE)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value("Error"));
     }
