@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Places.model.Place;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Places", description = "Information about places")
 @RestController
 public class PlaceController {
 
