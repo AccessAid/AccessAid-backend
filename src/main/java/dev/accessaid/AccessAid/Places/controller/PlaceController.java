@@ -1,22 +1,24 @@
 package dev.accessaid.AccessAid.Places.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
-import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
-import dev.accessaid.AccessAid.Geolocation.controller.GeolocationController;
 import dev.accessaid.AccessAid.Places.model.Place;
-import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
+import dev.accessaid.AccessAid.Places.service.PlaceService;
+import dev.accessaid.AccessAid.Places.utils.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
+import dev.accessaid.AccessAid.Places.utils.PlaceSaveException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Places", description = "Information about places")
@@ -25,52 +27,62 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class PlaceController {
 
     @Autowired
-    private GeolocationController geolocationController;
-
-    @Autowired
-    private PlaceRepository placeRepository;
+    private PlaceService placeService;
 
     @GetMapping("")
-    public String getPlaces() {
-        return "Place";
-    }
-
-    @PostMapping("")
-    public ResponseEntity<?> createPlace(@RequestBody PlaceRequest request) {
+    public ResponseEntity<?> seeAllPlaces() {
         try {
-            GeolocationResponse response;
-            String address = request.getAddress();
-            if (address == null && (request.getLatitude() == null && request.getLongitude() == null)) {
-                ErrorResponse errorResponse = new ErrorResponse("Missing address or coordinates");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            } else if (address != null) {
-                response = (GeolocationResponse) geolocationController.getGeolocationByAddress(address).getBody();
-
-            } else {
-                double latitude = request.getLatitude();
-                double longitude = request.getLongitude();
-                response = (GeolocationResponse) geolocationController.getGeolocationByCoordinates(latitude, longitude)
-                        .getBody();
-            }
-            Place newPlace = new Place(response);
-            placeRepository.save(newPlace);
-
-            return ResponseEntity.ok(newPlace);
-
+            List<Place> places = placeService.findAllPlaces();
+            return ResponseEntity.ok(places);
         } catch (Exception e) {
-            System.out.println(e);
-            ErrorResponse errorResponse = new ErrorResponse("Error");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-    @PutMapping("/{id}")
-    public String updatePlace(@RequestBody Place place) {
-        return "Place";
+    @GetMapping("/{id}")
+    public ResponseEntity<?> seePlaceById(@PathVariable Integer id) {
+        try {
+            Place place = placeService.findPlaceById(id);
+            return ResponseEntity.ok(place);
+        } catch (PlaceNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> addPlace(@RequestBody PlaceRequest request) {
+        try {
+            Place newPlace = placeService.createPlace(request);
+            return ResponseEntity.ok(newPlace);
+        } catch (PlaceSaveException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public String deletePlace(@RequestBody Place place) {
-        return "Place";
+    public ResponseEntity<?> deletePlace(@PathVariable Integer id) {
+        try {
+            Place place = placeService.findPlaceById(id);
+            placeService.removePlace(id);
+            return ResponseEntity.ok(place);
+
+        } catch (PlaceNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 }
