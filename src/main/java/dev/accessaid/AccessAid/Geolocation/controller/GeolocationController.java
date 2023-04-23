@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 import dev.accessaid.AccessAid.Geolocation.service.GeolocationService;
-import dev.accessaid.AccessAid.Places.model.Place;
-import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Geolocation", description = "Geolocation information by address or coordinates")
@@ -21,15 +19,10 @@ public class GeolocationController {
     @Autowired
     private GeolocationService geolocationService;
 
-    @Autowired
-    private PlaceRepository placeRepository;
-
     @GetMapping("/api/geolocation/byaddress")
     public ResponseEntity<?> getGeolocationByAddress(@RequestParam("address") String address) {
         try {
             GeolocationResponse response = geolocationService.getGeolocationByAddress(address);
-            Place newPlace = new Place(response);
-            placeRepository.save(newPlace);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
@@ -44,8 +37,6 @@ public class GeolocationController {
             @RequestParam("longitude") double longitude) {
         try {
             GeolocationResponse response = geolocationService.getGeolocationByCoordinates(latitude, longitude);
-            Place newPlace = new Place(response);
-            placeRepository.save(newPlace);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
