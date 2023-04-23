@@ -30,6 +30,7 @@ public class CommentService {
     }
 
     public Comment createComment(Comment comment) {
+
         return commentRepository.save(comment);
 
     }
@@ -48,11 +49,23 @@ public class CommentService {
     @Transactional
     public Comment removeComment(Integer id) {
         Comment commentToDelete = commentRepository.findCommentById(id);
-        System.out.println("COMMENT TO DELETE" + commentToDelete);
         if (commentToDelete == null) {
             throw new CommentException(HttpStatus.NOT_FOUND, "Comment not found");
         }
-        commentRepository.deleteCommentById(id);
+        User user = commentToDelete.getUser();
+        Place place = commentToDelete.getPlace();
+        if (user != null) {
+            user.getComments().remove(commentToDelete);
+        }
+        if (place != null) {
+            place.getComments().remove(commentToDelete);
+        }
+        try {
+            commentRepository.deleteCommentById(id);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new CommentException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete comment");
+        }
         return commentToDelete;
     }
 
