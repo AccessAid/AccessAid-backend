@@ -51,8 +51,7 @@ public class CommentController {
             CommentResponse response = CommentMapper.toCommentResponse(createdComment);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println(e);
-            ErrorResponse errorResponse = new ErrorResponse("Error");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
@@ -70,8 +69,7 @@ public class CommentController {
             CommentResponse response = CommentMapper.toCommentResponse(updatedComment);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println(e);
-            ErrorResponse errorResponse = new ErrorResponse("Error");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
@@ -88,8 +86,7 @@ public class CommentController {
             CommentResponse response = CommentMapper.toCommentResponse(commentToDelete);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println(e);
-            ErrorResponse errorResponse = new ErrorResponse("Error");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
