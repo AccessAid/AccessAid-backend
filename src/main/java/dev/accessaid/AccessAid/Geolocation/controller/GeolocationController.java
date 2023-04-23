@@ -26,8 +26,7 @@ public class GeolocationController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.out.println(e);
-            ErrorResponse errorResponse = new ErrorResponse("Error");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
@@ -40,8 +39,7 @@ public class GeolocationController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.out.println(e);
-            ErrorResponse errorResponse = new ErrorResponse("Error");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
 
