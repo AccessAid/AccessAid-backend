@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Comments.Response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.model.Comment;
+import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.service.CommentServiceImp;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.model.User;
+import dev.accessaid.AccessAid.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Comments", description = "Comments by the users about the places")
@@ -30,6 +32,12 @@ public class CommentController {
 
     @Autowired
     private CommentServiceImp commentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PlaceServiceImpl placeService;
 
     @GetMapping("")
     public List<CommentResponse> seeAllComments() {
@@ -92,18 +100,46 @@ public class CommentController {
     }
 
     @GetMapping("/place/{placeId}")
-    public List<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId) {
-        Place place = new Place();
-        place.setId(placeId);
-        List<Comment> comments = commentService.getCommentsByPlace(place);
-        return CommentMapper.toCommentResponses(comments);
+    public ResponseEntity<?> seeCommentsByPlace(@PathVariable Integer placeId) {
+        try {
+            Place place = placeService.findPlaceById(placeId);
+            if (place == null) {
+                ErrorResponse errorResponse = new ErrorResponse("Place not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<Comment> placesComments = commentService.getCommentsByPlace(place);
+            if (placesComments.isEmpty()) {
+                ErrorResponse errorResponse = new ErrorResponse("Place has no comments");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<CommentResponse> response = CommentMapper.toCommentResponses(placesComments);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
     }
 
     @GetMapping("/user/{userId}")
-    public List<CommentResponse> seeCommentsByUser(@PathVariable Integer userId) {
-        User user = new User();
-        user.setId(userId);
-        List<Comment> comments = commentService.getCommentsByUser(user);
-        return CommentMapper.toCommentResponses(comments);
+    public ResponseEntity<?> seeCommentsByUser(@PathVariable Integer userId) {
+        try {
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                ErrorResponse errorResponse = new ErrorResponse("User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<Comment> comments = commentService.getCommentsByUser(user);
+            if (comments.isEmpty()) {
+                ErrorResponse errorResponse = new ErrorResponse("User has not commented any place");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<CommentResponse> response = CommentMapper.toCommentResponses(comments);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
     }
 }
