@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
@@ -14,11 +15,14 @@ import dev.accessaid.AccessAid.model.User;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Integer> {
 
-    List<User> findUsersById(Integer placeId);
+    @Query("SELECT p.users FROM Place p WHERE p.id = :placeId")
+    List<User> findUsersByPlaceId(@Param("placeId") Integer placeId);
 
-    List<Place> findByUserId(Integer userId);
+    @Query("SELECT p FROM Place p JOIN p.users u WHERE u.id = :userId")
+    List<Place> findPlacesByUserId(@Param("userId") Integer userId);
 
-    List<Comment> findCommentsById(Integer placeId);
+    @Query("SELECT c FROM Comment c JOIN c.place p WHERE p.id = :placeId")
+    List<Comment> findCommentsByPlaceId(@Param("placeId") Integer placeId);
 
     @Query(value = "SELECT AVG(r.rating) FROM Place p JOIN p.ratings r WHERE p.id = ?1")
     Double findTotalRatingByPlace(Integer placeId);
