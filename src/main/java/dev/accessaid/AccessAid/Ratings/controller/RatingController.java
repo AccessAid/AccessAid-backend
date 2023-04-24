@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,10 +20,11 @@ import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.service.RatingServiceImpl;
+import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
 import dev.accessaid.AccessAid.model.User;
 import dev.accessaid.AccessAid.service.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Ratings", description = "Ratings of the places")
@@ -43,7 +45,8 @@ public class RatingController {
     public ResponseEntity<?> seeAllRatings() {
         try {
             List<Rating> ratings = ratingService.getAllRatings();
-            return ResponseEntity.ok(ratings);
+            List<RatingResponse> responses = RatingMapper.toRatingResponses(ratings);
+            return ResponseEntity.ok(responses);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -55,7 +58,8 @@ public class RatingController {
     public ResponseEntity<?> seeRatingById(@PathVariable Integer id) {
         try {
             Rating rating = ratingService.getRatingById(id);
-            return ResponseEntity.ok(rating);
+            RatingResponse response = RatingMapper.toRatingResponse(rating);
+            return ResponseEntity.ok(response);
         } catch (RatingNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -71,7 +75,8 @@ public class RatingController {
     public ResponseEntity<?> addRating(@RequestBody Rating rating) {
         try {
             Rating newRating = ratingService.createRating(rating);
-            return ResponseEntity.ok(newRating);
+            RatingResponse response = RatingMapper.toRatingResponse(newRating);
+            return ResponseEntity.ok(response);
         } catch (RatingSaveException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -93,7 +98,8 @@ public class RatingController {
             }
             ratingToUpdate.setRating(rating.getRating());
             Rating udpatedRating = ratingService.changeRating(ratingToUpdate);
-            return ResponseEntity.ok(udpatedRating);
+            RatingResponse response = RatingMapper.toRatingResponse(udpatedRating);
+            return ResponseEntity.ok(response);
         } catch (RatingNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -113,7 +119,8 @@ public class RatingController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
             }
             ratingService.removeRating(id);
-            return ResponseEntity.ok(ratingToDelete);
+            RatingResponse response = RatingMapper.toRatingResponse(ratingToDelete);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -122,15 +129,45 @@ public class RatingController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> seeRatingsByUser(@PathVariable Integer userId) {
-        User user = userService.getUserById(userId);
-        List<Rating> ratings = ratingService.getRatingByUser(user);
-        return ResponseEntity.ok(ratings);
+        try {
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                ErrorResponse errorResponse = new ErrorResponse("User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<Rating> ratings = ratingService.getRatingByUser(user);
+            if (ratings.isEmpty()) {
+                ErrorResponse errorResponse = new ErrorResponse("User has not rated any place");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<RatingResponse> response = RatingMapper.toRatingResponses(ratings);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
     }
 
     @GetMapping("/place/{placeId}")
     public ResponseEntity<?> seeRatingsByPlace(@PathVariable Integer placeId) {
-        Place place = placeService.findPlaceById(placeId);
-        List<Rating> places = ratingService.getRatingByPlace(place);
-        return ResponseEntity.ok(places);
+        try {
+            Place place = placeService.findPlaceById(placeId);
+            if (place == null) {
+                ErrorResponse errorResponse = new ErrorResponse("Place not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<Rating> places = ratingService.getRatingByPlace(place);
+            if (places.isEmpty()) {
+                ErrorResponse errorResponse = new ErrorResponse("Place has not been rated by anyone");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+            List<RatingResponse> response = RatingMapper.toRatingResponses(places);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
     }
 }
