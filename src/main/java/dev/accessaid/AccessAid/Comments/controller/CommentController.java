@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Comments.Response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.model.Comment;
-import dev.accessaid.AccessAid.Comments.service.CommentService;
+import dev.accessaid.AccessAid.Comments.service.CommentServiceImp;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Places.model.Place;
@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CommentController {
 
     @Autowired
-    private CommentService commentService;
+    private CommentServiceImp commentService;
 
     @GetMapping("")
     public List<CommentResponse> seeAllComments() {
@@ -95,7 +95,7 @@ public class CommentController {
     public List<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId) {
         Place place = new Place();
         place.setId(placeId);
-        List<Comment> comments = commentService.getAllCommentsByPlace(place);
+        List<Comment> comments = commentService.getCommentsByPlace(place);
         return CommentMapper.toCommentResponses(comments);
     }
 
@@ -103,7 +103,7 @@ public class CommentController {
     public List<CommentResponse> seeCommentsByUser(@PathVariable Integer userId) {
         User user = new User();
         user.setId(userId);
-        List<Comment> comments = commentService.getAllCommentsByUser(user);
+        List<Comment> comments = commentService.getCommentsByUser(user);
         return CommentMapper.toCommentResponses(comments);
     }
 }
