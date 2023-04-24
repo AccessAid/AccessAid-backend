@@ -14,13 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
+import dev.accessaid.AccessAid.Comments.response.CommentResponse;
+import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.Places.response.PlaceResponse;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
+import dev.accessaid.AccessAid.Places.utils.PlaceMapper;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
+import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
 import dev.accessaid.AccessAid.model.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -36,7 +42,8 @@ public class PlaceController {
     public ResponseEntity<?> seeAllPlaces() {
         try {
             List<Place> places = placeService.findAllPlaces();
-            return ResponseEntity.ok(places);
+            List<PlaceResponse> response = PlaceMapper.toPlaceResponses(places);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -47,7 +54,8 @@ public class PlaceController {
     public ResponseEntity<?> seePlaceById(@PathVariable Integer id) {
         try {
             Place place = placeService.findPlaceById(id);
-            return ResponseEntity.ok(place);
+            PlaceResponse response = PlaceMapper.toPlaceResponse(place);
+            return ResponseEntity.ok(response);
         } catch (PlaceNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -62,7 +70,8 @@ public class PlaceController {
     public ResponseEntity<?> addPlace(@RequestBody PlaceRequest request) {
         try {
             Place newPlace = placeService.createPlace(request);
-            return ResponseEntity.ok(newPlace);
+            PlaceResponse response = PlaceMapper.toPlaceResponse(newPlace);
+            return ResponseEntity.ok(response);
         } catch (PlaceSaveException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -77,7 +86,8 @@ public class PlaceController {
         try {
             Place place = placeService.findPlaceById(id);
             placeService.removePlace(id);
-            return ResponseEntity.ok(place);
+            PlaceResponse response = PlaceMapper.toPlaceResponse(place);
+            return ResponseEntity.ok(response);
 
         } catch (PlaceNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
@@ -93,7 +103,8 @@ public class PlaceController {
     public ResponseEntity<?> seePlaceRatings(@PathVariable Integer id) {
         try {
             List<Rating> ratings = placeService.findAllRatingsByPlace(id);
-            return ResponseEntity.ok(ratings);
+            List<RatingResponse> response = RatingMapper.toRatingResponses(ratings);
+            return ResponseEntity.ok(response);
         } catch (PlaceNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -105,7 +116,7 @@ public class PlaceController {
     }
 
     @GetMapping("/{id}/users")
-    public ResponseEntity<?> seePlaceUsers(@PathVariable Integer id) {
+    public ResponseEntity<?> seeUsersByPlace(@PathVariable Integer id) {
         try {
             List<User> users = placeService.findUsersByPlace(id);
             return ResponseEntity.ok(users);
@@ -120,10 +131,11 @@ public class PlaceController {
     }
 
     @GetMapping("/{id}/comments")
-    public ResponseEntity<?> seePlaceComments(@PathVariable Integer id) {
+    public ResponseEntity<?> seeCommentsByPlace(@PathVariable Integer id) {
         try {
             List<Comment> comments = placeService.findCommentsByPlace(id);
-            return ResponseEntity.ok(comments);
+            List<CommentResponse> response = CommentMapper.toCommentResponses(comments);
+            return ResponseEntity.ok(response);
         } catch (PlaceNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -149,11 +161,12 @@ public class PlaceController {
         }
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/{userid}")
     public ResponseEntity<?> seePlacesByUser(@PathVariable Integer userid) {
         try {
             List<Place> places = placeService.findPlacesByUser(userid);
-            return ResponseEntity.ok(places);
+            List<PlaceResponse> response = PlaceMapper.toPlaceResponses(places);
+            return ResponseEntity.ok(response);
         } catch (PlaceNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
