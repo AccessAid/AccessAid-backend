@@ -3,8 +3,8 @@ package dev.accessaid.AccessAid.Comments.utils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.accessaid.AccessAid.Comments.Response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.model.Comment;
+import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 
 public class CommentMapper {
 

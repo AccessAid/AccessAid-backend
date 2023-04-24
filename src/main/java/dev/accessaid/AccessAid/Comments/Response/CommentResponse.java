@@ -1,4 +1,4 @@
-package dev.accessaid.AccessAid.Comments.Response;
+package dev.accessaid.AccessAid.Comments.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
