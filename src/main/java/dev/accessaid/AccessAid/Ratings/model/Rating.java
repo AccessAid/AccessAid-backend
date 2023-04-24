@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.Ratings.model;
 
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "rating")
+@Table(name = "rating", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "place_id" }) })
 public class Rating {
 
     @Id
@@ -32,9 +34,13 @@ public class Rating {
     @Min(1)
     @Max(5)
     Double rating;
-    Integer user_id;
 
     @ManyToOne
-    @JoinColumn(name = "place")
+    @JoinColumn(name = "user_id")
+    User user;
+
+    @ManyToOne
+    @JoinColumn(name = "place_id")
     Place place;
+
 }
