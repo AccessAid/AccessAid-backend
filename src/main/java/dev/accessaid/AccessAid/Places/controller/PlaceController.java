@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
+import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
+import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
-import dev.accessaid.AccessAid.Places.utils.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
-import dev.accessaid.AccessAid.Places.utils.PlaceSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.model.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
