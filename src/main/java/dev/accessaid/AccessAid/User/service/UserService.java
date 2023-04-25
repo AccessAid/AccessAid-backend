@@ -2,31 +2,27 @@ package dev.accessaid.AccessAid.User.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import dev.accessaid.AccessAid.Profile.model.Profile;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
+import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
-import dev.accessaid.AccessAid.User.repository.UserRepository;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    private final UserRepository userRepository;
+    List<User> getUsers();
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    User getUserById(Integer id) throws UserNotFoundException;
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
+    User createUser(User user) throws UserSaveException;
 
-    public User getUserById(Integer id) {
-        return userRepository.findById(id).get();
-    }
+    User changeUser(User user) throws UserNotFoundException, UserSaveException;
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
+    User removeUser(Integer id) throws UserNotFoundException;
+
+    User getUserByProfile(Profile profile) throws UserNotFoundException;
+
+    User getUserByEmail(String email) throws UserNotFoundException;
+
+    User getUserByUsername(String username) throws UserNotFoundException;
+
 }
