@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,6 @@ import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.response.UserResponse;
 import dev.accessaid.AccessAid.User.service.UserServiceImpl;
 import dev.accessaid.AccessAid.User.utils.UserMapper;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Users", description = "Information about Users")
