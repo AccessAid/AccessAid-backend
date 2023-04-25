@@ -47,7 +47,7 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<Place> places;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "user")
     private List<Rating> ratings;
 
     @OneToOne(mappedBy = "user")
