@@ -17,9 +17,9 @@ import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
-import dev.accessaid.AccessAid.User.service.UserNotFoundException;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
@@ -108,7 +108,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
         }
         return optionalPlace.get().getUsers();
-    } 
+    }
 
     @Override
     public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException {

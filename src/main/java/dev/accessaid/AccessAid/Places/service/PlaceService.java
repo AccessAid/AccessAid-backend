@@ -1,14 +1,15 @@
 package dev.accessaid.AccessAid.Places.service;
 
 import java.util.List;
+
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
-import dev.accessaid.AccessAid.User.service.UserNotFoundException;
 
 public interface PlaceService {
     List<Place> findAllPlaces();

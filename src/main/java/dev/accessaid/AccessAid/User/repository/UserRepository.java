@@ -1,21 +1,20 @@
 package dev.accessaid.AccessAid.User.repository;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.User.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query(value = "SELECT * FROM _user", nativeQuery = true)
-    List<User> findAllUsers();
+    Optional<User> findByProfile(Profile profile);
 
-    void deleteUserById(Integer id);
+    Optional<User> findByEmail(String email);
 
-    <S extends User> S save(S user);
+    Optional<User> findByUsername(String username);
 
 }
