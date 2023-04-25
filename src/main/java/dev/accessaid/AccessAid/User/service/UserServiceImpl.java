@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
         if (!userToChange.isPresent()) {
             throw new UserNotFoundException("User not found");
         }
-        User updatedUser = userToChange.get();
-        return userRepository.save(updatedUser);
+        return userRepository.save(user);
     }
 
     @Override
