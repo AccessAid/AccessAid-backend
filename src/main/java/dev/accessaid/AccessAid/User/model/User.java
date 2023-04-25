@@ -7,12 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Profile.model.Profile;
+import dev.accessaid.AccessAid.Ratings.model.Rating;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,12 +33,6 @@ public class User {
     @GeneratedValue
     private Integer id;
 
-    @JsonProperty("firstname")
-    private String firstname;
-
-    @JsonProperty("lastname")
-    private String lastname;
-
     @JsonProperty("username")
     private String username;
 
@@ -51,7 +47,10 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<Place> places;
 
-    @OneToMany(mappedBy = "user")
+    @ManyToMany(mappedBy = "users")
+    private List<Rating> ratings;
+
+    @OneToOne(mappedBy = "user")
     private Profile profile;
 
 }
