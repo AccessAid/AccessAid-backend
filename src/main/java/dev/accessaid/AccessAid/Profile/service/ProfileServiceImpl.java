@@ -24,7 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Profile getProfileById(Integer id) {
+    public Profile getProfileById(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profile = profileRepository.findById(id);
         if (!profile.isPresent()) {
             throw new ProfileNotFoundException("Profile not found");
