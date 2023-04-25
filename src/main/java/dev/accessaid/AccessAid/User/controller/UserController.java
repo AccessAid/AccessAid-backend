@@ -162,9 +162,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
+    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable Integer id) {
         try {
-            User userToUpdate = userService.getUserById(user.getId());
+            User userToUpdate = userService.getUserById(id);
             if (userToUpdate == null) {
                 throw new UserNotFoundException("User not found");
             }
