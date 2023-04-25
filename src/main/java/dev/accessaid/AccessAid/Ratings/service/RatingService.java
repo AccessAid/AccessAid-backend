@@ -18,7 +18,7 @@ public interface RatingService {
 
     Rating createRating(Rating rating) throws RatingSaveException;
 
-    Rating changeRating(Rating rating) throws RatingNotFoundException;
+    Rating changeRating(Rating rating) throws RatingNotFoundException, RatingSaveException;
 
     Rating removeRating(Integer id) throws RatingNotFoundException;
 
