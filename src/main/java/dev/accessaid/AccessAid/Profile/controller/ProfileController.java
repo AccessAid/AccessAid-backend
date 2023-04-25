@@ -103,7 +103,7 @@ public class ProfileController {
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProfile(@PathVariable Integer id) {
         try {
             Profile profileToDelete = profileService.getProfileById(id);
