@@ -21,8 +21,8 @@ import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
-import dev.accessaid.AccessAid.model.User;
-import dev.accessaid.AccessAid.service.UserService;
+import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Comments", description = "Comments by the users about the places")

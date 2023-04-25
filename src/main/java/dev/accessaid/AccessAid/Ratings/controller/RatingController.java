@@ -23,8 +23,8 @@ import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.service.RatingServiceImpl;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
-import dev.accessaid.AccessAid.model.User;
-import dev.accessaid.AccessAid.service.UserService;
+import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Ratings", description = "Ratings of the places")

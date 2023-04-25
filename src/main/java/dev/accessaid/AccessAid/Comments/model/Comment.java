@@ -1,7 +1,7 @@
 package dev.accessaid.AccessAid.Comments.model;
 
 import dev.accessaid.AccessAid.Places.model.Place;
-import dev.accessaid.AccessAid.model.User;
+import dev.accessaid.AccessAid.User.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

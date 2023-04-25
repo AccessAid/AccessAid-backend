@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
@@ -12,8 +13,7 @@ import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.repository.RatingRepository;
-import dev.accessaid.AccessAid.model.User;
-import dev.accessaid.AccessAid.service.UserNotFoundException;
+import dev.accessaid.AccessAid.User.model.User;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -67,7 +67,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<Rating> getRatingByUser(User user) throws UserNotFoundException {
+    public List<Rating> getRatingByUser(User user) throws UsernameNotFoundException {
         return ratingRepository.findByUser(user);
 
     }
