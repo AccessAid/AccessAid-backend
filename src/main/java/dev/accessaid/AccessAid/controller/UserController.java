@@ -1,5 +1,7 @@
 package dev.accessaid.AccessAid.controller;
 
+import dev.accessaid.AccessAid.security.payload.JwtResponse;
+import dev.accessaid.AccessAid.security.payload.LoginRequest;
 import dev.accessaid.AccessAid.security.payload.MessageResponse;
 import dev.accessaid.AccessAid.security.payload.RegisterRequest;
 import dev.accessaid.AccessAid.security.service.UserService;
@@ -23,5 +25,10 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
         return userService.registerUser(signUpRequest);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+        return userService.loginUser((loginRequest));
     }
 }
