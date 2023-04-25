@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.Profile.model.Profile;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -49,5 +50,8 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private List<Place> places;
+
+    @OneToMany(mappedBy = "user")
+    private Profile profile;
 
 }
