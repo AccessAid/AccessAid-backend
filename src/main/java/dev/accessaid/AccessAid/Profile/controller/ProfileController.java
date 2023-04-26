@@ -85,12 +85,13 @@ public class ProfileController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProfile(@RequestBody Profile profile, @PathVariable Integer id) {
         try {
+            profile.setId(id);
             Profile profileToUpdate = profileService.getProfileById(id);
             if (profileToUpdate == null) {
                 ErrorResponse errorResponse = new ErrorResponse("Rating not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
             }
-            Profile updatedProfile = profileService.changeProfile(profileToUpdate);
+            Profile updatedProfile = profileService.changeProfile(profile);
             ProfileResponse response = ProfileMapper.toProfileResponse(updatedProfile);
             return ResponseEntity.ok(response);
         } catch (ProfileNotFoundException e) {
@@ -106,12 +107,8 @@ public class ProfileController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProfile(@PathVariable Integer id) {
         try {
-            Profile profileToDelete = profileService.getProfileById(id);
-            if (profileToDelete == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Profile not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            profileService.removeProfile(id);
+            Profile profileToDelete = profileService.removeProfile(id);
+
             ProfileResponse response = ProfileMapper.toProfileResponse(profileToDelete);
             return ResponseEntity.ok(response);
         } catch (ProfileNotFoundException e) {
