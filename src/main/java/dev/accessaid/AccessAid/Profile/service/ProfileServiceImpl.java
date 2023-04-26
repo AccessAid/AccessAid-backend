@@ -11,12 +11,17 @@ import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
 import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.repository.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public List<Profile> getAllProfiles() {
@@ -34,15 +39,15 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Profile createProfile(Profile profile) throws ProfileSaveException {
-        User user = profile.getUser();
-        if (user == null) {
-            throw new IllegalArgumentException("User does not exist");
-        }
-        Optional<Profile> profileToSave = profileRepository.findByUser(user);
-        if (profileToSave.isPresent()) {
+        User user = userRepository.findById(profile.getUser().getId())
+                .orElseThrow(() -> new IllegalArgumentException("User does not exist"));
+
+        if (user.getProfile() != null) {
             throw new ProfileSaveException("Profile already exists");
         }
         try {
+            profile.setUser(user);
+            user.setProfile(profile);
             return profileRepository.save(profile);
         } catch (Exception e) {
             throw new ProfileSaveException("Error saving profile");
@@ -55,16 +60,23 @@ public class ProfileServiceImpl implements ProfileService {
         if (!profileToUpdate.isPresent()) {
             throw new ProfileNotFoundException("Profile not found");
         }
-        Profile updatedProfile = profileToUpdate.get();
-        return profileRepository.save(updatedProfile);
+        try {
+            return profileRepository.save(profile);
+        } catch (Exception e) {
+            throw new ProfileSaveException("Error saving profile");
+        }
     }
 
     @Override
+    @Transactional
     public Profile removeProfile(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profileToRemove = profileRepository.findById(id);
         if (!profileToRemove.isPresent()) {
             throw new ProfileNotFoundException("Profile not found");
         }
+        Profile deletedProfile = profileToRemove.get();
+        User user = deletedProfile.getUser();
+        user.setProfile(null);
         profileRepository.deleteById(id);
         return profileToRemove.get();
     }
