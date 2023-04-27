@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
-import dev.accessaid.AccessAid.Geolocation.controller.GeolocationController;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
@@ -31,7 +28,7 @@ public class PlaceServiceImpl implements PlaceService {
     private UserRepository userRepository;
 
     @Autowired
-    private GeolocationController geolocationController;
+    private GeolocationUtils geolocationUtils;
 
     @Override
     public List<Place> findAllPlaces() {
@@ -50,33 +47,12 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Place createPlace(PlaceRequest request) throws PlaceSaveException {
-        GeolocationResponse response;
-        String address = request.getAddress();
-        if (address == null && (request.getLatitude() == null && request.getLongitude() == null)) {
-            throw new PlaceSaveException("Missing address or coordinates");
-        } else if (address != null) {
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByAddress(address);
-            if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
-                throw new PlaceSaveException("Place not found for address: " + address);
-            }
-            response = (GeolocationResponse) geolocationResponseEntity.getBody();
-
-        } else {
-            double latitude = request.getLatitude();
-            double longitude = request.getLongitude();
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
-                    longitude);
-            if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
-                throw new PlaceSaveException(
-                        "Place not found for coordinates: " + latitude + "," + longitude);
-            }
-            response = (GeolocationResponse) geolocationResponseEntity.getBody();
-        }
+        GeolocationResponse response = geolocationUtils.getGeolocationByAddressOrCoordinates(request);
         Place newPlace = new Place(response);
         try {
             placeRepository.save(newPlace);
         } catch (Exception e) {
-            throw new PlaceSaveException("Error saving place to database");
+            throw new PlaceSaveException();
         }
         return newPlace;
     }
