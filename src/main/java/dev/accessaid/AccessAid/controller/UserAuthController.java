@@ -7,18 +7,15 @@ import dev.accessaid.AccessAid.security.payload.RegisterRequest;
 import dev.accessaid.AccessAid.security.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/api/auth")
+public class UserAuthController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserAuthController(UserService userService) {
         this.userService = userService;
     }
 
