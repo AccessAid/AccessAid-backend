@@ -9,6 +9,8 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.config.documentation.Places.ExamplesValues;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,19 +35,24 @@ import lombok.NoArgsConstructor;
 @Table(name = "place")
 public class Place {
 
+    @Schema(example = "1", description = "")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @Schema(example = ExamplesValues.LATITUDE, description = "")
     @NotNull
     double latitude;
 
+    @Schema(example = ExamplesValues.LONGITUDE, description = "")
     @NotNull
     double longitude;
 
+    @Schema(example = ExamplesValues.ADDRESS, description = "")
     @NotNull
     String address;
 
+    @Schema(example = ExamplesValues.API_PLACE_ID, description = "")
     @NotNull
     String api_placeId;
 
@@ -53,6 +60,7 @@ public class Place {
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<Rating> ratings;
 
+    @Schema(example = "4.5", description = "")
     double totalRating;
 
     @JsonIgnore
