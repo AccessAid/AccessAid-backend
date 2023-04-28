@@ -1,4 +1,4 @@
-package dev.accessaid.AccessAid.Geolocation.Response;
+package dev.accessaid.AccessAid.config;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
