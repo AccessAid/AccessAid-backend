@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
@@ -25,6 +24,7 @@ import dev.accessaid.AccessAid.Ratings.service.RatingServiceImpl;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
+import dev.accessaid.AccessAid.config.ErrorResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Ratings", description = "Ratings of the places")
