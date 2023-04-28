@@ -42,4 +42,24 @@ public class GeolocationUtils {
         return response;
 
     }
+
+    public GeolocationResponse getGeolocationByAddress(String address) throws PlaceSaveException {
+        ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByAddress(address);
+        if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
+            throw new PlaceSaveException("Place not found for address: " + address);
+        }
+        return (GeolocationResponse) geolocationResponseEntity.getBody();
+    }
+
+    public GeolocationResponse getGeolocationByCoordinates(double latitude, double longitude)
+            throws PlaceSaveException {
+        ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
+                longitude);
+        if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
+            throw new PlaceSaveException(
+                    "Place not found for coordinates: " + latitude + "," + longitude);
+        }
+        return (GeolocationResponse) geolocationResponseEntity.getBody();
+
+    }
 }
