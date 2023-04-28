@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 import dev.accessaid.AccessAid.Geolocation.service.GeolocationService;
 import dev.accessaid.AccessAid.config.ErrorResponse;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Hidden
 @Tag(name = "Geolocation", description = "Geolocation information by address or coordinates")
 @RestController
 public class GeolocationController {
