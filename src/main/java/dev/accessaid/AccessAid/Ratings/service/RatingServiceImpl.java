@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.repository.RatingRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -21,6 +23,12 @@ public class RatingServiceImpl implements RatingService {
 
     @Autowired
     private RatingRepository ratingRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PlaceRepository placeRepository;
 
     @Override
     public List<Rating> getAllRatings() {
@@ -40,8 +48,24 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating createRating(Rating rating) throws RatingSaveException {
+        User user = userRepository.findById(rating.getUser().getId())
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + rating.getUser().getId()));
 
-        return ratingRepository.save(rating);
+        Place place = placeRepository.findById(rating.getPlace().getId())
+                .orElseThrow(
+                        () -> new PlaceNotFoundException("Place not found with id: " + rating.getPlace().getId()));
+
+        Rating savedRating = ratingRepository.save(rating);
+
+        place.addRating(savedRating);
+
+        if (!place.getUsers().contains(user)) {
+            place.getUsers().add(user);
+            placeRepository.save(place);
+        }
+
+        return savedRating;
+
     }
 
     @Override

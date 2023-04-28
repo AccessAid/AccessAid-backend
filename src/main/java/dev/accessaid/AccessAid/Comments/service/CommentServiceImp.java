@@ -12,17 +12,25 @@ import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.repository.CommentRepository;
+import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.model.Place;
+import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.repository.UserRepository;
 import jakarta.transaction.Transactional;
-
-
 
 @Service
 public class CommentServiceImp implements CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PlaceRepository placeRepository;
 
     @Override
     public List<Comment> getComments() {
@@ -44,7 +52,24 @@ public class CommentServiceImp implements CommentService {
     @Override
     public Comment createComment(Comment comment) throws CommentSaveException {
 
-        return commentRepository.save(comment);
+        User user = userRepository.findById(comment.getUser().getId())
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + comment.getUser().getId()));
+
+        Place place = placeRepository.findById(comment.getPlace().getId())
+                .orElseThrow(
+                        () -> new PlaceNotFoundException("Place not found with id: " + comment.getPlace().getId()));
+
+        Comment savedComment = commentRepository.save(comment);
+
+        place.addComment(savedComment);
+
+        if (!place.getUsers().contains(user)) {
+            place.getUsers().add(user);
+            placeRepository.save(place);
+        }
+
+        return savedComment;
+
     }
 
     @Override
