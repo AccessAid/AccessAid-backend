@@ -27,7 +27,7 @@ import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
-import dev.accessaid.AccessAid.model.User;
+import dev.accessaid.AccessAid.User.model.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Places", description = "Information about places")

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
-import dev.accessaid.AccessAid.model.User;
+import dev.accessaid.AccessAid.User.model.User;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Integer> {

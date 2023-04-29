@@ -17,9 +17,9 @@ import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
-import dev.accessaid.AccessAid.model.User;
-import dev.accessaid.AccessAid.repository.UserRepository;
-import dev.accessaid.AccessAid.service.UserNotFoundException;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
+import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.repository.UserRepository;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {

@@ -12,8 +12,8 @@ import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.repository.RatingRepository;
-import dev.accessaid.AccessAid.model.User;
-import dev.accessaid.AccessAid.service.UserNotFoundException;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
+import dev.accessaid.AccessAid.User.model.User;
 import jakarta.transaction.Transactional;
 
 @Service

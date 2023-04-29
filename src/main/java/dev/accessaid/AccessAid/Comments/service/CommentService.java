@@ -6,7 +6,7 @@ import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
-import dev.accessaid.AccessAid.model.User;
+import dev.accessaid.AccessAid.User.model.User;
 
 public interface CommentService {
 

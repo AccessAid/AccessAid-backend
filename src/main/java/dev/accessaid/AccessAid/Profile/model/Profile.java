@@ -1,14 +1,14 @@
-package dev.accessaid.AccessAid.Comments.model;
+package dev.accessaid.AccessAid.Profile.model;
 
-import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.User.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,23 +16,21 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "profile", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id" }) })
+public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    String comment;
 
-    @ManyToOne
+    String firstName;
+    String lastName;
+    String avatarPath;
+
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "place_id", referencedColumnName = "id")
-    private Place place;
-
+    User user;
 }
