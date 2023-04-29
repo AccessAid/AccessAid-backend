@@ -48,6 +48,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorResponse("Internal server error: " + e.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Internal server error occurred.")
+    public ErrorResponse handleException(Exception e) {
+        return new ErrorResponse("Internal server error: " + e.getMessage());
+    }
+
     @ExceptionHandler(PlaceSaveException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Place save failed.")
     public ErrorResponse handlePlaceSaveException(PlaceSaveException e) {
