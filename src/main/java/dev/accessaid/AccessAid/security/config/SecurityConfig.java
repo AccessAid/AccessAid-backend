@@ -25,33 +25,33 @@ public class SecurityConfig {
     private JwtAuthEntryPoint unauthorizedHandler;
 
     @Bean
-    JwtAuthEntryPoint unauthorizedHandler() {
+    public JwtAuthEntryPoint unauthorizedHandler() {
         return new JwtAuthEntryPoint();
     }
 
     @Bean
-    JwtRequestFilter authenticationJwtTokenFilter() {
+    public JwtRequestFilter authenticationJwtTokenFilter() {
         return new JwtRequestFilter();
     }
 
     @Bean
-    UserDetailsServiceImpl userDetailsService() {
+    public UserDetailsServiceImpl userDetailsService() {
         return new UserDetailsServiceImpl();
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .cors().and().csrf().disable()
