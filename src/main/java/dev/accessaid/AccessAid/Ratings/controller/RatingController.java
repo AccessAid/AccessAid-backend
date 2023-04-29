@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,19 +13,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
-import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.service.RatingServiceImpl;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
-import dev.accessaid.AccessAid.config.ErrorResponse;
+import dev.accessaid.AccessAid.config.documentation.Ratings.RatingRequestExample;
+import dev.accessaid.AccessAid.config.documentation.Ratings.RatingResponseExample;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Ratings", description = "Ratings of the places")
@@ -41,133 +49,101 @@ public class RatingController {
     @Autowired
     private PlaceServiceImpl placeService;
 
+    @Operation(summary = "See a list of ratings")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping("")
-    public ResponseEntity<?> seeAllRatings() {
-        try {
-            List<Rating> ratings = ratingService.getAllRatings();
-            List<RatingResponse> responses = RatingMapper.toRatingResponses(ratings);
-            return ResponseEntity.ok(responses);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    public List<RatingResponse> seeAllRatings() {
+        List<Rating> ratings = ratingService.getAllRatings();
+        return RatingMapper.toRatingResponses(ratings);
 
     }
 
+    @Operation(summary = "See a rating by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = RatingResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<?> seeRatingById(@PathVariable Integer id) {
-        try {
-            Rating rating = ratingService.getRatingById(id);
-            RatingResponse response = RatingMapper.toRatingResponse(rating);
-            return ResponseEntity.ok(response);
-        } catch (RatingNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    public ResponseEntity<RatingResponse> seeRatingById(@PathVariable Integer id) {
+        Rating rating = ratingService.getRatingById(id);
+        RatingResponse response = RatingMapper.toRatingResponse(rating);
+        return ResponseEntity.ok(response);
 
     }
 
+    @Operation(summary = "Add a new rating for a place")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Rating added successfully", content = @Content(schema = @Schema(implementation = RatingResponseExample.class))),
+            @ApiResponse(responseCode = "400", description = "Error saving rating", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PostMapping("")
-    public ResponseEntity<?> addRating(@RequestBody Rating rating) {
-        try {
-            Rating newRating = ratingService.createRating(rating);
-            RatingResponse response = RatingMapper.toRatingResponse(newRating);
-            return ResponseEntity.ok(response);
-        } catch (RatingSaveException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public RatingResponse addRating(
+            @RequestBody @Validated @Schema(implementation = RatingRequestExample.class) Rating rating) {
+        Rating newRating = ratingService.createRating(rating);
+        return RatingMapper.toRatingResponse(newRating);
 
     }
 
+    @Operation(summary = "Update an existing rating")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Rating updated successfully", content = @Content(schema = @Schema(implementation = RatingResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRating(@PathVariable Integer id, @RequestBody Rating rating) {
-        try {
-            Rating ratingToUpdate = ratingService.getRatingById(id);
-            if (ratingToUpdate == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Rating not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            ratingToUpdate.setRating(rating.getRating());
-            Rating udpatedRating = ratingService.changeRating(ratingToUpdate);
-            RatingResponse response = RatingMapper.toRatingResponse(udpatedRating);
-            return ResponseEntity.ok(response);
-        } catch (RatingNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public RatingResponse updateRating(@PathVariable Integer id,
+            @RequestBody @Schema(example = "{\"rating\": 5.0}") Rating rating) {
+        Rating ratingToUpdate = ratingService.getRatingById(id);
+        if (ratingToUpdate == null) {
+            throw new RatingNotFoundException("Rating not found");
         }
+        ratingToUpdate.setRating(rating.getRating());
+        Rating udpatedRating = ratingService.changeRating(ratingToUpdate);
+        return RatingMapper.toRatingResponse(udpatedRating);
+
     }
 
+    @Operation(summary = "Delete a rating by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content)
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRating(@PathVariable Integer id) {
-        try {
-            Rating ratingToDelete = ratingService.getRatingById(id);
-            if (ratingToDelete == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Rating not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            ratingService.removeRating(id);
-            RatingResponse response = RatingMapper.toRatingResponse(ratingToDelete);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRating(@PathVariable Integer id) {
+
+        ratingService.removeRating(id);
     }
 
+    @Operation(summary = "See all ratings that a user has made")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
+    })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> seeRatingsByUser(@PathVariable Integer userId) {
-        try {
-            User user = userService.getUserById(userId);
-            if (user == null) {
-                ErrorResponse errorResponse = new ErrorResponse("User not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<Rating> ratings = ratingService.getRatingByUser(user);
-            if (ratings.isEmpty()) {
-                ErrorResponse errorResponse = new ErrorResponse("User has not rated any place");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<RatingResponse> response = RatingMapper.toRatingResponses(ratings);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    public List<RatingResponse> seeRatingsByUser(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        List<Rating> ratings = ratingService.getRatingByUser(user);
+        return RatingMapper.toRatingResponses(ratings);
 
     }
 
+    @Operation(summary = "See all places that have been rated by a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
+    })
     @GetMapping("/place/{placeId}")
-    public ResponseEntity<?> seeRatingsByPlace(@PathVariable Integer placeId) {
-        try {
-            Place place = placeService.findPlaceById(placeId);
-            if (place == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Place not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<Rating> places = ratingService.getRatingByPlace(place);
-            if (places.isEmpty()) {
-                ErrorResponse errorResponse = new ErrorResponse("Place has not been rated by anyone");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<RatingResponse> response = RatingMapper.toRatingResponses(places);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    public List<RatingResponse> seeRatingsByPlace(@PathVariable Integer placeId) {
+        Place place = placeService.findPlaceById(placeId);
+        List<Rating> places = ratingService.getRatingByPlace(place);
+        return RatingMapper.toRatingResponses(places);
 
     }
+
 }
