@@ -30,12 +30,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtRequestFilter authenticationJwtTokenFilter() {
+    public JwtRequestFilter authenticationJwtTokenFilter() {
         return new JwtRequestFilter();
     }
 
     @Bean
-    UserDetailsServiceImpl userDetailsService() {
+    public UserDetailsServiceImpl userDetailsService() {
         return new UserDetailsServiceImpl();
     }
 
@@ -46,12 +46,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .cors().and().csrf().disable()
