@@ -21,4 +21,6 @@ public class ExamplesValues {
     public static final String EMAIL = "johndoe@email.com";
 
     public static final String USERNAME = "johndoe";
+
+    public static final String PASSWORD = "password123";
 }
