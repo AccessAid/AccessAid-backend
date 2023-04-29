@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
+import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
@@ -15,6 +16,12 @@ import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Internal server error occurred.")
+    public ErrorResponse handleException(Exception e) {
+        return new ErrorResponse("Internal server error: " + e.getMessage());
+    }
 
     @ExceptionHandler(PlaceSaveException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Place save failed.")
@@ -29,12 +36,6 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Internal server error occurred.")
-    public ErrorResponse handleException(Exception e) {
-        return new ErrorResponse("Internal server error: " + e.getMessage());
-    }
-
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User not found.")
     public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
@@ -45,6 +46,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Comment not found.")
     @ResponseBody
     public ErrorResponse handleCommentNotFoundException(CommentNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(CommentSaveException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Comment save failed.")
+    public ErrorResponse handleCommentSaveException(CommentSaveException e) {
         return new ErrorResponse(e.getMessage());
     }
 
