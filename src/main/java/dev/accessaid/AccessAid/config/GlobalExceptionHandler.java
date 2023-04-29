@@ -10,6 +10,7 @@ import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
+import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 
 @ControllerAdvice
@@ -51,6 +52,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Rating not found.")
     @ResponseBody
     public ErrorResponse handleRatingNotFoundException(RatingNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(RatingSaveException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Rating save failed.")
+    public ErrorResponse handleRatingSaveException(RatingSaveException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
