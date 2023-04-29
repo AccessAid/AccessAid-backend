@@ -1,4 +1,4 @@
-package dev.accessaid.AccessAid.security.service;
+package dev.accessaid.AccessAid.User.service;
 
 import java.util.ArrayList;
 
@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
-import dev.accessaid.AccessAid.repository.UserRepository;
+import dev.accessaid.AccessAid.User.repository.UserRepository;
 
+@Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

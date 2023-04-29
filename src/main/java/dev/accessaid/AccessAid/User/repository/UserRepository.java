@@ -11,6 +11,10 @@ import dev.accessaid.AccessAid.User.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
+
     Optional<User> findByProfile(Profile profile);
 
     Optional<User> findByEmail(String email);
