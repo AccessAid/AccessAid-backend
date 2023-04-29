@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -161,49 +160,43 @@ public class UserController {
 
     }
 
+    @Operation(summary = "Update an existing profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile updated successfully", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable Integer id) {
-        try {
-            user.setId(id);
-            User userToUpdate = userService.getUserById(id);
-            if (userToUpdate == null) {
-                throw new UserNotFoundException("User not found");
-            }
-            User updatedUser = userService.changeUser(user);
-            UserResponse response = UserMapper.toUserResponse(updatedUser);
-            return ResponseEntity.ok(response);
-        } catch (UserNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public UserResponse updateUser(@RequestBody @Validated @Schema(implementation = UserRequestExample.class) User user,
+            @PathVariable Integer id) {
+        user.setId(id);
+        User userToUpdate = userService.getUserById(id);
+        if (userToUpdate == null) {
+            throw new UserNotFoundException("User not found");
         }
+        userToUpdate.updateFields(user);
+        User updatedUser = userService.changeUser(userToUpdate);
+        return UserMapper.toUserResponse(updatedUser);
 
     }
 
+    @Operation(summary = "Delete an existing user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        try {
-            User userToDelete = userService.getUserById(id);
-            if (userToDelete == null) {
-                throw new UserNotFoundException("User not found");
-            }
-            userService.removeUser(id);
-            UserResponse response = UserMapper.toUserResponse(userToDelete);
-            return ResponseEntity.ok(response);
-        } catch (ProfileNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Integer id) {
+        userService.removeUser(id);
 
     }
 
+    @Operation(summary = "See user by profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @GetMapping("/profile/{profileId}")
     public ResponseEntity<?> seeUserByProfile(@PathVariable Integer profileId) {
         try {
@@ -225,43 +218,28 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "See user by email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @GetMapping("/email/{email}")
-    public ResponseEntity<?> seeUserByEmail(@PathVariable String email) {
-        try {
-            User user = userService.getUserByEmail(email);
-            if (user == null) {
-                ErrorResponse errorResponse = new ErrorResponse("User not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            UserResponse response = UserMapper.toUserResponse(user);
-            return ResponseEntity.ok(response);
-        } catch (UserNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    public UserResponse seeUserByEmail(@PathVariable String email) {
+        User user = userService.getUserByEmail(email);
+        return UserMapper.toUserResponse(user);
 
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
     }
 
+    @Operation(summary = "See user by email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @GetMapping("/username/{username}")
-    public ResponseEntity<?> seeUserByUsername(@PathVariable String username) {
-        try {
-            User user = userService.getUserByUsername(username);
-            if (user == null) {
-                ErrorResponse errorResponse = new ErrorResponse("User not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            UserResponse response = UserMapper.toUserResponse(user);
-            return ResponseEntity.ok(response);
-        } catch (UserNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    public UserResponse seeUserByUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        return UserMapper.toUserResponse(user);
 
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
     }
+
 }
