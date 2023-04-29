@@ -38,22 +38,19 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating getRatingById(Integer id) throws RatingNotFoundException {
-        Optional<Rating> rating = ratingRepository.findById(id);
-        if (rating.isPresent())
-            return rating.get();
-        else
-            throw new RatingNotFoundException("Rating with id " + id + " not found");
+        return ratingRepository.findById(id)
+                .orElseThrow(() -> new RatingNotFoundException("Rating with id " + id + " not found"));
 
     }
 
     @Override
     public Rating createRating(Rating rating) throws RatingSaveException {
+
         User user = userRepository.findById(rating.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + rating.getUser().getId()));
 
         Place place = placeRepository.findById(rating.getPlace().getId())
-                .orElseThrow(
-                        () -> new PlaceNotFoundException("Place not found with id: " + rating.getPlace().getId()));
+                .orElseThrow(() -> new PlaceNotFoundException("Place not found with id: " + rating.getPlace().getId()));
 
         Rating savedRating = ratingRepository.save(rating);
 
@@ -81,13 +78,10 @@ public class RatingServiceImpl implements RatingService {
     @Override
     @Transactional
     public Rating removeRating(Integer id) throws RatingNotFoundException {
-
-        Optional<Rating> ratingToDelete = ratingRepository.findById(id);
-        if (!ratingToDelete.isPresent()) {
-            throw new RatingNotFoundException("Rating with id " + id + " not found");
-        }
+        Rating ratingToDelete = ratingRepository.findById(id)
+                .orElseThrow(() -> new RatingNotFoundException("Rating with id " + id + " not found"));
         ratingRepository.deleteById(id);
-        return ratingToDelete.get();
+        return ratingToDelete;
     }
 
     @Override
