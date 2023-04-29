@@ -61,4 +61,16 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
+    public void updateFields(User updatedUser) {
+
+        if (updatedUser.getEmail() != null) {
+            this.setEmail(updatedUser.getEmail());
+        }
+        if (updatedUser.getUsername() != null) {
+            this.setUsername(updatedUser.getUsername());
+        }
+        if (updatedUser.getPassword() != null) {
+            this.setPassword(updatedUser.getPassword());
+        }
+    }
 }
