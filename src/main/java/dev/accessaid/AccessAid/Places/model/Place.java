@@ -9,7 +9,7 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.User.model.User;
-import dev.accessaid.AccessAid.config.documentation.Places.ExamplesValues;
+import dev.accessaid.AccessAid.config.documentation.ExamplesValues;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
