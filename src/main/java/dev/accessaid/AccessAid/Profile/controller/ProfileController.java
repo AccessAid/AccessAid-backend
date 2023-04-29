@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
@@ -23,6 +22,7 @@ import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
+import dev.accessaid.AccessAid.config.ErrorResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Profiles", description = "User Profiles")

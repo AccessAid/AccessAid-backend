@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,10 +66,9 @@ public class RatingController {
             @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<RatingResponse> seeRatingById(@PathVariable Integer id) {
+    public RatingResponse seeRatingById(@PathVariable Integer id) {
         Rating rating = ratingService.getRatingById(id);
-        RatingResponse response = RatingMapper.toRatingResponse(rating);
-        return ResponseEntity.ok(response);
+        return RatingMapper.toRatingResponse(rating);
 
     }
 
@@ -133,7 +131,7 @@ public class RatingController {
 
     }
 
-    @Operation(summary = "See all places that have been rated by a user")
+    @Operation(summary = "See all ratings that have been made for a place")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
             @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
