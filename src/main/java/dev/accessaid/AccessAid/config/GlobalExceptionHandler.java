@@ -10,6 +10,8 @@ import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
+import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
+import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -65,6 +67,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RatingSaveException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Rating save failed.")
     public ErrorResponse handleRatingSaveException(RatingSaveException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(ProfileNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Profile not found.")
+    @ResponseBody
+    public ErrorResponse handleProfileNotFoundException(ProfileNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(ProfileSaveException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Profile save failed.")
+    public ErrorResponse handleProfileSaveException(ProfileSaveException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
