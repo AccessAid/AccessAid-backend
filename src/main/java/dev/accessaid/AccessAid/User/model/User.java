@@ -8,6 +8,7 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +18,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,16 +32,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "_user")
 public class User {
 
+    @Schema(example = "1", description = "")
     @Id
     @GeneratedValue
     private Integer id;
 
+    @Schema(example = "username", description = "")
     @JsonProperty("username")
     private String username;
 
+    @Schema(example = "email@email.com", description = "")
     @JsonProperty("email")
+    @Email
     private String email;
 
+    @Schema(example = "password", description = "")
     private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
