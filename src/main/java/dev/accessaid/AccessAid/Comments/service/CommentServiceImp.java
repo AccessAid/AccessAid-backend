@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import dev.accessaid.AccessAid.Comments.exceptions.CommentException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
@@ -40,12 +38,8 @@ public class CommentServiceImp implements CommentService {
 
     @Override
     public Comment getCommentById(Integer id) throws CommentNotFoundException {
-        Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isPresent()) {
-            return comment.get();
-        } else {
-            throw new CommentNotFoundException("Comment not found");
-        }
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
 
     }
 
@@ -87,35 +81,19 @@ public class CommentServiceImp implements CommentService {
     @Override
     @Transactional
     public Comment removeComment(Integer id) throws CommentNotFoundException {
-        Optional<Comment> commentToDelete = commentRepository.findById(id);
-        if (!commentToDelete.isPresent()) {
-            throw new CommentNotFoundException("Comment not found");
-        }
-        Comment deletedComment = commentToDelete.get();
-        User user = deletedComment.getUser();
-        Place place = deletedComment.getPlace();
-        if (user != null) {
-            user.getComments().remove(deletedComment);
-        }
-        if (place != null) {
-            place.getComments().remove(deletedComment);
-        }
-        try {
-            commentRepository.deleteById(id);
-        } catch (Exception e) {
-            System.out.println(e);
-            throw new CommentException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete comment");
-        }
-        return commentToDelete.get();
+        Comment commentToDelete = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+        commentRepository.deleteById(id);
+        return commentToDelete;
     }
 
     @Override
-    public List<Comment> getCommentsByPlace(Place place) {
+    public List<Comment> getCommentsByPlace(Place place) throws PlaceNotFoundException {
         return commentRepository.findAllCommentsByPlace(place);
     }
 
     @Override
-    public List<Comment> getCommentsByUser(User user) {
+    public List<Comment> getCommentsByUser(User user) throws UserNotFoundException {
         return commentRepository.findAllCommentsByUser(user);
     }
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,17 +12,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.service.CommentServiceImp;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
-import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
+import dev.accessaid.AccessAid.config.documentation.Comments.CommentRequestExample;
+import dev.accessaid.AccessAid.config.documentation.Comments.CommentResponseExample;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Comments", description = "Comments by the users about the places")
@@ -39,12 +48,22 @@ public class CommentController {
     @Autowired
     private PlaceServiceImpl placeService;
 
+    @Operation(summary = "See a list of comments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping("")
     public List<CommentResponse> seeAllComments() {
         List<Comment> comments = commentService.getComments();
         return CommentMapper.toCommentResponses(comments);
     }
 
+    @Operation(summary = "See a comment by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CommentResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content)
+    })
     @GetMapping("/{id}")
     public CommentResponse seeCommentById(@PathVariable Integer id) {
         Comment comment = commentService.getCommentById(id);
@@ -52,94 +71,76 @@ public class CommentController {
 
     }
 
+    @Operation(summary = "Add comment", description = "Create a comment for a place", tags = { "Comments" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Comment created successfully", content = @Content(schema = @Schema(implementation = CommentResponseExample.class))),
+            @ApiResponse(responseCode = "400", description = "Error saving comment", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PostMapping("")
-    public ResponseEntity<?> addComment(@RequestBody Comment comment) {
-        try {
-            Comment createdComment = commentService.createComment(comment);
-            CommentResponse response = CommentMapper.toCommentResponse(createdComment);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentResponse addComment(
+            @RequestBody @Validated @Schema(implementation = CommentRequestExample.class) Comment comment) {
+        Comment createdComment = commentService.createComment(comment);
+        return CommentMapper.toCommentResponse(createdComment);
     }
 
+    @Operation(summary = "Update an existing comment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment updated successfully", content = @Content(schema = @Schema(implementation = CommentResponseExample.class))),
+            @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateComment(@PathVariable Integer id, @RequestBody Comment comment) {
-        try {
-            Comment existingComment = commentService.getCommentById(id);
-            if (existingComment == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Comment not found with id: " + id);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            existingComment.setComment(comment.getComment());
-            Comment updatedComment = commentService.changeComment(existingComment);
-            CommentResponse response = CommentMapper.toCommentResponse(updatedComment);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public CommentResponse updateComment(@PathVariable Integer id,
+            @RequestBody @Schema(example = "{\"comment\": \"Nice Place!\"}") Comment comment) {
+        Comment existingComment = commentService.getCommentById(id);
+        if (existingComment == null) {
+            throw new CommentNotFoundException("Comment not found with id: " + id);
         }
+        existingComment.setComment(comment.getComment());
+        Comment updatedComment = commentService.changeComment(existingComment);
+        return CommentMapper.toCommentResponse(updatedComment);
+
     }
 
+    @Operation(summary = "Delete an existing comment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content),
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable Integer id) {
-        try {
-            Comment commentToDelete = commentService.getCommentById(id);
-            if (commentToDelete == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Comment not found with id: " + id);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            commentService.removeComment(id);
-            CommentResponse response = CommentMapper.toCommentResponse(commentToDelete);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable Integer id) {
+
+        commentService.removeComment(id);
+
     }
 
+    @Operation(summary = "See all comments that have been made about a place")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
+    })
     @GetMapping("/place/{placeId}")
-    public ResponseEntity<?> seeCommentsByPlace(@PathVariable Integer placeId) {
-        try {
-            Place place = placeService.findPlaceById(placeId);
-            if (place == null) {
-                ErrorResponse errorResponse = new ErrorResponse("Place not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<Comment> placesComments = commentService.getCommentsByPlace(place);
-            if (placesComments.isEmpty()) {
-                ErrorResponse errorResponse = new ErrorResponse("Place has no comments");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<CommentResponse> response = CommentMapper.toCommentResponses(placesComments);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    public List<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId) {
+        Place place = placeService.findPlaceById(placeId);
+        List<Comment> placesComments = commentService.getCommentsByPlace(place);
+        return CommentMapper.toCommentResponses(placesComments);
 
     }
 
+    @Operation(summary = "See all comments that a user has made")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
+    })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> seeCommentsByUser(@PathVariable Integer userId) {
-        try {
-            User user = userService.getUserById(userId);
-            if (user == null) {
-                ErrorResponse errorResponse = new ErrorResponse("User not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<Comment> comments = commentService.getCommentsByUser(user);
-            if (comments.isEmpty()) {
-                ErrorResponse errorResponse = new ErrorResponse("User has not commented any place");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-            List<CommentResponse> response = CommentMapper.toCommentResponses(comments);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    public List<CommentResponse> seeCommentsByUser(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        List<Comment> comments = commentService.getCommentsByUser(user);
+        return CommentMapper.toCommentResponses(comments);
 
     }
+
 }
