@@ -66,7 +66,7 @@ public class PlaceController {
 
     @Operation(summary = "See a place by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PlaceResponseExample.class))),
+            @ApiResponse(responseCode = "200", description = "Place found", content = @Content(schema = @Schema(implementation = PlaceResponseExample.class))),
             @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
     })
     @GetMapping("/{id}")
@@ -92,7 +92,7 @@ public class PlaceController {
 
     @Operation(summary = "Delete a place by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PlaceResponseExample.class))),
+            @ApiResponse(responseCode = "200", description = "Deleted successfully", content = @Content(schema = @Schema(implementation = PlaceResponseExample.class))),
             @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
     })
     @DeleteMapping("/{id}")
@@ -151,7 +151,7 @@ public class PlaceController {
         return placeService.findTotalRatingByPlace(id);
     }
 
-    @Operation(summary = "See places by user")
+    @Operation(summary = "See places where a user has commented or rated")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceResponseExample.class)))),
             @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
