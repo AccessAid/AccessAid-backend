@@ -1,6 +1,6 @@
 package dev.accessaid.AccessAid.repository;
 
-import dev.accessaid.AccessAid.model.User;
+import dev.accessaid.AccessAid.User.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
