@@ -2,6 +2,7 @@ package dev.accessaid.AccessAid.Ratings.model;
 
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.User.model.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,10 +27,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "rating", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "place_id" }) })
 public class Rating {
 
+    @Schema(example = "1", description = "")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @Schema(example = "4.5", description = "")
     @NotNull
     @Min(1)
     @Max(5)
