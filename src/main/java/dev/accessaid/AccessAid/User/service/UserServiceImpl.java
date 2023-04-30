@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenUtil.generateJwtToken(authentication);
-
         return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
     }
 
