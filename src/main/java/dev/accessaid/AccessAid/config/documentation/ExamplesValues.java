@@ -11,6 +11,7 @@ public class ExamplesValues {
     public static final String API_PLACE_ID = "ChIJDYp7EELQD4gRDzMUL_0DFlU";
 
     public static final String COMMENT = "This place has good accessibility for wheelchair users.";
+
     public static final String COMMENT2 = "This place has good accessibility for wheelchair users.";
 
     public static final String COMMENT2 = "This place has good accessibility for wheelchair users.";
