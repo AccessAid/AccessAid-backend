@@ -25,151 +25,151 @@ import jakarta.transaction.Transactional;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CommentRepositoryTest {
 
-    @Autowired
-    private CommentRepository commentRepository;
+        @Autowired
+        private CommentRepository commentRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Autowired
-    private PlaceRepository placeRepository;
+        @Autowired
+        private PlaceRepository placeRepository;
 
-    private Comment comment;
-    private Comment comment2;
-    private User user;
-    private Place place;
+        private Comment comment;
+        private Comment comment2;
+        private User user;
+        private Place place;
 
-    @BeforeEach
-    void init() {
-        user = User.builder()
-                .id(1)
-                .username(ExamplesValues.USERNAME)
-                .password(ExamplesValues.PASSWORD)
-                .email(ExamplesValues.EMAIL)
-                .build();
-        user = userRepository.save(user);
+        @BeforeEach
+        void init() {
+                user = User.builder()
+                                .id(1)
+                                .username(ExamplesValues.USERNAME)
+                                .password(ExamplesValues.PASSWORD)
+                                .email(ExamplesValues.EMAIL)
+                                .build();
+                user = userRepository.save(user);
 
-        place = Place.builder()
-                .id(1)
-                .latitude(Double.parseDouble(ExamplesValues.LATITUDE))
-                .longitude(Double.parseDouble(ExamplesValues.LONGITUDE))
-                .address(ExamplesValues.ADDRESS)
-                .api_placeId(ExamplesValues.API_PLACE_ID)
-                .totalRating(ExamplesValues.TOTAL_RATING)
-                .build();
-        place = placeRepository.save(place);
+                place = Place.builder()
+                                .id(1)
+                                .latitude(Double.parseDouble(ExamplesValues.LATITUDE))
+                                .longitude(Double.parseDouble(ExamplesValues.LONGITUDE))
+                                .address(ExamplesValues.ADDRESS)
+                                .api_placeId(ExamplesValues.API_PLACE_ID)
+                                .totalRating(ExamplesValues.TOTAL_RATING)
+                                .build();
+                place = placeRepository.save(place);
 
-        comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
+                comment = Comment.builder()
+                                .comment(ExamplesValues.COMMENT)
+                                .user(user)
+                                .place(place)
+                                .build();
 
-        comment2 = Comment.builder()
-                .comment(ExamplesValues.COMMENT2)
-                .user(user)
-                .place(place)
-                .build();
-    }
+                comment2 = Comment.builder()
+                                .comment(ExamplesValues.COMMENT2)
+                                .user(user)
+                                .place(place)
+                                .build();
+        }
 
-    @Test
-    @DisplayName("Save a comment in the database")
-    void testSaveComment() {
-        Comment savedComment = commentRepository.save(comment);
+        @Test
+        @DisplayName("Save a comment in the database")
+        void testSaveComment() {
+                Comment savedComment = commentRepository.save(comment);
 
-        assertNotNull(savedComment);
-        assertNotNull(savedComment.getId());
-        assertEquals(savedComment.getComment(), ExamplesValues.COMMENT);
-        assertEquals(savedComment.getUser(), user);
-        assertEquals(savedComment.getPlace(), place);
+                assertNotNull(savedComment);
+                assertNotNull(savedComment.getId());
+                assertEquals(savedComment.getComment(), ExamplesValues.COMMENT);
+                assertEquals(savedComment.getUser(), user);
+                assertEquals(savedComment.getPlace(), place);
 
-    }
+        }
 
-    @Test
-    @DisplayName("Return all comments from the database")
-    void testFindAllComments() {
-        commentRepository.save(comment);
-        commentRepository.save(comment2);
+        @Test
+        @DisplayName("Return all comments from the database")
+        void testFindAllComments() {
+                commentRepository.save(comment);
+                commentRepository.save(comment2);
 
-        List<Comment> comments = commentRepository.findAll();
-        assertNotNull(comments);
-        assertEquals(2, comments.size());
-    }
+                List<Comment> comments = commentRepository.findAll();
+                assertNotNull(comments);
+                assertEquals(2, comments.size());
+        }
 
-    @Test
-    @DisplayName("Return a comment by Id from the database")
-    void testFindCommentById() {
-        commentRepository.save(comment);
-        Comment commentFound = commentRepository.findById(comment.getId()).orElse(null);
+        @Test
+        @DisplayName("Return a comment by Id from the database")
+        void testFindCommentById() {
+                commentRepository.save(comment);
+                Comment commentFound = commentRepository.findById(comment.getId()).orElse(null);
 
-        assertNotNull(commentFound);
-        assertEquals(commentFound.getComment(), ExamplesValues.COMMENT);
-        assertEquals(commentFound.getUser().getId(), 1);
-        assertEquals(commentFound.getPlace().getId(), 1);
-    }
+                assertNotNull(commentFound);
+                assertEquals(commentFound.getComment(), ExamplesValues.COMMENT);
+                assertEquals(commentFound.getUser().getId(), 1);
+                assertEquals(commentFound.getPlace().getId(), 1);
+        }
 
-    @Test
-    @DisplayName("Save a comment in the database")
-    void testUpdateComment() {
-        Comment commentToUpdate = commentRepository.save(comment);
-        commentToUpdate.setComment(ExamplesValues.COMMENT2);
+        @Test
+        @DisplayName("Save a comment in the database")
+        void testUpdateComment() {
+                Comment commentToUpdate = commentRepository.save(comment);
+                commentToUpdate.setComment(ExamplesValues.COMMENT2);
 
-        Comment savedComment = commentRepository.save(commentToUpdate);
+                Comment savedComment = commentRepository.save(commentToUpdate);
 
-        assertNotNull(savedComment);
-        assertNotNull(savedComment.getId());
-        assertEquals(savedComment.getComment(), ExamplesValues.COMMENT2);
+                assertNotNull(savedComment);
+                assertNotNull(savedComment.getId());
+                assertEquals(savedComment.getComment(), ExamplesValues.COMMENT2);
 
-    }
+        }
 
-    @Test
-    @DisplayName("Delete a comment by Id from the database")
-    @Transactional
-    void testDeleteCommentById() {
-        commentRepository.save(comment);
-        commentRepository.save(comment2);
+        @Test
+        @DisplayName("Delete a comment by Id from the database")
+        @Transactional
+        void testDeleteCommentById() {
+                commentRepository.save(comment);
+                commentRepository.save(comment2);
 
-        List<Comment> comments = commentRepository.findAll();
-        assertEquals(2, comments.size());
+                List<Comment> comments = commentRepository.findAll();
+                assertEquals(2, comments.size());
 
-        commentRepository.deleteById(comment.getId());
+                commentRepository.deleteById(comment.getId());
 
-        commentRepository.flush();
-        Comment deletedComment = commentRepository.findById(comment.getId()).orElse(null);
+                commentRepository.flush();
+                Comment deletedComment = commentRepository.findById(comment.getId()).orElse(null);
 
-        List<Comment> newList = commentRepository.findAll();
-        assertNull(deletedComment);
-        assertEquals(1, newList.size());
-    }
+                List<Comment> newList = commentRepository.findAll();
+                assertNull(deletedComment);
+                assertEquals(1, newList.size());
+        }
 
-    @Test
-    @DisplayName("Return all comments by place from the database")
-    void testFindAllCommentsByPlace() {
-        commentRepository.save(comment);
-        commentRepository.save(comment2);
+        @Test
+        @DisplayName("Return all comments by place from the database")
+        void testFindAllCommentsByPlace() {
+                commentRepository.save(comment);
+                commentRepository.save(comment2);
 
-        List<Comment> comments = commentRepository.findAllCommentsByPlace(place);
-        assertEquals(comments.size(), 2);
-        assertEquals(comments.get(0).getComment(), ExamplesValues.COMMENT);
-        assertEquals(comments.get(1).getComment(), ExamplesValues.COMMENT2);
-        assertEquals(comments.get(0).getPlace(), place);
-        assertEquals(comments.get(1).getPlace(), place);
+                List<Comment> comments = commentRepository.findAllCommentsByPlace(place);
+                assertEquals(comments.size(), 2);
+                assertEquals(comments.get(0).getComment(), ExamplesValues.COMMENT);
+                assertEquals(comments.get(1).getComment(), ExamplesValues.COMMENT2);
+                assertEquals(comments.get(0).getPlace(), place);
+                assertEquals(comments.get(1).getPlace(), place);
 
-    }
+        }
 
-    @Test
-    @DisplayName("Return all comments by user from the database")
-    void testFindAllCommentsByUser() {
-        commentRepository.save(comment);
-        commentRepository.save(comment2);
+        @Test
+        @DisplayName("Return all comments by user from the database")
+        void testFindAllCommentsByUser() {
+                commentRepository.save(comment);
+                commentRepository.save(comment2);
 
-        List<Comment> comments = commentRepository.findAllCommentsByUser(user);
-        assertEquals(comments.size(), 2);
-        assertEquals(comments.get(0).getComment(), ExamplesValues.COMMENT);
-        assertEquals(comments.get(1).getComment(), ExamplesValues.COMMENT2);
-        assertEquals(comments.get(0).getUser(), user);
-        assertEquals(comments.get(1).getUser(), user);
+                List<Comment> comments = commentRepository.findAllCommentsByUser(user);
+                assertEquals(comments.size(), 2);
+                assertEquals(comments.get(0).getComment(), ExamplesValues.COMMENT);
+                assertEquals(comments.get(1).getComment(), ExamplesValues.COMMENT2);
+                assertEquals(comments.get(0).getUser(), user);
+                assertEquals(comments.get(1).getUser(), user);
 
-    }
+        }
 
 }
