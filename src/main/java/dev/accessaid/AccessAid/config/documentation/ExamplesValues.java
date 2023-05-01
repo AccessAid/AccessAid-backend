@@ -11,6 +11,7 @@ public class ExamplesValues {
     public static final String API_PLACE_ID = "ChIJDYp7EELQD4gRDzMUL_0DFlU";
 
     public static final String COMMENT = "This place has good accessibility for wheelchair users.";
+    public static final String COMMENT2 = "This place has good accessibility for wheelchair users.";
 
     public static final String FIRSTNAME = "John";
 
@@ -23,4 +24,10 @@ public class ExamplesValues {
     public static final String USERNAME = "johndoe";
 
     public static final String PASSWORD = "password123";
+
+    public static final Integer USER_ID = 1;
+
+    public static final Integer PLACE_ID = 1;
+
+    public static final double TOTAL_RATING = 4.5;
 }
