@@ -34,9 +34,14 @@ public class CommentRepositoryTest {
     @Autowired
     private PlaceRepository placeRepository;
 
+    private Comment comment;
+    private Comment comment2;
+    private User user;
+    private Place place;
+
     @BeforeEach
-    void setUp() {
-        User user = User.builder()
+    void init() {
+        user = User.builder()
                 .id(1)
                 .username(ExamplesValues.USERNAME)
                 .password(ExamplesValues.PASSWORD)
@@ -44,7 +49,7 @@ public class CommentRepositoryTest {
                 .build();
         user = userRepository.save(user);
 
-        Place place = Place.builder()
+        place = Place.builder()
                 .id(1)
                 .latitude(Double.parseDouble(ExamplesValues.LATITUDE))
                 .longitude(Double.parseDouble(ExamplesValues.LONGITUDE))
@@ -53,19 +58,23 @@ public class CommentRepositoryTest {
                 .totalRating(ExamplesValues.TOTAL_RATING)
                 .build();
         place = placeRepository.save(place);
-    }
 
-    @Test
-    @DisplayName("Save a comment in the database")
-    void testSaveComment() {
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
+        comment = Comment.builder()
                 .comment(ExamplesValues.COMMENT)
                 .user(user)
                 .place(place)
                 .build();
 
+        comment2 = Comment.builder()
+                .comment(ExamplesValues.COMMENT2)
+                .user(user)
+                .place(place)
+                .build();
+    }
+
+    @Test
+    @DisplayName("Save a comment in the database")
+    void testSaveComment() {
         Comment savedComment = commentRepository.save(comment);
 
         assertNotNull(savedComment);
@@ -79,21 +88,7 @@ public class CommentRepositoryTest {
     @Test
     @DisplayName("Return all comments from the database")
     void testFindAllComments() {
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
-
-        comment = commentRepository.save(comment);
-        Comment comment2 = Comment.builder()
-                .comment(ExamplesValues.COMMENT2)
-                .user(user)
-                .place(place)
-                .build();
-
+        commentRepository.save(comment);
         commentRepository.save(comment2);
 
         List<Comment> comments = commentRepository.findAll();
@@ -104,16 +99,9 @@ public class CommentRepositoryTest {
     @Test
     @DisplayName("Return a comment by Id from the database")
     void testFindCommentById() {
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
-
-        comment = commentRepository.save(comment);
+        commentRepository.save(comment);
         Comment commentFound = commentRepository.findById(comment.getId()).orElse(null);
+
         assertNotNull(commentFound);
         assertEquals(commentFound.getComment(), ExamplesValues.COMMENT);
         assertEquals(commentFound.getUser().getId(), 1);
@@ -123,13 +111,6 @@ public class CommentRepositoryTest {
     @Test
     @DisplayName("Save a comment in the database")
     void testUpdateComment() {
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
         Comment commentToUpdate = commentRepository.save(comment);
         commentToUpdate.setComment(ExamplesValues.COMMENT2);
 
@@ -145,22 +126,7 @@ public class CommentRepositoryTest {
     @DisplayName("Delete a comment by Id from the database")
     @Transactional
     void testDeleteCommentById() {
-
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
-
-        comment = commentRepository.save(comment);
-        Comment comment2 = Comment.builder()
-                .comment(ExamplesValues.COMMENT2)
-                .user(user)
-                .place(place)
-                .build();
-
+        commentRepository.save(comment);
         commentRepository.save(comment2);
 
         List<Comment> comments = commentRepository.findAll();
@@ -179,21 +145,7 @@ public class CommentRepositoryTest {
     @Test
     @DisplayName("Return all comments by place from the database")
     void testFindAllCommentsByPlace() {
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
-
-        comment = commentRepository.save(comment);
-        Comment comment2 = Comment.builder()
-                .comment(ExamplesValues.COMMENT2)
-                .user(user)
-                .place(place)
-                .build();
-
+        commentRepository.save(comment);
         commentRepository.save(comment2);
 
         List<Comment> comments = commentRepository.findAllCommentsByPlace(place);
@@ -208,21 +160,7 @@ public class CommentRepositoryTest {
     @Test
     @DisplayName("Return all comments by user from the database")
     void testFindAllCommentsByUser() {
-        User user = userRepository.findById(1).orElse(null);
-        Place place = placeRepository.findById(1).orElse(null);
-        Comment comment = Comment.builder()
-                .comment(ExamplesValues.COMMENT)
-                .user(user)
-                .place(place)
-                .build();
-
-        comment = commentRepository.save(comment);
-        Comment comment2 = Comment.builder()
-                .comment(ExamplesValues.COMMENT2)
-                .user(user)
-                .place(place)
-                .build();
-
+        commentRepository.save(comment);
         commentRepository.save(comment2);
 
         List<Comment> comments = commentRepository.findAllCommentsByUser(user);
