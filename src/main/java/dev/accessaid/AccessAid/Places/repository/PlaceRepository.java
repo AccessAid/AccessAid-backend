@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.Places.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +30,7 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
 
     @Query(value = "SELECT r FROM Place p JOIN p.ratings r WHERE p.id = ?1")
     List<Rating> findAllRatingsByPlace(Integer placeId);
+
+    Optional<Place> findByLatitudeAndLongitude(double latitude, double longitude);
 
 }

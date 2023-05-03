@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Profile.model.Profile;
@@ -12,15 +19,61 @@ import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
+import dev.accessaid.AccessAid.security.jwt.JwtTokenUtil;
+import dev.accessaid.AccessAid.security.payload.JwtResponse;
+import dev.accessaid.AccessAid.security.payload.LoginRequest;
+import dev.accessaid.AccessAid.security.payload.MessageResponse;
+import dev.accessaid.AccessAid.security.payload.RegisterRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private AuthenticationManager authManager;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Override
+    public ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest) {
+
+        if (userRepository.existsByUsername(signUpRequest.getUsername()))
+            return new ResponseEntity<>(new MessageResponse("username already exists"), HttpStatus.BAD_REQUEST);
+
+        if (userRepository.existsByEmail(signUpRequest.getEmail()))
+            return new ResponseEntity<>(new MessageResponse("email already exists"), HttpStatus.BAD_REQUEST);
+
+        User newUser = new User();
+        newUser.setEmail(signUpRequest.getEmail());
+        newUser.setUsername(signUpRequest.getUsername());
+        newUser.setPassword(encoder.encode(signUpRequest.getPassword()));
+        userRepository.save(newUser);
+        // User user = new User(null, signUpRequest.getUsername(),
+        // signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
+        // userRepository.save(user);
+
+        return new ResponseEntity<>(new MessageResponse("user was registered correctly"), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest) {
+
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtTokenUtil.generateJwtToken(authentication);
+        return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
+    }
 
     @Override
     public List<User> getUsers() {

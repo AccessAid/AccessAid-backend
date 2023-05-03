@@ -1,8 +1,7 @@
 package dev.accessaid.AccessAid.security.config;
 
-import dev.accessaid.AccessAid.security.jwt.JwtAuthEntryPoint;
-import dev.accessaid.AccessAid.security.jwt.JwtRequestFilter;
-import dev.accessaid.AccessAid.security.service.UserDetailsServiceImpl;
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import dev.accessaid.AccessAid.User.service.UserDetailsServiceImpl;
+import dev.accessaid.AccessAid.security.jwt.JwtAuthEntryPoint;
+import dev.accessaid.AccessAid.security.jwt.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +24,8 @@ public class SecurityConfig {
 
     private JwtAuthEntryPoint unauthorizedHandler;
 
-    @Bean JwtAuthEntryPoint unauthorizedHandler() {
+    @Bean
+    public JwtAuthEntryPoint unauthorizedHandler() {
         return new JwtAuthEntryPoint();
     }
 
@@ -38,9 +40,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -55,8 +59,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .httpBasic(withDefaults());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

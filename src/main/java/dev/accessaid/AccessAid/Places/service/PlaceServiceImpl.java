@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
-import dev.accessaid.AccessAid.Geolocation.controller.GeolocationController;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
+import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.Ratings.response.TotalRatingResponse;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
@@ -31,7 +31,7 @@ public class PlaceServiceImpl implements PlaceService {
     private UserRepository userRepository;
 
     @Autowired
-    private GeolocationController geolocationController;
+    private GeolocationUtils geolocationUtils;
 
     @Override
     public List<Place> findAllPlaces() {
@@ -41,68 +41,42 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Place findPlaceById(Integer id) throws PlaceNotFoundException {
         Optional<Place> placeOptional = placeRepository.findById(id);
-        if (placeOptional.isPresent()) {
-            return placeOptional.get();
-        } else {
-            throw new PlaceNotFoundException("Place with ID " + id + " not found");
-        }
+        return placeOptional.orElseThrow(() -> new PlaceNotFoundException("Place with ID " + id + " not found"));
     }
 
     @Override
     public Place createPlace(PlaceRequest request) throws PlaceSaveException {
-        GeolocationResponse response;
-        String address = request.getAddress();
-        if (address == null && (request.getLatitude() == null && request.getLongitude() == null)) {
-            throw new PlaceSaveException("Missing address or coordinates");
-        } else if (address != null) {
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByAddress(address);
-            if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
-                throw new PlaceSaveException("Place not found for address: " + address);
-            }
-            response = (GeolocationResponse) geolocationResponseEntity.getBody();
-
-        } else {
-            double latitude = request.getLatitude();
-            double longitude = request.getLongitude();
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
-                    longitude);
-            if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
-                throw new PlaceSaveException(
-                        "Place not found for coordinates: " + latitude + "," + longitude);
-            }
-            response = (GeolocationResponse) geolocationResponseEntity.getBody();
+        GeolocationResponse response = geolocationUtils.getGeolocationByAddressOrCoordinates(request);
+        Optional<Place> existingPlace = placeRepository.findByLatitudeAndLongitude(response.getLatitude(),
+                response.getLongitude());
+        if (existingPlace.isPresent()) {
+            throw new PlaceSaveException("Place already exists");
         }
         Place newPlace = new Place(response);
-        try {
-            placeRepository.save(newPlace);
-        } catch (Exception e) {
-            throw new PlaceSaveException("Error saving place to database");
-        }
+
+        placeRepository.save(newPlace);
         return newPlace;
     }
 
     @Override
     public Place removePlace(Integer id) throws PlaceNotFoundException {
-        Optional<Place> placeOptional = placeRepository.findById(id);
-        if (placeOptional.isPresent()) {
-            placeRepository.deleteById(id);
-            return placeOptional.get();
-        } else {
-            throw new PlaceNotFoundException("Place with ID " + id + " not found");
-        }
+        Place placeToRemove = placeRepository.findById(id)
+                .orElseThrow(() -> new PlaceNotFoundException("Place with ID " + id + " not found"));
+        placeRepository.deleteById(id);
+        return placeToRemove;
+
     }
 
     @Override
     public List<Place> findPlacesByUser(Integer userId) throws UserNotFoundException {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (!optionalUser.isPresent()) {
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
-        return optionalUser.get().getPlaces();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId))
+                .getPlaces();
+
     }
 
     @Override
-    public List<User> findUsersByPlace(Integer placeId) throws PlaceNotFoundException {
+    public List<User> findUsersByPlace(Integer placeId) throws PlaceNotFoundException, UserNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
@@ -111,7 +85,7 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException {
+    public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException, CommentNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
@@ -120,16 +94,18 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public double findTotalRatingByPlace(Integer placeId) throws PlaceNotFoundException {
+    public TotalRatingResponse findTotalRatingByPlace(Integer placeId) throws PlaceNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
         }
-        return optionalPlace.get().getTotalRating();
+        double totalRating = optionalPlace.get().getTotalRating();
+        TotalRatingResponse totalRatingResponse = new TotalRatingResponse(placeId, totalRating);
+        return totalRatingResponse;
     }
 
     @Override
-    public List<Rating> findAllRatingsByPlace(Integer placeId) throws PlaceNotFoundException {
+    public List<Rating> findAllRatingsByPlace(Integer placeId) throws PlaceNotFoundException, RatingNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);

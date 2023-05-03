@@ -14,9 +14,9 @@ public class UserResponse {
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("email")
-    private String email;
-
     @JsonProperty("username")
     private String username;
+
+    @JsonProperty("email")
+    private String email;
 }

@@ -8,6 +8,7 @@ import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.Ratings.response.TotalRatingResponse;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 
@@ -26,7 +27,7 @@ public interface PlaceService {
 
     List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException;
 
-    double findTotalRatingByPlace(Integer placeId) throws PlaceNotFoundException;
+    TotalRatingResponse findTotalRatingByPlace(Integer placeId) throws PlaceNotFoundException;
 
     List<Rating> findAllRatingsByPlace(Integer placeId) throws PlaceNotFoundException;
 }

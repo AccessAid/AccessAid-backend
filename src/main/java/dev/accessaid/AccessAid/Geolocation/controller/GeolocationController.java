@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Geolocation.Response.ErrorResponse;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 import dev.accessaid.AccessAid.Geolocation.service.GeolocationService;
+import dev.accessaid.AccessAid.config.ErrorResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Geolocation", description = "Geolocation information by address or coordinates")
