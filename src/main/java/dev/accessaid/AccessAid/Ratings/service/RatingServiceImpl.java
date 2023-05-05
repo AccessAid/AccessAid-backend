@@ -63,23 +63,6 @@ public class RatingServiceImpl implements RatingService {
 
         return savedRating;
 
-        User user = userRepository.findById(rating.getUser().getId())
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + rating.getUser().getId()));
-
-        Place place = placeRepository.findById(rating.getPlace().getId())
-                .orElseThrow(() -> new PlaceNotFoundException("Place not found with id: " + rating.getPlace().getId()));
-
-        Rating savedRating = ratingRepository.save(rating);
-
-        place.addRating(savedRating);
-
-        if (!place.getUsers().contains(user)) {
-            place.getUsers().add(user);
-            placeRepository.save(place);
-        }
-
-        return savedRating;
-
     }
 
     @Override
