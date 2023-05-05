@@ -14,8 +14,6 @@ public class ExamplesValues {
 
     public static final String COMMENT2 = "This place has good accessibility for wheelchair users.";
 
-    public static final String COMMENT2 = "This place has good accessibility for wheelchair users.";
-
     public static final String FIRSTNAME = "John";
 
     public static final String LASTNAME = "Doe";
