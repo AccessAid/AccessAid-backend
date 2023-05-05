@@ -23,4 +23,6 @@ public class ExamplesValues {
     public static final String USERNAME = "johndoe";
 
     public static final String PASSWORD = "password123";
+
+    public static final String REGISTER_MESSAGE = "user was registered correctly";
 }
