@@ -27,6 +27,7 @@ import dev.accessaid.AccessAid.User.utils.UserMapper;
 import dev.accessaid.AccessAid.config.ErrorResponse;
 import dev.accessaid.AccessAid.config.documentation.Users.UserRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Users.UserResponseExample;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -70,6 +71,7 @@ public class UserController {
 
     }
 
+    @Hidden
     @PostMapping("")
     public ResponseEntity<?> addUser(@RequestBody User user) {
         try {
