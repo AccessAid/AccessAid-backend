@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.response.CommentResponse;
-import dev.accessaid.AccessAid.Comments.service.CommentServiceImp;
+import dev.accessaid.AccessAid.Comments.service.CommentServiceImpl;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
@@ -40,7 +40,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CommentController {
 
     @Autowired
-    private CommentServiceImp commentService;
+    private CommentServiceImpl commentService;
 
     @Autowired
     private UserService userService;

@@ -19,7 +19,7 @@ import dev.accessaid.AccessAid.User.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
 @Service
-public class CommentServiceImp implements CommentService {
+public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentRepository commentRepository;

@@ -24,6 +24,7 @@ public class GeolocationControllerTest {
     private static final double LATITUDE = 42.0339357;
     private static final double LONGITUDE = -87.6721867;
     private static final String PLACE_ID = "ChIJDYp7EELQD4gRDzMUL_0DFlU";
+    private static final String ERROR_MESSAGE = "Error";
 
     @Mock
     private GeolocationService geolocationService;
@@ -77,24 +78,26 @@ public class GeolocationControllerTest {
 
     @Test
     public void testGetGeolocationByAddressThrowsException() throws Exception {
-        Mockito.when(geolocationService.getGeolocationByAddress(FORMATTED_ADDRESS)).thenThrow(new Exception());
+        Mockito.when(geolocationService.getGeolocationByAddress(FORMATTED_ADDRESS))
+                .thenThrow(new Exception(ERROR_MESSAGE));
 
         mockMvc.perform(get("/api/geolocation/byaddress")
                 .param("address",
                         FORMATTED_ADDRESS))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.message").value("Error"));
+                .andExpect(jsonPath("$.message").value(ERROR_MESSAGE));
     }
 
     @Test
     public void testGetGeolocationByCoordinatesThrowsException() throws Exception {
-        Mockito.when(geolocationService.getGeolocationByCoordinates(LATITUDE, LONGITUDE)).thenThrow(new Exception());
+        Mockito.when(geolocationService.getGeolocationByCoordinates(LATITUDE, LONGITUDE)).thenThrow(new Exception(
+                ERROR_MESSAGE));
 
         mockMvc.perform(get("/api/geolocation/bycoordinates")
                 .param("latitude", String.valueOf(LATITUDE))
                 .param("longitude", String.valueOf(LONGITUDE)))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.message").value("Error"));
+                .andExpect(jsonPath("$.message").value(ERROR_MESSAGE));
     }
 
 }

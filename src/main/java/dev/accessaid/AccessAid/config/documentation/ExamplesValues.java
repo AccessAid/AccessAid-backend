@@ -12,6 +12,8 @@ public class ExamplesValues {
 
     public static final String COMMENT = "This place has good accessibility for wheelchair users.";
 
+    public static final String COMMENT2 = "This place has good accessibility for wheelchair users.";
+
     public static final String FIRSTNAME = "John";
 
     public static final String LASTNAME = "Doe";
@@ -24,5 +26,12 @@ public class ExamplesValues {
 
     public static final String PASSWORD = "password123";
 
+    public static final Integer USER_ID = 1;
+
+    public static final Integer PLACE_ID = 1;
+
+    public static final double TOTAL_RATING = 4.5;
+
     public static final String REGISTER_MESSAGE = "user was registered correctly";
+
 }
