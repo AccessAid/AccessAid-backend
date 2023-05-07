@@ -2,12 +2,16 @@ package dev.accessaid.AccessAid.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.User.service.UserService;
+import dev.accessaid.AccessAid.config.documentation.Users.LoginRequestExample;
+import dev.accessaid.AccessAid.config.documentation.Users.MessageResponseAUTHExample;
+import dev.accessaid.AccessAid.config.documentation.Users.UserRequestExample;
 import dev.accessaid.AccessAid.security.payload.JwtResponse;
 import dev.accessaid.AccessAid.security.payload.LoginRequest;
 import dev.accessaid.AccessAid.security.payload.MessageResponse;
@@ -30,19 +34,20 @@ public class UserAuthController {
                 this.userService = userService;
         }
 
-        @Operation(summary = "Registro de usuarios", description = "Registrar un nuevo usuario")
+        @Operation(summary = "User registration", description = "Register a new user")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "201", description = "user was registered correctly", content = {
-                                        @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))
+                                        @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponseAUTHExample.class))
                         }),
                         @ApiResponse(responseCode = "400", description = "Bad Request"),
         })
         @PostMapping("/register")
-        public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
+        public ResponseEntity<MessageResponse> registerUser(
+                        @Valid @RequestBody @Schema(implementation = UserRequestExample.class) RegisterRequest signUpRequest) {
                 return userService.registerUser(signUpRequest);
         }
 
-        @Operation(summary = "Autenticacion de usuarios", description = "Autenticar un usuario")
+        @Operation(summary = "User login", description = "User authentication")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Ok", content = {
                                         @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))
@@ -50,7 +55,8 @@ public class UserAuthController {
                         @ApiResponse(responseCode = "401", description = "unauthorized"),
         })
         @PostMapping("/login")
-        public ResponseEntity<JwtResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+        public ResponseEntity<JwtResponse> loginUser(
+                        @RequestBody @Validated @Schema(implementation = LoginRequestExample.class) LoginRequest loginRequest) {
                 return userService.loginUser((loginRequest));
         }
 }

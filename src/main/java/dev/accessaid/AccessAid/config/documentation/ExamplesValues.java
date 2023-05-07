@@ -31,4 +31,7 @@ public class ExamplesValues {
     public static final Integer PLACE_ID = 1;
 
     public static final double TOTAL_RATING = 4.5;
+
+    public static final String REGISTER_MESSAGE = "user was registered correctly";
+
 }
