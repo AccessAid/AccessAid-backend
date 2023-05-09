@@ -14,4 +14,7 @@ public class UserResponseExample {
 
     @Schema(description = "User username", example = "username")
     private String username;
+
+    @Schema(description = "User profile", example = "1")
+    private Integer profile_id;
 }
