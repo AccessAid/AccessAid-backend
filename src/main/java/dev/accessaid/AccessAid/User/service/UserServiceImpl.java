@@ -57,10 +57,6 @@ public class UserServiceImpl implements UserService {
         newUser.setUsername(signUpRequest.getUsername());
         newUser.setPassword(encoder.encode(signUpRequest.getPassword()));
         userRepository.save(newUser);
-        // User user = new User(null, signUpRequest.getUsername(),
-        // signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
-        // userRepository.save(user);
-
         return new ResponseEntity<>(new MessageResponse("user was registered correctly"), HttpStatus.CREATED);
     }
 
@@ -105,7 +101,19 @@ public class UserServiceImpl implements UserService {
         if (!userToChange.isPresent()) {
             throw new UserNotFoundException("User not found");
         }
-        return userRepository.save(user);
+
+        User existingUser = userToChange.get();
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
+        }
+        if (user.getUsername() != null) {
+            existingUser.setUsername(user.getUsername());
+        }
+        if (user.getPassword() != null) {
+            existingUser.setPassword(encoder.encode(user.getPassword()));
+        }
+
+        return userRepository.save(existingUser);
     }
 
     @Override

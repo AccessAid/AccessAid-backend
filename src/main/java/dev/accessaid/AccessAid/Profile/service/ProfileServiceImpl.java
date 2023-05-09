@@ -60,8 +60,21 @@ public class ProfileServiceImpl implements ProfileService {
         if (!profileToUpdate.isPresent()) {
             throw new ProfileNotFoundException("Profile not found");
         }
+
+        Profile existingProfile = profileToUpdate.get();
+
+        if (profile.getFirstName() != null) {
+            existingProfile.setFirstName(profile.getFirstName());
+        }
+        if (profile.getLastName() != null) {
+            existingProfile.setLastName(profile.getLastName());
+        }
+        if (profile.getAvatarPath() != null) {
+            existingProfile.setAvatarPath(profile.getAvatarPath());
+        }
+
         try {
-            return profileRepository.save(profile);
+            return profileRepository.save(existingProfile);
         } catch (Exception e) {
             throw new ProfileSaveException("Error saving profile");
         }
