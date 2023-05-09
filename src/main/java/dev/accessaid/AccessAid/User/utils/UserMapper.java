@@ -9,10 +9,17 @@ import dev.accessaid.AccessAid.User.response.UserResponse;
 public class UserMapper {
 
     public static UserResponse toUserResponse(User user) {
+        Integer profileId = null;
+        if (user.getProfile() != null) {
+            profileId = user.getProfile().getId();
+        }
+
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),
-                user.getEmail());
+                user.getEmail(),
+                profileId);
+
     }
 
     public static List<UserResponse> toUserResponses(List<User> users) {
