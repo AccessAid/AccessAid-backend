@@ -145,6 +145,20 @@ public class CommentController {
 
     }
 
+    @Operation(summary = "See all comments that have been made about a place")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
+    })
+    @GetMapping("/place/{placeId}/paged")
+    public Page<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId,
+            @Parameter(hidden = true) Pageable pageable) {
+        Place place = placeService.findPlaceById(placeId);
+        Page<Comment> placesComments = commentService.getCommentsByPlace(place, pageable);
+        return CommentMapper.toCommentResponses(placesComments, pageable);
+
+    }
+
     @Operation(summary = "See all comments that a user has made")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
@@ -155,6 +169,20 @@ public class CommentController {
         User user = userService.getUserById(userId);
         List<Comment> comments = commentService.getCommentsByUser(user);
         return CommentMapper.toCommentResponses(comments);
+
+    }
+
+    @Operation(summary = "See all comments that a user has made")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
+    })
+    @GetMapping("/user/{userId}/paged")
+    public Page<CommentResponse> seeCommentsByUser(@PathVariable Integer userId,
+            @Parameter(hidden = true) Pageable pageable) {
+        User user = userService.getUserById(userId);
+        Page<Comment> comments = commentService.getCommentsByUser(user, pageable);
+        return CommentMapper.toCommentResponses(comments, pageable);
 
     }
 

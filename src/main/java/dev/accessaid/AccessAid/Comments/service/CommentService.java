@@ -27,5 +27,9 @@ public interface CommentService {
 
     List<Comment> getCommentsByPlace(Place place) throws CommentNotFoundException;
 
+    Page<Comment> getCommentsByPlace(Place place, Pageable pageable) throws CommentNotFoundException;
+
     List<Comment> getCommentsByUser(User user) throws CommentNotFoundException;
+
+    Page<Comment> getCommentsByUser(User user, Pageable pageable) throws CommentNotFoundException;
 };
