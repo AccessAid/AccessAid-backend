@@ -3,6 +3,8 @@ package dev.accessaid.AccessAid.Comments.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,6 +59,17 @@ public class CommentController {
     public List<CommentResponse> seeAllComments() {
         List<Comment> comments = commentService.getComments();
         return CommentMapper.toCommentResponses(comments);
+    }
+
+    @Operation(summary = "See a list of comments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("/paged")
+    public Page<CommentResponse> seeAllComments(Pageable pageable) {
+        Page<Comment> comments = commentService.getComments(pageable);
+        return CommentMapper.toCommentResponses(comments, pageable);
     }
 
     @Operation(summary = "See a comment by id")

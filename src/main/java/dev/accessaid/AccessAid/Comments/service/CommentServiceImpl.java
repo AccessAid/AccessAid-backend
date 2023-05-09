@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
@@ -31,9 +33,14 @@ public class CommentServiceImpl implements CommentService {
     private PlaceRepository placeRepository;
 
     @Override
-    public List<Comment> getComments() {
+    public List<Comment> getComments() throws CommentNotFoundException {
         return commentRepository.findAll();
 
+    }
+
+    @Override
+    public Page<Comment> getComments(Pageable pageable) throws CommentNotFoundException {
+        return commentRepository.findAll(pageable);
     }
 
     @Override

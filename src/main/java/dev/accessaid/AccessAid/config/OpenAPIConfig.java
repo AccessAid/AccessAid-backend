@@ -3,6 +3,8 @@ package dev.accessaid.AccessAid.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -17,10 +19,15 @@ public class OpenAPIConfig {
         @Value("http://localhost:8080")
         private String devUrl;
 
+        @Value("${api.pagination.default-size}")
+        private int defaultPageSize;
+
         final String securitySchemeName = "bearerAuth";
 
         @Bean
         public OpenAPI openAPI() {
+                Pageable defaultPageable = PageRequest.of(0, defaultPageSize);
+
                 return new OpenAPI()
                                 .info(new io.swagger.v3.oas.models.info.Info()
                                                 .title("AccessAid API")
@@ -40,6 +47,8 @@ public class OpenAPIConfig {
                                                                 .type(SecurityScheme.Type.HTTP)
                                                                 .scheme("bearer")
                                                                 .bearerFormat("JWT")));
+                // .extensions(Collections
+                // .singletonList(new OpenApiCustomPageableExtension(defaultPageable)));
 
         }
 
