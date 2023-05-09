@@ -33,7 +33,7 @@ public class RatingServiceImpl implements RatingService {
     private PlaceRepository placeRepository;
 
     @Override
-    public List<Rating> getAllRatings() {
+    public List<Rating> getAllRatings() throws RatingNotFoundException {
         return ratingRepository.findAll();
 
     }
