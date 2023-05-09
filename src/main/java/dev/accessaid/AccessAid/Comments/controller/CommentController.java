@@ -29,6 +29,7 @@ import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentResponseExample;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -67,7 +68,8 @@ public class CommentController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping("/paged")
-    public Page<CommentResponse> seeAllComments(Pageable pageable) {
+    public Page<CommentResponse> seeAllComments(
+            @Parameter(hidden = true) Pageable pageable) {
         Page<Comment> comments = commentService.getComments(pageable);
         return CommentMapper.toCommentResponses(comments, pageable);
     }
