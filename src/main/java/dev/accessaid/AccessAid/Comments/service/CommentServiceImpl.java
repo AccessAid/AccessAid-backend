@@ -12,6 +12,7 @@ import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.repository.CommentRepository;
+import dev.accessaid.AccessAid.Comments.utils.CommentUtils;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
@@ -67,6 +68,16 @@ public class CommentServiceImpl implements CommentService {
         if (!place.getUsers().contains(user)) {
             place.getUsers().add(user);
             placeRepository.save(place);
+        }
+
+        if (comment.getReplyToComment() != null) {
+            Comment replyToComment = comment.getReplyToComment();
+            if (replyToComment.getId() != null) {
+                Comment repliedComment = commentRepository.findById(replyToComment.getId())
+                        .orElseThrow(() -> new CommentNotFoundException("Reply-to comment not found"));
+
+                CommentUtils.setRepliedCommentAndReplyToComment(repliedComment, savedComment, commentRepository);
+            }
         }
 
         return savedComment;
