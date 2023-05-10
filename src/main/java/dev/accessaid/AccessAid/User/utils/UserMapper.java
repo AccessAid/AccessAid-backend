@@ -7,22 +7,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import dev.accessaid.AccessAid.Profile.model.Profile;
+import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
+import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.response.UserResponse;
 
 public class UserMapper {
 
     public static UserResponse toUserResponse(User user) {
-        Integer profileId = null;
+        ProfileResponse profileResponse = null;
         if (user.getProfile() != null) {
-            profileId = user.getProfile().getId();
+            Profile profile = user.getProfile();
+            profileResponse = ProfileMapper.toProfileResponse(profile);
         }
 
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                profileId);
+                profileResponse);
 
     }
 
