@@ -1,6 +1,5 @@
 package dev.accessaid.AccessAid.config;
 
-import java.net.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,29 +35,37 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PlaceSaveException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Place save failed.")
-    public ErrorResponse handlePlaceSaveException(PlaceSaveException e) {
-        return new ErrorResponse(e.getMessage());
+    //@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Place save failed.")
+    public ResponseEntity<ErrorResponse> handlePlaceSaveException(PlaceSaveException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PlaceNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Place not found.")
+    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Place not found.")
     @ResponseBody
-    public ErrorResponse handlePlaceNotFoundException(PlaceNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handlePlaceNotFoundException(PlaceNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User not found.")
-    public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User not found.")
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Comment not found.")
+    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Comment not found.")
     @ResponseBody
-    public ErrorResponse handleCommentNotFoundException(CommentNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CommentSaveException.class)
