@@ -1,11 +1,13 @@
 package dev.accessaid.AccessAid.config.documentation.Comments;
 
+import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.config.documentation.ExamplesValues;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -25,4 +27,9 @@ public class CommentRequestExample {
     @ManyToOne
     @JoinColumn(name = "place_id")
     Place place;
+
+    @Schema(description = "replyToComment", example = "{\"id\":1}")
+    @OneToOne
+    @JoinColumn(name = "reply_to_comment_id")
+    Comment replyToComment;
 }
