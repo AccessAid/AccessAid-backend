@@ -34,4 +34,16 @@ public class ExamplesValues {
 
     public static final String REGISTER_MESSAGE = "user was registered correctly";
 
+    public static final String STREET_ADDRESS = "123 Main St";
+
+    public static final String CITY = "Evanston";
+
+    public static final String COUNTRY = "Spain";
+
+    public static final String PHONE = "123-456-789";
+
+    public static final String ZIPCODE = "60202";
+
+    public static final String ABOUT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
 }
