@@ -3,6 +3,8 @@ package dev.accessaid.AccessAid.Comments.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +28,7 @@ import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentResponseExample;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,10 +56,22 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @GetMapping("")
+    @Hidden
+    @GetMapping("/uppaged")
     public List<CommentResponse> seeAllComments() {
         List<Comment> comments = commentService.getComments();
         return CommentMapper.toCommentResponses(comments);
+    }
+
+    @Operation(summary = "See a list of comments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("")
+    public Page<CommentResponse> seeAllComments(Pageable pageable) {
+        Page<Comment> comments = commentService.getComments(pageable);
+        return CommentMapper.toCommentResponses(comments, pageable);
     }
 
     @Operation(summary = "See a comment by id")
@@ -122,11 +137,40 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
             @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
     })
-    @GetMapping("/place/{placeId}")
+    @Hidden
+    @GetMapping("/place/{placeId}/unpaged")
     public List<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId) {
         Place place = placeService.findPlaceById(placeId);
         List<Comment> placesComments = commentService.getCommentsByPlace(place);
         return CommentMapper.toCommentResponses(placesComments);
+
+    }
+
+    @Operation(summary = "See all comments that have been made about a place")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
+    })
+    @GetMapping("/place/{placeId}")
+    public Page<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId,
+            Pageable pageable) {
+        Place place = placeService.findPlaceById(placeId);
+        Page<Comment> placesComments = commentService.getCommentsByPlace(place, pageable);
+        return CommentMapper.toCommentResponses(placesComments, pageable);
+
+    }
+
+    @Operation(summary = "See all comments that a user has made")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
+            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
+    })
+    @Hidden
+    @GetMapping("/user/{userId}/unpaged")
+    public List<CommentResponse> seeCommentsByUser(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        List<Comment> comments = commentService.getCommentsByUser(user);
+        return CommentMapper.toCommentResponses(comments);
 
     }
 
@@ -136,10 +180,11 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
     })
     @GetMapping("/user/{userId}")
-    public List<CommentResponse> seeCommentsByUser(@PathVariable Integer userId) {
+    public Page<CommentResponse> seeCommentsByUser(@PathVariable Integer userId,
+            Pageable pageable) {
         User user = userService.getUserById(userId);
-        List<Comment> comments = commentService.getCommentsByUser(user);
-        return CommentMapper.toCommentResponses(comments);
+        Page<Comment> comments = commentService.getCommentsByUser(user, pageable);
+        return CommentMapper.toCommentResponses(comments, pageable);
 
     }
 

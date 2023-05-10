@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
@@ -24,8 +26,13 @@ public class ProfileServiceImpl implements ProfileService {
     UserRepository userRepository;
 
     @Override
-    public List<Profile> getAllProfiles() {
+    public List<Profile> getAllProfiles() throws ProfileNotFoundException {
         return profileRepository.findAll();
+    }
+
+    @Override
+    public Page<Profile> getAllProfiles(Pageable pageable) throws ProfileNotFoundException {
+        return profileRepository.findAll(pageable);
     }
 
     @Override

@@ -3,6 +3,8 @@ package dev.accessaid.AccessAid.Profile.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,7 @@ import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileResponseExample;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,10 +51,23 @@ public class ProfileController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @GetMapping("")
+    @Hidden
+    @GetMapping("/unpaged")
     public List<ProfileResponse> seeAllProfiles() {
         List<Profile> profiles = profileService.getAllProfiles();
         return ProfileMapper.toProfileResponses(profiles);
+
+    }
+
+    @Operation(summary = "See a list of profiles")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("")
+    public Page<ProfileResponse> seeAllProfiles(Pageable pageable) {
+        Page<Profile> profiles = profileService.getAllProfiles(pageable);
+        return ProfileMapper.toProfileResponses(profiles, pageable);
 
     }
 

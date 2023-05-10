@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
+@Import(PageableConfig.class)
 public class OpenAPIConfig {
 
         @Value("http://localhost:8080")
@@ -21,6 +23,7 @@ public class OpenAPIConfig {
 
         @Bean
         public OpenAPI openAPI() {
+
                 return new OpenAPI()
                                 .info(new io.swagger.v3.oas.models.info.Info()
                                                 .title("AccessAid API")

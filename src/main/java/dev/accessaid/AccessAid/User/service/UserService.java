@@ -2,6 +2,8 @@ package dev.accessaid.AccessAid.User.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import dev.accessaid.AccessAid.Profile.model.Profile;
@@ -18,7 +20,9 @@ public interface UserService {
 
     ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest);
 
-    List<User> getUsers();
+    List<User> getUsers() throws UserNotFoundException;
+
+    Page<User> getUsers(Pageable pageable) throws UserNotFoundException;
 
     User getUserById(Integer id) throws UserNotFoundException;
 
