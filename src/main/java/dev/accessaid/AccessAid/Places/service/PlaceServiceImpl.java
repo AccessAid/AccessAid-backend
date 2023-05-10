@@ -124,7 +124,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Page<Comment> findCommentsByPlace(Integer placeId, Pageable pageable)
-            throws PlaceNotFoundException, CommentNotFoundException {
+            throws PlaceNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
@@ -156,7 +156,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Page<Rating> findAllRatingsByPlace(Integer placeId, Pageable pageable)
-            throws PlaceNotFoundException, RatingNotFoundException {
+            throws PlaceNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
