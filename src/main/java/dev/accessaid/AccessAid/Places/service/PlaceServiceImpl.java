@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
@@ -17,7 +16,6 @@ import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
-import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.TotalRatingResponse;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -115,7 +113,8 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException, CommentNotFoundException {
+    public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException {
+
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
@@ -146,7 +145,7 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Rating> findAllRatingsByPlace(Integer placeId) throws PlaceNotFoundException, RatingNotFoundException {
+    public List<Rating> findAllRatingsByPlace(Integer placeId) throws PlaceNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);

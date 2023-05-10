@@ -12,12 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class PlaceSaveException extends RuntimeException {
-
-    private static final String DEFAULT_MESSAGE = "Error saving place.";
-
-    String message = DEFAULT_MESSAGE;
+    private String message;
 
     public PlaceSaveException(String message) {
         super(message);
+        this.message = message;
     }
 }
