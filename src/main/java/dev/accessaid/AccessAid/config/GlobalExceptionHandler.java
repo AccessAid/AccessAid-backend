@@ -35,7 +35,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PlaceSaveException.class)
-    //@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Place save failed.")
     public ResponseEntity<ErrorResponse> handlePlaceSaveException(PlaceSaveException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
@@ -43,7 +42,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PlaceNotFoundException.class)
-    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Place not found.")
     @ResponseBody
     public ResponseEntity<ErrorResponse> handlePlaceNotFoundException(PlaceNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
@@ -52,7 +50,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User not found.")
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
@@ -60,7 +57,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
-    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Comment not found.")
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
