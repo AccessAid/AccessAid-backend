@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
@@ -31,8 +33,14 @@ public class RatingServiceImpl implements RatingService {
     private PlaceRepository placeRepository;
 
     @Override
-    public List<Rating> getAllRatings() {
+    public List<Rating> getAllRatings() throws RatingNotFoundException {
         return ratingRepository.findAll();
+
+    }
+
+    @Override
+    public Page<Rating> getAllRatings(Pageable pageable) throws RatingNotFoundException {
+        return ratingRepository.findAll(pageable);
 
     }
 
@@ -91,8 +99,19 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    public Page<Rating> getRatingByUser(User user, Pageable pageable) throws UserNotFoundException {
+        return ratingRepository.findByUser(user, pageable);
+
+    }
+
+    @Override
     public List<Rating> getRatingByPlace(Place place) throws PlaceNotFoundException {
         return ratingRepository.findByPlace(place);
+    }
+
+    @Override
+    public Page<Rating> getRatingByPlace(Place place, Pageable pageable) throws PlaceNotFoundException {
+        return ratingRepository.findByPlace(place, pageable);
     }
 
 }

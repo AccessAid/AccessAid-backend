@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Comments.model.Comment;
@@ -32,8 +35,13 @@ public class PlaceServiceImpl implements PlaceService {
     private GeolocationUtils geolocationUtils;
 
     @Override
-    public List<Place> findAllPlaces() {
+    public List<Place> findAllPlaces() throws PlaceNotFoundException {
         return placeRepository.findAll();
+    }
+
+    @Override
+    public Page<Place> findAllPlaces(Pageable pageable) throws PlaceNotFoundException {
+        return placeRepository.findAll(pageable);
     }
 
     @Override
@@ -74,6 +82,16 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public Page<Place> findPlacesByUser(Integer userId, Pageable pageable) throws UserNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+
+        List<Place> places = user.getPlaces();
+        return new PageImpl<>(places, pageable, places.size());
+
+    }
+
+    @Override
     public List<User> findUsersByPlace(Integer placeId) throws PlaceNotFoundException, UserNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
@@ -83,12 +101,36 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public Page<User> findUsersByPlace(Integer placeId, Pageable pageable)
+            throws PlaceNotFoundException, UserNotFoundException {
+        Optional<Place> optionalPlace = placeRepository.findById(placeId);
+        if (!optionalPlace.isPresent()) {
+            throw new PlaceNotFoundException("Place not found with id: " + placeId);
+        }
+        List<User> users = optionalPlace.get().getUsers();
+        return new PageImpl<>(users, pageable, users.size());
+
+    }
+
+    @Override
     public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException {
+
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
         if (!optionalPlace.isPresent()) {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
         }
         return optionalPlace.get().getComments();
+    }
+
+    @Override
+    public Page<Comment> findCommentsByPlace(Integer placeId, Pageable pageable)
+            throws PlaceNotFoundException, CommentNotFoundException {
+        Optional<Place> optionalPlace = placeRepository.findById(placeId);
+        if (!optionalPlace.isPresent()) {
+            throw new PlaceNotFoundException("Place not found with id: " + placeId);
+        }
+        List<Comment> comments = optionalPlace.get().getComments();
+        return new PageImpl<>(comments, pageable, comments.size());
     }
 
     @Override
@@ -109,6 +151,18 @@ public class PlaceServiceImpl implements PlaceService {
             throw new PlaceNotFoundException("Place not found with id: " + placeId);
         }
         return optionalPlace.get().getRatings();
+
+    }
+
+    @Override
+    public Page<Rating> findAllRatingsByPlace(Integer placeId, Pageable pageable)
+            throws PlaceNotFoundException, RatingNotFoundException {
+        Optional<Place> optionalPlace = placeRepository.findById(placeId);
+        if (!optionalPlace.isPresent()) {
+            throw new PlaceNotFoundException("Place not found with id: " + placeId);
+        }
+        List<Rating> ratings = optionalPlace.get().getRatings();
+        return new PageImpl<>(ratings, pageable, ratings.size());
 
     }
 

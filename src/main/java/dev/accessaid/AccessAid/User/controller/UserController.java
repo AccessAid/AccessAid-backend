@@ -3,6 +3,8 @@ package dev.accessaid.AccessAid.User.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -52,10 +54,23 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponseExample.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @GetMapping("")
+    @Hidden
+    @GetMapping("/unpaged")
     public List<UserResponse> seeAllUsers() {
         List<User> users = userService.getUsers();
         return UserMapper.toUserResponses(users);
+
+    }
+
+    @Operation(summary = "See a list of users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponseExample.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("")
+    public Page<UserResponse> seeAllUsers(Pageable pageable) {
+        Page<User> users = userService.getUsers(pageable);
+        return UserMapper.toUserResponses(users, pageable);
 
     }
 
