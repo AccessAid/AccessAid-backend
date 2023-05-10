@@ -19,8 +19,8 @@ public class CommentMapper {
         if (comment.getReplyToComment() != null) {
             replyToComment = comment.getReplyToComment().getId();
         }
-        if (comment.getResponseByComment() != null) {
-            responseByComment = comment.getResponseByComment().getId();
+        if (comment.getRepliedComment() != null) {
+            responseByComment = comment.getRepliedComment().getId();
             hasResponse = true;
         }
 
