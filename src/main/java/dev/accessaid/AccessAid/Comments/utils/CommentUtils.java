@@ -15,22 +15,27 @@ public class CommentUtils {
 
     public static void setRepliedCommentAndReplyToComment(Comment repliedComment, Comment savedComment,
             CommentRepository commentRepository) {
-        if (repliedComment.isHasResponse()) {
-            Comment lastRepliedComment = CommentUtils.getLastRepliedComment(repliedComment);
-            lastRepliedComment.setRepliedComment(savedComment);
-            lastRepliedComment.setHasResponse(true);
-            commentRepository.save(lastRepliedComment);
-
-            savedComment.setReplyToComment(lastRepliedComment);
+        if (repliedComment.getId().equals(savedComment.getId())) {
+            savedComment.setReplyToComment(null);
             commentRepository.save(savedComment);
         } else {
-            repliedComment.setRepliedComment(savedComment);
-            repliedComment.setHasResponse(true);
-            commentRepository.save(repliedComment);
 
-            savedComment.setReplyToComment(repliedComment);
-            commentRepository.save(savedComment);
+            if (repliedComment.isHasResponse()) {
+                Comment lastRepliedComment = CommentUtils.getLastRepliedComment(repliedComment);
+                lastRepliedComment.setRepliedComment(savedComment);
+                lastRepliedComment.setHasResponse(true);
+                commentRepository.save(lastRepliedComment);
+
+                savedComment.setReplyToComment(lastRepliedComment);
+                commentRepository.save(savedComment);
+            } else {
+                repliedComment.setRepliedComment(savedComment);
+                repliedComment.setHasResponse(true);
+                commentRepository.save(repliedComment);
+
+                savedComment.setReplyToComment(repliedComment);
+                commentRepository.save(savedComment);
+            }
         }
     }
-
 }
