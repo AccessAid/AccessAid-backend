@@ -48,8 +48,8 @@ public class Comment {
     private Comment replyToComment;
 
     @OneToOne
-    @JoinColumn(name = "response_by_comment_id", referencedColumnName = "id")
-    private Comment responseByComment;
+    @JoinColumn(name = "replied_comment_id", referencedColumnName = "id")
+    private Comment repliedComment;
 
     @Column(name = "has_response")
     private boolean hasResponse;
