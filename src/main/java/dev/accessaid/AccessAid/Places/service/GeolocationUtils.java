@@ -38,15 +38,17 @@ public class GeolocationUtils {
         if (address == null && latitude != null && longitude == null)
             throw new PlaceSaveException("Missing address or longitude");
 
-        if (address == null && latitude != null & longitude != null) {
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude, longitude);
+        if (address == null && latitude != null && longitude != null) {
+            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
+                    longitude);
             if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
                 throw new PlaceSaveException(
                         "Place not found for coordinates: " + latitude + "," + longitude);
             }
         }
 
-        ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude, longitude);
+        ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
+                longitude);
         GeolocationResponse response = (GeolocationResponse) geolocationResponseEntity.getBody();
         return response;
     }
