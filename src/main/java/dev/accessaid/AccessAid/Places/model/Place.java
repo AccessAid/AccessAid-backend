@@ -21,7 +21,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,19 +40,15 @@ public class Place {
     Integer id;
 
     @Schema(example = ExamplesValues.LATITUDE, description = "")
-    @NotNull
     double latitude;
 
     @Schema(example = ExamplesValues.LONGITUDE, description = "")
-    @NotNull
     double longitude;
 
     @Schema(example = ExamplesValues.ADDRESS, description = "")
-    @NotNull
     String address;
 
     @Schema(example = ExamplesValues.API_PLACE_ID, description = "")
-    @NotNull
     String api_placeId;
 
     @JsonIgnore

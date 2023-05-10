@@ -12,13 +12,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class PlaceNotFoundException extends RuntimeException {
-
-    private static final String DEFAULT_MESSAGE = "Place not found";
-
-    String message = DEFAULT_MESSAGE;
+    private String message;
 
     public PlaceNotFoundException(String message) {
         super(message);
+        this.message = message;
     }
 
 }

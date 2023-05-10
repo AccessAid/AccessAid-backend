@@ -32,8 +32,10 @@ spring.jpa.show-sql = true
 spring.jpa.generate-ddl=true
 spring.jpa.hibernate.ddl-auto = create-drop
 spring.jpa.properties.hibernate.format_sql=true
+spring.mvc.pathmatch.matching-strategy=ant-path-matcher
 spring.sendgrid.api-key=[YOUR_API_KEY]
 app.jwt.secret=[YOUR_SECRET_256-bit]
+
 ```
 Make sure to replace the username and password with your local database credentials.
 
