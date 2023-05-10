@@ -13,11 +13,25 @@ import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 public class CommentMapper {
 
     public static CommentResponse toCommentResponse(Comment comment) {
+        Integer replyToComment = null;
+        Integer responseByComment = null;
+        boolean hasResponse = false;
+        if (comment.getReplyToComment() != null) {
+            replyToComment = comment.getReplyToComment().getId();
+        }
+        if (comment.getResponseByComment() != null) {
+            responseByComment = comment.getResponseByComment().getId();
+            hasResponse = true;
+        }
+
         return new CommentResponse(
                 comment.getId(),
                 comment.getComment(),
                 comment.getUser().getId(),
-                comment.getPlace().getId());
+                comment.getPlace().getId(),
+                replyToComment,
+                responseByComment,
+                hasResponse);
     }
 
     public static List<CommentResponse> toCommentResponses(List<Comment> comments) {

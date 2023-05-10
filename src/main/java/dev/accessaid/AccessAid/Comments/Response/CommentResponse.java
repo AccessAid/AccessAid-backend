@@ -23,4 +23,12 @@ public class CommentResponse {
     @JsonProperty("place_id")
     private Integer place_id;
 
+    @JsonProperty("replyToComment_id")
+    private Integer replyToComment_id;
+
+    @JsonProperty("responseByComment_id")
+    private Integer responseByComment_id;
+
+    @JsonProperty("has_response")
+    private boolean hasResponse;
 }
