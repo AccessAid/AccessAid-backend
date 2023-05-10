@@ -47,10 +47,13 @@ public class GeolocationUtils {
             }
         }
 
-        ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
-                longitude);
-        GeolocationResponse response = (GeolocationResponse) geolocationResponseEntity.getBody();
-        return response;
+        if (latitude != null && longitude != null) {
+            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
+                    longitude);
+            GeolocationResponse response = (GeolocationResponse) geolocationResponseEntity.getBody();
+            return response;
+        }
+        throw new PlaceSaveException("Missing address or coordinates");
     }
 
     public GeolocationResponse getGeolocationByAddress(String address) throws PlaceSaveException {
