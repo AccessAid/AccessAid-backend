@@ -17,30 +17,38 @@ public class GeolocationUtils {
     private GeolocationController geolocationController;
 
     public GeolocationResponse getGeolocationByAddressOrCoordinates(PlaceRequest request) throws PlaceSaveException {
-        GeolocationResponse response;
         String address = request.getAddress();
-        if (address == null && (request.getLatitude() == null && request.getLongitude() == null)) {
-            throw new PlaceSaveException("Missing address or coordinates");
-        } else if (address != null) {
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByAddress(address);
-            if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
-                throw new PlaceSaveException("Place not found for address: " + address);
-            }
-            response = (GeolocationResponse) geolocationResponseEntity.getBody();
+        Double latitude = request.getLatitude();
+        Double longitude = request.getLongitude();
 
-        } else {
-            double latitude = request.getLatitude();
-            double longitude = request.getLongitude();
-            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude,
-                    longitude);
+        if (address == null && latitude == null && longitude == null)
+            throw new PlaceSaveException("Missing address or coordinates");
+
+        if (address != null) {
+            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByAddress(address);
+            if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK)
+                throw new PlaceSaveException("Place not found for address: " + address);
+            GeolocationResponse response = (GeolocationResponse) geolocationResponseEntity.getBody();
+            return response;
+        }
+
+        if (address == null && latitude == null && longitude != null)
+            throw new PlaceSaveException("Missing address or latitude");
+
+        if (address == null && latitude != null && longitude == null)
+            throw new PlaceSaveException("Missing address or longitude");
+
+        if (address == null && latitude != null & longitude != null) {
+            ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude, longitude);
             if (geolocationResponseEntity.getStatusCode() != HttpStatus.OK) {
                 throw new PlaceSaveException(
                         "Place not found for coordinates: " + latitude + "," + longitude);
             }
-            response = (GeolocationResponse) geolocationResponseEntity.getBody();
         }
-        return response;
 
+        ResponseEntity<?> geolocationResponseEntity = geolocationController.getGeolocationByCoordinates(latitude, longitude);
+        GeolocationResponse response = (GeolocationResponse) geolocationResponseEntity.getBody();
+        return response;
     }
 
     public GeolocationResponse getGeolocationByAddress(String address) throws PlaceSaveException {
