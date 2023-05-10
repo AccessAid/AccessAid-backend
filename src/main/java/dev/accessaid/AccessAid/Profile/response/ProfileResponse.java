@@ -29,4 +29,21 @@ public class ProfileResponse {
     @JsonProperty("avatarPath")
     private String avatarPath;
 
+    @JsonProperty("streetAddress")
+    private String streetAddress;
+
+    @JsonProperty("city")
+    private String city;
+
+    @JsonProperty("country")
+    private String country;
+
+    @JsonProperty("zipCode")
+    private String zipCode;
+
+    @JsonProperty("phone")
+    private String phone;
+
+    @JsonProperty("about")
+    private String about;
 }

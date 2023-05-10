@@ -19,6 +19,24 @@ public class ProfileRequestExample {
     @Schema(example = ExamplesValues.AVATAR_PATH, description = "")
     String avatarPath;
 
+    @Schema(example = ExamplesValues.STREET_ADDRESS, description = "")
+    String streetAddress;
+
+    @Schema(example = ExamplesValues.CITY, description = "")
+    String city;
+
+    @Schema(example = ExamplesValues.COUNTRY, description = "")
+    String country;
+
+    @Schema(example = ExamplesValues.ZIPCODE, description = "")
+    String zipCode;
+
+    @Schema(example = ExamplesValues.PHONE, description = "")
+    String phone;
+
+    @Schema(example = ExamplesValues.ABOUT, description = "")
+    String about;
+
     @Schema(description = "user", example = "{\"id\":1}")
     @OneToOne
     @JoinColumn(name = "user_id")
