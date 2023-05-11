@@ -33,13 +33,13 @@ public class RatingServiceImpl implements RatingService {
     private PlaceRepository placeRepository;
 
     @Override
-    public List<Rating> getAllRatings() throws RatingNotFoundException {
+    public List<Rating> getAllRatings() {
         return ratingRepository.findAll();
 
     }
 
     @Override
-    public Page<Rating> getAllRatings(Pageable pageable) throws RatingNotFoundException {
+    public Page<Rating> getAllRatings(Pageable pageable) {
         return ratingRepository.findAll(pageable);
 
     }
@@ -53,6 +53,19 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating createRating(Rating rating) throws RatingSaveException {
+
+        System.out.println(rating.getRating());
+        System.out.println(rating.getUser().getId());
+        System.out.println(rating.getPlace().getId());
+
+        if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() != null)
+            throw new RatingSaveException("user must be not null");
+
+        if (rating.getRating() != null && rating.getUser().getId() != null && rating.getPlace().getId() == null)
+            throw new RatingSaveException("place must be not null");
+
+        if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() == null)
+            throw new RatingSaveException("user and place must be not null");
 
         User user = userRepository.findById(rating.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + rating.getUser().getId()));
