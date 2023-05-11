@@ -25,4 +25,22 @@ public class ProfileResponseExample {
     @Schema(example = ExamplesValues.AVATAR_PATH, description = "")
     private String avatarPath;
 
+    @Schema(example = ExamplesValues.STREET_ADDRESS, description = "")
+    private String streetAddress;
+
+    @Schema(example = ExamplesValues.CITY, description = "")
+    private String city;
+
+    @Schema(example = ExamplesValues.COUNTRY, description = "")
+    private String country;
+
+    @Schema(example = ExamplesValues.ZIPCODE, description = "")
+    private String zipCode;
+
+    @Schema(example = ExamplesValues.PHONE, description = "")
+    private String phone;
+
+    @Schema(example = ExamplesValues.ABOUT, description = "")
+    private String about;
+
 }
