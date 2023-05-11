@@ -19,4 +19,12 @@ public class CommentResponseExample {
     @Schema(description = "ID of place related to the comment", example = "1")
     private Integer place_id;
 
+    @Schema(description = "Id of the comment that this comment is replying to", example = "1")
+    private Integer replyToComment;
+
+    @Schema(description = "Id of the comment that has replied to this comment", example = "1")
+    private Integer responseByComment;
+
+    @Schema(description = "Whether the comment has a response", example = "false")
+    private boolean hasResponse;
 }
