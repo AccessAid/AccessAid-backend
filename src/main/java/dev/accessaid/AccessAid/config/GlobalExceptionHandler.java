@@ -71,10 +71,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(RatingNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Rating not found.")
     @ResponseBody
-    public ErrorResponse handleRatingNotFoundException(RatingNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleRatingNotFoundException(RatingNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RatingSaveException.class)
