@@ -78,9 +78,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(RatingSaveException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Rating save failed.")
-    public ErrorResponse handleRatingSaveException(RatingSaveException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleRatingSaveException(RatingSaveException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProfileNotFoundException.class)
