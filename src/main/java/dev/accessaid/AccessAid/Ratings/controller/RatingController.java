@@ -111,7 +111,7 @@ public class RatingController {
     })
     @PutMapping("/{id}")
     public RatingResponse updateRating(@PathVariable Integer id,
-            @RequestBody @Schema(example = "{\"rating\": 5.0}") Rating rating) {
+            @RequestBody @Validated @Schema(example = "{\"rating\": 5.0}") Rating rating) {
         Rating ratingToUpdate = ratingService.getRatingById(id);
         if (ratingToUpdate == null) {
             throw new RatingNotFoundException("Rating not found");
