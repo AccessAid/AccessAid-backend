@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Accessibility.response;
 
-import java.net.URL;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.AddressType;
 import com.google.maps.model.Photo;
@@ -18,14 +16,17 @@ public class AccessibilityResponse {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("phone")
+    private String phone;
+
     @JsonProperty("url")
-    private URL url;
+    private String url;
 
     @JsonProperty("accessibility")
     private Boolean wheelchair_accessible_entrance;
 
     @JsonProperty("website")
-    private URL website;
+    private String website;
 
     @JsonProperty("types")
     private AddressType[] types;
