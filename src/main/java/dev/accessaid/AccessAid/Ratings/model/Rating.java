@@ -33,7 +33,7 @@ public class Rating {
     Integer id;
 
     @Schema(example = "4.5", description = "")
-    @NotNull(message="must not be null")
+    @NotNull(message="must be not null")
     @Min(value = 1, message= "should be between one and five")
     @Max(value = 5, message = "should be between one and five")
     Double rating;

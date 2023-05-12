@@ -52,11 +52,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating createRating(Rating rating) throws RatingSaveException {
-
-        System.out.println(rating.getRating());
-        System.out.println(rating.getUser().getId());
-        System.out.println(rating.getPlace().getId());
+    public Rating createRating(Rating rating) throws RatingSaveException, UserNotFoundException {
 
         if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() != null)
             throw new RatingSaveException("user must be not null");
