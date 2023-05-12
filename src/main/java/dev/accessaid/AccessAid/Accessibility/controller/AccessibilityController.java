@@ -25,7 +25,7 @@ public class AccessibilityController {
             AccessibilityResponse response = accessibilityService.getPlaceDetails(placeId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse("INVALID_REQUEST");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
