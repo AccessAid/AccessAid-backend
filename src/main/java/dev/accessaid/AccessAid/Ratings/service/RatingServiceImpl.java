@@ -52,16 +52,16 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating createRating(Rating rating) throws RatingSaveException, UserNotFoundException {
+    public Rating createRating(Rating rating) throws RatingSaveException, UserNotFoundException, PlaceNotFoundException {
 
         if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() != null)
-            throw new RatingSaveException("user must be not null");
+            throw new RatingSaveException("user must not be null");
 
         if (rating.getRating() != null && rating.getUser().getId() != null && rating.getPlace().getId() == null)
-            throw new RatingSaveException("place must be not null");
+            throw new RatingSaveException("place must not be null");
 
         if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() == null)
-            throw new RatingSaveException("user and place must be not null");
+            throw new RatingSaveException("user and place must not be null");
 
         User user = userRepository.findById(rating.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + rating.getUser().getId()));
