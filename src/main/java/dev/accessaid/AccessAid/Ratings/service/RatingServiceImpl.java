@@ -3,6 +3,9 @@ package dev.accessaid.AccessAid.Ratings.service;
 import java.util.List;
 import java.util.Optional;
 
+import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +34,9 @@ public class RatingServiceImpl implements RatingService {
 
     @Autowired
     private PlaceRepository placeRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public List<Rating> getAllRatings() {
@@ -62,6 +68,13 @@ public class RatingServiceImpl implements RatingService {
 
         if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() == null)
             throw new RatingSaveException("user and place must not be null");
+
+        Query query = entityManager.createQuery("FROM Rating r WHERE r.user.id = :userId AND r.place.id = :placeId" );
+        query.setParameter("userId", rating.getUser().getId());
+        query.setParameter("placeId", rating.getPlace().getId());
+        List<Rating> ratingFind = query.getResultList();
+        if (ratingFind.size() > 0)
+            throw new RatingDuplicateUserPlaceException("rating for user and place already exists");
 
         User user = userRepository.findById(rating.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + rating.getUser().getId()));
