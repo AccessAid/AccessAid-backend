@@ -92,12 +92,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
     @ExceptionHandler(ProfileNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Profile not found.")
     @ResponseBody
-    public ErrorResponse handleProfileNotFoundException(ProfileNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleProfileNotFoundException(ProfileNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProfileSaveException.class)
