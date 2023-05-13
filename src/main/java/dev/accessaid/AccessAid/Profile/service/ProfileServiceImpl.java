@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.Profile.service;
 import java.util.List;
 import java.util.Optional;
 
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,19 +48,17 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Profile createProfile(Profile profile) throws ProfileSaveException {
-        User user = userRepository.findById(profile.getUser().getId())
-                .orElseThrow(() -> new IllegalArgumentException("User does not exist"));
 
-        if (user.getProfile() != null) {
+        User user = userRepository.findById(profile.getUser().getId())
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+
+        if (user.getProfile() != null)
             throw new ProfileSaveException("Profile already exists");
-        }
-        try {
-            profile.setUser(user);
-            user.setProfile(profile);
-            return profileRepository.save(profile);
-        } catch (Exception e) {
-            throw new ProfileSaveException("Error saving profile");
-        }
+
+        profile.setUser(user);
+        user.setProfile(profile);
+
+        return profileRepository.save(profile);
     }
 
     @Override
