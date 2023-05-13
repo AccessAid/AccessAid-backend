@@ -1,5 +1,6 @@
 package dev.accessaid.AccessAid.config.documentation.Users;
 
+import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,4 +15,7 @@ public class UserResponseExample {
 
     @Schema(description = "User username", example = "username")
     private String username;
+
+    @Schema(description = "User profile")
+    private ProfileResponse profile;
 }

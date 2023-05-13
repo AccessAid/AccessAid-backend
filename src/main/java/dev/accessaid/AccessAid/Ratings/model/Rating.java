@@ -33,9 +33,9 @@ public class Rating {
     Integer id;
 
     @Schema(example = "4.5", description = "")
-    @NotNull
-    @Min(1)
-    @Max(5)
+    @NotNull(message="must not be null")
+    @Min(value = 1, message= "should be between one and five")
+    @Max(value = 5, message = "should be between one and five")
     Double rating;
 
     @ManyToOne

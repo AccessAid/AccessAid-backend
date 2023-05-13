@@ -19,7 +19,13 @@ public class ProfileMapper {
                 profile.getLastName(),
                 profile.getUser().getEmail(),
                 profile.getUser().getUsername(),
-                profile.getAvatarPath()
+                profile.getAvatarPath(),
+                profile.getStreetAddress(),
+                profile.getCity(),
+                profile.getCountry(),
+                profile.getZipCode(),
+                profile.getPhone(),
+                profile.getAbout()
 
         );
 

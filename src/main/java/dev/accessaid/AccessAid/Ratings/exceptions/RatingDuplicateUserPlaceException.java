@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Setter
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class RatingSaveException extends RuntimeException {
+public class RatingDuplicateUserPlaceException extends RuntimeException {
 
     private String message;
 
-    public RatingSaveException(String message) {
+    public RatingDuplicateUserPlaceException(String message) {
         super(message);
         this.message = message;
     }

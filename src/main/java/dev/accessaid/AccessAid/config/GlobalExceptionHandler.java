@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -71,16 +72,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(RatingNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Rating not found.")
     @ResponseBody
-    public ErrorResponse handleRatingNotFoundException(RatingNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleRatingNotFoundException(RatingNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RatingSaveException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Rating save failed.")
-    public ErrorResponse handleRatingSaveException(RatingSaveException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleRatingSaveException(RatingSaveException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RatingDuplicateUserPlaceException.class)
+    public ResponseEntity<ErrorResponse> handleRatingDuplicateUserPlaceException(RatingDuplicateUserPlaceException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProfileNotFoundException.class)
