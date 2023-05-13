@@ -101,9 +101,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ProfileSaveException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Profile save failed.")
-    public ErrorResponse handleProfileSaveException(ProfileSaveException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleProfileSaveException(ProfileSaveException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Override
