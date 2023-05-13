@@ -22,7 +22,6 @@ import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
-import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileResponseExample;
@@ -138,8 +137,7 @@ public class ProfileController {
     })
     @GetMapping("/user/{userId}")
     public ProfileResponse seeProfileByUser(@PathVariable Integer userId) {
-        User user = userService.getUserById(userId);
-        Profile profile = profileService.getProfileByUser(user);
+        Profile profile = profileService.getProfileByUser(userId);
         return ProfileMapper.toProfileResponse(profile);
 
     }

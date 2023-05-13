@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
-import dev.accessaid.AccessAid.User.model.User;
-
 public interface ProfileService {
 
     List<Profile> getAllProfiles() throws ProfileNotFoundException;
@@ -24,5 +22,5 @@ public interface ProfileService {
 
     Profile removeProfile(Integer id) throws ProfileNotFoundException;
 
-    Profile getProfileByUser(User user) throws ProfileNotFoundException;
+    Profile getProfileByUser(Integer userId) throws ProfileNotFoundException;
 }

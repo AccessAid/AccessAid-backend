@@ -118,13 +118,17 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.deleteById(id);
         return profileToRemove.get();
     }
-
     @Override
-    public Profile getProfileByUser(User user) throws ProfileNotFoundException {
-        Optional<Profile> profile = profileRepository.findByUser(user);
-        if (!profile.isPresent()) {
+    public Profile getProfileByUser(Integer userId) throws ProfileNotFoundException {
+
+        Optional<User> userFind = userRepository.findById(userId);
+        if (!userFind.isPresent())
+            throw new UserNotFoundException("User not found");
+
+        Optional<Profile> profile = profileRepository.findByUser(userFind.get());
+        if (!profile.isPresent())
             throw new ProfileNotFoundException("Profile not found");
-        }
+
         return profile.get();
 
     }
