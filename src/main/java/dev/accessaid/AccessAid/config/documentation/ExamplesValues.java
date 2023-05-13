@@ -77,4 +77,8 @@ public class ExamplesValues {
             AddressType.POINT_OF_INTEREST,
             AddressType.ESTABLISHMENT
     };
+
+    public static final String SENT_DATE = "2023-05-10T10:00:00";
+
+    public static final String MESSAGE = "This is an example message for testing purposes.";
 }
