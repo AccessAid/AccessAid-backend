@@ -80,5 +80,7 @@ public class ExamplesValues {
 
     public static final String SENT_DATE = "2023-05-10T10:00:00";
 
+    public static final String SUBJECT = "Test Email subject";
+
     public static final String MESSAGE = "This is an example message for testing purposes.";
 }
