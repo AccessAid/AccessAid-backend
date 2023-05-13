@@ -71,34 +71,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         Profile existingProfile = profileToUpdate.get();
 
-        ProfileUtils.updateProfileFields(existingProfile, profile);
-        // if (profile.getFirstName() != null) {
-        // existingProfile.setFirstName(profile.getFirstName());
-        // }
-        // if (profile.getLastName() != null) {
-        // existingProfile.setLastName(profile.getLastName());
-        // }
-        // if (profile.getAvatarPath() != null) {
-        // existingProfile.setAvatarPath(profile.getAvatarPath());
-        // }
-        // if (profile.getStreetAddress() != null) {
-        // existingProfile.setStreetAddress(profile.getStreetAddress());
-        // }
-        // if (profile.getCity() != null) {
-        // existingProfile.setCity(profile.getCity());
-        // }
-        // if (profile.getCountry() != null) {
-        // existingProfile.setCountry(profile.getCountry());
-        // }
-        // if (profile.getZipCode() != null) {
-        // existingProfile.setZipCode(profile.getZipCode());
-        // }
-        // if (profile.getPhone() != null) {
-        // existingProfile.setPhone(profile.getPhone());
-        // }
-        // if (profile.getAbout() != null) {
-        // existingProfile.setAbout(profile.getAbout());
-        // }
+        ProfileUtils.updateProfileFields(existingProfile, profile);       
 
         try {
             return profileRepository.save(existingProfile);
