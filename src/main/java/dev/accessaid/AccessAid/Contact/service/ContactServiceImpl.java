@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import dev.accessaid.AccessAid.Contact.exceptions.ContactNotFoundException;
@@ -23,7 +23,7 @@ public class ContactServiceImpl implements ContactService {
     private ContactRepository contactRepository;
 
     @Autowired
-    private MailSender mailSender;
+    private JavaMailSender mailSender;
 
     @Override
     public List<Contact> getContacts() {
@@ -61,11 +61,12 @@ public class ContactServiceImpl implements ContactService {
     public void sendEmailNotification(Contact contact) throws EmailSendException {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo("admin@example.com");
+            message.setTo("accessaid.app@gmail.com");
             message.setSubject("New contact message");
             message.setText("A new contact message has been received:\n\n" +
                     "Name: " + contact.getName() + "\n" +
                     "Email: " + contact.getEmail() + "\n" +
+                    "Subject: " + contact.getSubject() + "\n" +
                     "Message: " + contact.getMessage());
 
             mailSender.send(message);
