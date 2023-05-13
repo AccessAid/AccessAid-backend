@@ -11,16 +11,10 @@ import dev.accessaid.AccessAid.Profile.model.Profile;
 public interface ProfileService {
 
     List<Profile> getAllProfiles() throws ProfileNotFoundException;
-
     Page<Profile> getAllProfiles(Pageable pageable) throws ProfileNotFoundException;
-
     Profile getProfileById(Integer id) throws ProfileNotFoundException;
-
     Profile createProfile(Profile profile) throws ProfileSaveException;
-
     Profile changeProfile(Profile profile) throws ProfileSaveException, ProfileNotFoundException;
-
     Profile removeProfile(Integer id) throws ProfileNotFoundException;
-
     Profile getProfileByUser(Integer userId) throws ProfileNotFoundException;
 }

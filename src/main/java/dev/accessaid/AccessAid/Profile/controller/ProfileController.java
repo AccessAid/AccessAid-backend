@@ -104,9 +104,8 @@ public class ProfileController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @PutMapping("/{id}")
-    public ProfileResponse updateProfile(
-            @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile,
-            @PathVariable Integer id) {
+    public ProfileResponse updateProfile(@PathVariable Integer id,
+            @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
         profile.setId(id);
         Profile profileToUpdate = profileService.getProfileById(id);
         if (profileToUpdate == null) {
@@ -141,5 +140,4 @@ public class ProfileController {
         return ProfileMapper.toProfileResponse(profile);
 
     }
-
 }

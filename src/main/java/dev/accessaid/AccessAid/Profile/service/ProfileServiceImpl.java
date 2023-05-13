@@ -59,50 +59,19 @@ public class ProfileServiceImpl implements ProfileService {
 
         return profileRepository.save(profile);
     }
-
     @Override
-    public Profile changeProfile(Profile profile) throws ProfileSaveException, ProfileNotFoundException {
+    public Profile changeProfile(Profile profile) throws UserNotFoundException, ProfileNotFoundException {
         Optional<Profile> profileToUpdate = profileRepository.findById(profile.getId());
-        if (!profileToUpdate.isPresent()) {
+        if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
-        }
+
+        User user = userRepository.findById(profile.getUser().getId())
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
         Profile existingProfile = profileToUpdate.get();
-
         ProfileUtils.updateProfileFields(existingProfile, profile);
-        // if (profile.getFirstName() != null) {
-        // existingProfile.setFirstName(profile.getFirstName());
-        // }
-        // if (profile.getLastName() != null) {
-        // existingProfile.setLastName(profile.getLastName());
-        // }
-        // if (profile.getAvatarPath() != null) {
-        // existingProfile.setAvatarPath(profile.getAvatarPath());
-        // }
-        // if (profile.getStreetAddress() != null) {
-        // existingProfile.setStreetAddress(profile.getStreetAddress());
-        // }
-        // if (profile.getCity() != null) {
-        // existingProfile.setCity(profile.getCity());
-        // }
-        // if (profile.getCountry() != null) {
-        // existingProfile.setCountry(profile.getCountry());
-        // }
-        // if (profile.getZipCode() != null) {
-        // existingProfile.setZipCode(profile.getZipCode());
-        // }
-        // if (profile.getPhone() != null) {
-        // existingProfile.setPhone(profile.getPhone());
-        // }
-        // if (profile.getAbout() != null) {
-        // existingProfile.setAbout(profile.getAbout());
-        // }
 
-        try {
-            return profileRepository.save(existingProfile);
-        } catch (Exception e) {
-            throw new ProfileSaveException("Error saving profile");
-        }
+        return profileRepository.save(existingProfile);
     }
 
     @Override
