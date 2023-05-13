@@ -17,6 +17,7 @@ public class ContactMapper {
                 contact.getId(),
                 contact.getName(),
                 contact.getEmail(),
+                contact.getSubject(),
                 contact.getMessage(),
                 contact.getSentDate());
     }

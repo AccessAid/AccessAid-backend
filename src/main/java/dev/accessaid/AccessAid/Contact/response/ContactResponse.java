@@ -31,6 +31,10 @@ public class ContactResponse {
     @JsonProperty("email")
     private String email;
 
+    @Schema(example = ExamplesValues.SUBJECT, description = "")
+    @JsonProperty("subject")
+    private String subject;
+
     @Schema(example = ExamplesValues.MESSAGE, description = "")
     @JsonProperty("message")
     private String message;
