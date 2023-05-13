@@ -33,10 +33,9 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Page<Profile> getAllProfiles(Pageable pageable) throws ProfileNotFoundException {
+    public Page<Profile> getAllProfiles(Pageable pageable) {
         return profileRepository.findAll(pageable);
     }
-
     @Override
     public Profile getProfileById(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profile = profileRepository.findById(id);
