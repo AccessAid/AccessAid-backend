@@ -1,5 +1,7 @@
 package dev.accessaid.AccessAid.config.documentation;
 
+import com.google.maps.model.AddressType;
+
 public class ExamplesValues {
 
     public static final String LATITUDE = "42.0339357";
@@ -46,4 +48,33 @@ public class ExamplesValues {
 
     public static final String ABOUT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
+    public static final String PLACE_NAME = "Australian Cruise Group";
+
+    public static final String PLACE_PHONE = "(02) 8296 7351";
+
+    public static final String PLACE_URL = "https://maps.google.com/?cid=3292831917685799941";
+
+    public static final String IS_ACCESSIBLE = "true";
+
+    public static final String WEBSITE = "https://www.australiancruisegroup.com.au/";
+
+    public static final String TRAVEL_AGENCY = "TRAVEL_AGENCY";
+
+    public static final String RESTAURANT = "RESTAURANT";
+
+    public static final String FOOD = "FOOD";
+
+    public static final String POINT_OF_INTEREST = "POINT_OF_INTEREST";
+
+    public static final String ESTABLISHMENT = "ESTABLISHMENT";
+
+    public static final String PLACE_TYPES_STRING = "[\"TRAVEL_AGENCY\", \"RESTAURANT\", \"FOOD\", \"POINT_OF_INTEREST\", \"ESTABLISHMENT\"]";
+
+    public static final AddressType[] PLACE_TYPES = {
+            AddressType.TRAVEL_AGENCY,
+            AddressType.RESTAURANT,
+            AddressType.FOOD,
+            AddressType.POINT_OF_INTEREST,
+            AddressType.ESTABLISHMENT
+    };
 }

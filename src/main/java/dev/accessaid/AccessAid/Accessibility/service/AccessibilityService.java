@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Accessibility.service;
 
-import java.net.URL;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +25,18 @@ public class AccessibilityService {
     public AccessibilityResponse getPlaceDetails(String placeId) throws Exception {
         PlaceDetails details = PlacesApi.placeDetails(context, placeId).await();
 
-        String name = details.name;
-        URL url = details.url;
-        Boolean wheelchair_accessible_entrance = details.wheelchairAccessibleEntrance;
-        URL website = details.website;
-        AddressType[] types = details.types;
-        Photo[] photos = details.photos;
+        String name = details.name != null ? details.name : null;
+        String phone = details.formattedPhoneNumber != null ? details.formattedPhoneNumber : null;
+        String url = details.url != null ? details.url.toString() : null;
+        Boolean wheelchair_accessible_entrance = details.wheelchairAccessibleEntrance != null
+                ? details.wheelchairAccessibleEntrance
+                : null;
+        String website = details.website != null ? details.website.toString() : null;
+        AddressType[] types = details.types != null ? details.types : null;
+        Photo[] photos = details.photos != null ? details.photos : null;
 
-        AccessibilityResponse response = new AccessibilityResponse(name, url, wheelchair_accessible_entrance, website,
+        AccessibilityResponse response = new AccessibilityResponse(name, phone, url, wheelchair_accessible_entrance,
+                website,
                 types, photos);
         return response;
     }
