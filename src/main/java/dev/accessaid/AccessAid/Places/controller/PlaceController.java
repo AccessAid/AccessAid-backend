@@ -56,6 +56,9 @@ public class PlaceController {
     @Autowired
     private PlaceServiceImpl placeService;
 
+    @Autowired
+    private PlaceMapper placeMapper;
+
     @Operation(summary = "See a list of places")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceResponseExample.class)))),
@@ -65,7 +68,7 @@ public class PlaceController {
     @GetMapping("/unpaged")
     public List<PlaceResponse> seeAllPlaces() {
         List<Place> places = placeService.findAllPlaces();
-        return PlaceMapper.toPlaceResponses(places);
+        return placeMapper.toPlaceResponses(places);
     }
 
     @Operation(summary = "See a list of places")
@@ -76,7 +79,7 @@ public class PlaceController {
     @GetMapping("")
     public Page<PlaceResponse> seeAllPlaces(Pageable pageable) {
         Page<Place> places = placeService.findAllPlaces(pageable);
-        return PlaceMapper.toPlaceResponses(places, pageable);
+        return placeMapper.toPlaceResponses(places, pageable);
     }
 
     @Operation(summary = "See a place by id")
@@ -87,7 +90,7 @@ public class PlaceController {
     @GetMapping("/{id}")
     public ResponseEntity<PlaceResponse> seePlaceById(@PathVariable Integer id) {
         Place place = placeService.findPlaceById(id);
-        PlaceResponse response = PlaceMapper.toPlaceResponse(place);
+        PlaceResponse response = placeMapper.toPlaceResponse(place);
         return ResponseEntity.ok(response);
     }
 
@@ -102,7 +105,7 @@ public class PlaceController {
     public PlaceResponse addPlace(
             @RequestBody @Validated @Schema(oneOf = { PlaceRequestExample.class }) PlaceRequest request) {
         Place newPlace = placeService.createPlace(request);
-        return PlaceMapper.toPlaceResponse(newPlace);
+        return placeMapper.toPlaceResponse(newPlace);
     }
 
     @Operation(summary = "Delete a place by id")
@@ -115,7 +118,7 @@ public class PlaceController {
     public ResponseEntity<?> deletePlace(@PathVariable Integer id) throws PlaceNotFoundException {
         Place place = placeService.findPlaceById(id);
         placeService.removePlace(id);
-        PlaceResponse response = PlaceMapper.toPlaceResponse(place);
+        PlaceResponse response = placeMapper.toPlaceResponse(place);
         return ResponseEntity.ok(response);
     }
 
@@ -215,7 +218,7 @@ public class PlaceController {
     @GetMapping("/user/{userid}/unpaged")
     public ResponseEntity<List<PlaceResponse>> seePlacesByUser(@PathVariable Integer userid) {
         List<Place> places = placeService.findPlacesByUser(userid);
-        List<PlaceResponse> response = PlaceMapper.toPlaceResponses(places);
+        List<PlaceResponse> response = placeMapper.toPlaceResponses(places);
         return ResponseEntity.ok(response);
     }
 
@@ -227,7 +230,7 @@ public class PlaceController {
     @GetMapping("/user/{userid}")
     public ResponseEntity<Page<PlaceResponse>> seePlacesByUser(@PathVariable Integer userid, Pageable pageable) {
         Page<Place> places = placeService.findPlacesByUser(userid, pageable);
-        Page<PlaceResponse> response = PlaceMapper.toPlaceResponses(places, pageable);
+        Page<PlaceResponse> response = placeMapper.toPlaceResponses(places, pageable);
         return ResponseEntity.ok(response);
     }
 
