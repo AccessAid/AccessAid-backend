@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.Profile.service;
 import java.util.List;
 import java.util.Optional;
 
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,10 +33,9 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Page<Profile> getAllProfiles(Pageable pageable) throws ProfileNotFoundException {
+    public Page<Profile> getAllProfiles(Pageable pageable) {
         return profileRepository.findAll(pageable);
     }
-
     @Override
     public Profile getProfileById(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profile = profileRepository.findById(id);
@@ -47,37 +47,31 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Profile createProfile(Profile profile) throws ProfileSaveException {
+
         User user = userRepository.findById(profile.getUser().getId())
-                .orElseThrow(() -> new IllegalArgumentException("User does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
-        if (user.getProfile() != null) {
+        if (user.getProfile() != null)
             throw new ProfileSaveException("Profile already exists");
-        }
-        try {
-            profile.setUser(user);
-            user.setProfile(profile);
-            return profileRepository.save(profile);
-        } catch (Exception e) {
-            throw new ProfileSaveException("Error saving profile");
-        }
-    }
 
+        profile.setUser(user);
+        user.setProfile(profile);
+
+        return profileRepository.save(profile);
+    }
     @Override
-    public Profile changeProfile(Profile profile) throws ProfileSaveException, ProfileNotFoundException {
+    public Profile changeProfile(Profile profile) throws UserNotFoundException, ProfileNotFoundException {
         Optional<Profile> profileToUpdate = profileRepository.findById(profile.getId());
-        if (!profileToUpdate.isPresent()) {
+        if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
-        }
+
+        User user = userRepository.findById(profile.getUser().getId())
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
         Profile existingProfile = profileToUpdate.get();
+        ProfileUtils.updateProfileFields(existingProfile, profile);
 
-        ProfileUtils.updateProfileFields(existingProfile, profile);       
-
-        try {
-            return profileRepository.save(existingProfile);
-        } catch (Exception e) {
-            throw new ProfileSaveException("Error saving profile");
-        }
+        return profileRepository.save(existingProfile);
     }
 
     @Override
@@ -93,13 +87,17 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.deleteById(id);
         return profileToRemove.get();
     }
-
     @Override
-    public Profile getProfileByUser(User user) throws ProfileNotFoundException {
-        Optional<Profile> profile = profileRepository.findByUser(user);
-        if (!profile.isPresent()) {
+    public Profile getProfileByUser(Integer userId) throws ProfileNotFoundException {
+
+        Optional<User> userFind = userRepository.findById(userId);
+        if (!userFind.isPresent())
+            throw new UserNotFoundException("User not found");
+
+        Optional<Profile> profile = profileRepository.findByUser(userFind.get());
+        if (!profile.isPresent())
             throw new ProfileNotFoundException("Profile not found");
-        }
+
         return profile.get();
 
     }
