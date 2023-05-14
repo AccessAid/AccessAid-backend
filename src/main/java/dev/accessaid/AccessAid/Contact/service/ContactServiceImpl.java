@@ -72,7 +72,7 @@ public class ContactServiceImpl implements ContactService {
                     "Email: " + contact.getEmail() + "\n" +
                     "Subject: " + contact.getSubject() + "\n" +
                     "Message: " + contact.getMessage());
-           
+
             mailSender.send(message);
         } catch (Exception e) {
             throw new EmailSendException("Error sending email notification: " + e.getMessage());

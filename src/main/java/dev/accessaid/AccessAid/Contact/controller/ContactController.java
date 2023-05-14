@@ -26,6 +26,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 
 @Tag(name = "Contact", description = "Contact form")
 @RestController
@@ -68,7 +70,7 @@ public class ContactController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ContactResponse addContact(
-            @RequestBody @Validated @Schema(implementation = ContactRequestExample.class) Contact contact) {
+            @RequestBody @Valid @Schema(implementation = ContactRequestExample.class) Contact contact) {
         Contact newContact = contactService.createContact(contact);
         contactService.sendEmailNotification(contact);
         return ContactMapper.toContactResponse(newContact);
@@ -80,8 +82,9 @@ public class ContactController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = ContactRequestExample.class))),
             @ApiResponse(responseCode = "404", description = "Contact not found", content = @Content)
     })
-    @GetMapping("/{email}")
-    public ContactResponse seeContactByEmail(@PathVariable String email) {
+    @GetMapping("/email/{email}")
+    public ContactResponse seeContactByEmail(
+            @PathVariable @Validated @Email(message = "Invalid email format") String email) {
         Contact contact = contactService.getContactByEmail(email);
         return ContactMapper.toContactResponse(contact);
 
