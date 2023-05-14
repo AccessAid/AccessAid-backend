@@ -3,9 +3,6 @@ package dev.accessaid.AccessAid.Ratings.service;
 import java.util.List;
 import java.util.Optional;
 
-import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Service;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
+import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
@@ -21,6 +19,8 @@ import dev.accessaid.AccessAid.Ratings.repository.RatingRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -58,7 +58,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating createRating(Rating rating) throws RatingSaveException, UserNotFoundException, PlaceNotFoundException {
+    public Rating createRating(Rating rating)
+            throws RatingSaveException, UserNotFoundException, PlaceNotFoundException {
 
         if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() != null)
             throw new RatingSaveException("user must not be null");
@@ -69,7 +70,9 @@ public class RatingServiceImpl implements RatingService {
         if (rating.getRating() != null && rating.getUser().getId() == null && rating.getPlace().getId() == null)
             throw new RatingSaveException("user and place must not be null");
 
-        Query query = entityManager.createQuery("FROM Rating r WHERE r.user.id = :userId AND r.place.id = :placeId" );
+        TypedQuery<Rating> query = entityManager.createQuery(
+                "FROM Rating r WHERE r.user.id = :userId AND r.place.id = :placeId",
+                Rating.class);
         query.setParameter("userId", rating.getUser().getId());
         query.setParameter("placeId", rating.getPlace().getId());
         List<Rating> ratingFind = query.getResultList();
