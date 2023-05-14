@@ -3,7 +3,6 @@ package dev.accessaid.AccessAid.Profile.service;
 import java.util.List;
 import java.util.Optional;
 
-import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +13,7 @@ import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
 import dev.accessaid.AccessAid.Profile.utils.ProfileUtils;
+import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -36,6 +36,7 @@ public class ProfileServiceImpl implements ProfileService {
     public Page<Profile> getAllProfiles(Pageable pageable) {
         return profileRepository.findAll(pageable);
     }
+
     @Override
     public Profile getProfileById(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profile = profileRepository.findById(id);
@@ -59,13 +60,14 @@ public class ProfileServiceImpl implements ProfileService {
 
         return profileRepository.save(profile);
     }
+
     @Override
     public Profile changeProfile(Profile profile) throws UserNotFoundException, ProfileNotFoundException {
         Optional<Profile> profileToUpdate = profileRepository.findById(profile.getId());
         if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
 
-        User user = userRepository.findById(profile.getUser().getId())
+        userRepository.findById(profile.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
         Profile existingProfile = profileToUpdate.get();
@@ -87,6 +89,7 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.deleteById(id);
         return profileToRemove.get();
     }
+
     @Override
     public Profile getProfileByUser(Integer userId) throws ProfileNotFoundException {
 
