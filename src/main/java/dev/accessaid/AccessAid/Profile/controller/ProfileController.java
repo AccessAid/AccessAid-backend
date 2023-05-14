@@ -41,10 +41,6 @@ public class ProfileController {
 
     @Autowired
     private ProfileServiceImpl profileService;
-
-    @Autowired
-    private UserService userService;
-
     @Operation(summary = "See a list of profiles")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),

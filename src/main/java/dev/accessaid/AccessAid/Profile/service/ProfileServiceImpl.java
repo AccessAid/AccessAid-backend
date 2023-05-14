@@ -65,7 +65,7 @@ public class ProfileServiceImpl implements ProfileService {
         if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
 
-        User user = userRepository.findById(profile.getUser().getId())
+        userRepository.findById(profile.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
         Profile existingProfile = profileToUpdate.get();
