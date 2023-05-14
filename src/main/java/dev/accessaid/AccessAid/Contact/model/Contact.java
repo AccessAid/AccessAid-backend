@@ -36,7 +36,7 @@ public class Contact {
 
     @Schema(example = "email@email.com", description = "")
     @JsonProperty("email")
-    @Email
+    @Email(message = "Please enter a valid email")
     private String email;
 
     @Schema(example = "subject", description = "")
