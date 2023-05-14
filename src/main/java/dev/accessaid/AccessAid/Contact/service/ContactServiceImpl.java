@@ -15,6 +15,7 @@ import dev.accessaid.AccessAid.Contact.exceptions.ContactSaveException;
 import dev.accessaid.AccessAid.Contact.exceptions.EmailSendException;
 import dev.accessaid.AccessAid.Contact.model.Contact;
 import dev.accessaid.AccessAid.Contact.repository.ContactRepository;
+import dev.accessaid.AccessAid.Contact.utils.EmailText;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -24,6 +25,9 @@ public class ContactServiceImpl implements ContactService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private EmailText emailText;
 
     @Override
     public List<Contact> getContacts() {
@@ -61,14 +65,14 @@ public class ContactServiceImpl implements ContactService {
     public void sendEmailNotification(Contact contact) throws EmailSendException {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo("accessaid.app@gmail.com");
-            message.setSubject("New contact message");
-            message.setText("A new contact message has been received:\n\n" +
+            message.setTo(emailText.getEmailSetToAccessAid());
+            message.setSubject(emailText.getEmailSubject());
+            message.setText(emailText.getEmailText() +
                     "Name: " + contact.getName() + "\n" +
                     "Email: " + contact.getEmail() + "\n" +
                     "Subject: " + contact.getSubject() + "\n" +
                     "Message: " + contact.getMessage());
-
+           
             mailSender.send(message);
         } catch (Exception e) {
             throw new EmailSendException("Error sending email notification: " + e.getMessage());
