@@ -52,7 +52,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment createComment(Comment comment) throws CommentSaveException {
+    public Comment createComment(Comment comment) throws
+            UserNotFoundException, PlaceNotFoundException, CommentNotFoundException {
 
         User user = userRepository.findById(comment.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + comment.getUser().getId()));
@@ -61,7 +62,26 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(
                         () -> new PlaceNotFoundException("Place not found with id: " + comment.getPlace().getId()));
 
+        if (comment.getReplyToComment() != null) {
+            Comment replyToComment = comment.getReplyToComment();
+            if (replyToComment.getId() != null) {
+                Comment repliedComment = commentRepository.findById(replyToComment.getId())
+                        .orElseThrow(() -> new CommentNotFoundException("Reply-to comment not found"));
+            } else {
+                throw new CommentSaveException("reply-to comment can not be null");
+            }
+        }
+
         Comment savedComment = commentRepository.save(comment);
+
+        if (comment.getReplyToComment() != null) {
+            Comment replyToComment = comment.getReplyToComment();
+            if (replyToComment.getId() != null) {
+                Comment repliedComment = commentRepository.findById(replyToComment.getId()).get();
+
+                CommentUtils.setRepliedCommentAndReplyToComment(repliedComment, savedComment, commentRepository);
+            }
+        }
 
         place.addComment(savedComment);
 
@@ -69,19 +89,7 @@ public class CommentServiceImpl implements CommentService {
             place.getUsers().add(user);
             placeRepository.save(place);
         }
-
-        if (comment.getReplyToComment() != null) {
-            Comment replyToComment = comment.getReplyToComment();
-            if (replyToComment.getId() != null) {
-                Comment repliedComment = commentRepository.findById(replyToComment.getId())
-                        .orElseThrow(() -> new CommentNotFoundException("Reply-to comment not found"));
-
-                CommentUtils.setRepliedCommentAndReplyToComment(repliedComment, savedComment, commentRepository);
-            }
-        }
-
         return savedComment;
-
     }
 
     @Override
