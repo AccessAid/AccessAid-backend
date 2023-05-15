@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(Comment comment) throws
-            UserNotFoundException, PlaceNotFoundException, CommentNotFoundException {
+            UserNotFoundException, PlaceNotFoundException, CommentNotFoundException, CommentSaveException {
 
         User user = userRepository.findById(comment.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + comment.getUser().getId()));
