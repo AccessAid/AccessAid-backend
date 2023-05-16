@@ -38,9 +38,8 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAll();
 
     }
-
     @Override
-    public Page<Comment> getComments(Pageable pageable) throws CommentNotFoundException {
+    public Page<Comment> getComments(Pageable pageable) {
         return commentRepository.findAll(pageable);
     }
 
