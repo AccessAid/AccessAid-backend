@@ -3,6 +3,9 @@ package dev.accessaid.AccessAid.Comments.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +22,6 @@ import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -32,6 +34,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private PlaceRepository placeRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public List<Comment> getComments() throws CommentNotFoundException {
@@ -108,6 +113,48 @@ public class CommentServiceImpl implements CommentService {
     public Comment removeComment(Integer id) throws CommentNotFoundException {
         Comment commentToDelete = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+
+        if (commentToDelete.getReplyToComment() != null && commentToDelete.getRepliedComment() == null) {
+            Query query = entityManager.createQuery("FROM Comment c WHERE c.repliedComment.id = :repliedCommentId");
+            query.setParameter("repliedCommentId", commentToDelete.getId());
+            Comment comment = (Comment) query.getSingleResult();
+            comment.setRepliedComment(null);
+            comment.setHasResponse(false);
+            commentRepository.save(comment);
+
+            commentToDelete.setReplyToComment(null);
+            commentRepository.save(commentToDelete);
+        }
+
+        if (commentToDelete.getReplyToComment() != null && commentToDelete.getRepliedComment() != null) {
+            Query queryPre = entityManager.createQuery("FROM Comment c WHERE c.repliedComment.id = :repliedCommentId");
+            queryPre.setParameter("repliedCommentId", commentToDelete.getId());
+            Comment commentPre = (Comment) queryPre.getSingleResult();
+            commentPre.setRepliedComment(commentToDelete.getRepliedComment());
+            commentRepository.save(commentPre);
+
+            Query queryPost = entityManager.createQuery("FROM Comment c WHERE c.replyToComment.id = :replyCommentId");
+            queryPost.setParameter("replyCommentId", commentToDelete.getId());
+            Comment commentPost = (Comment) queryPost.getSingleResult();
+            commentPost.setReplyToComment(commentToDelete.getReplyToComment());
+            commentRepository.save(commentPost);
+
+            commentToDelete.setReplyToComment(null);
+            commentToDelete.setRepliedComment(null);
+            commentRepository.save(commentToDelete);
+        }
+
+        if (commentToDelete.getReplyToComment() == null && commentToDelete.getRepliedComment() != null) {
+            Query query = entityManager.createQuery("FROM Comment c WHERE c.id = :repliedCommentId");
+            query.setParameter("repliedCommentId", commentToDelete.getRepliedComment().getId());
+            Comment comment = (Comment) query.getSingleResult();
+            comment.setReplyToComment(null);
+            commentRepository.save(comment);
+
+            commentToDelete.setRepliedComment(null);
+            commentRepository.save(commentToDelete);
+        }
+
         commentRepository.deleteById(id);
         return commentToDelete;
     }
