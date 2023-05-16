@@ -24,7 +24,7 @@ public class Comment {
     Integer id;
 
     @Schema(description = "Comment", example = "Nice place!")
-    @NotNull
+    @NotNull(message="must not be null")
     String comment;
 
     @ManyToOne
