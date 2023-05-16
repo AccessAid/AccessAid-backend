@@ -66,9 +66,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CommentSaveException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Comment save failed.")
-    public ErrorResponse handleCommentSaveException(CommentSaveException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleCommentSaveException(CommentSaveException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RatingNotFoundException.class)
