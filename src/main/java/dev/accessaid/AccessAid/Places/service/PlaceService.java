@@ -22,6 +22,10 @@ public interface PlaceService {
 
     Place findPlaceById(Integer id) throws PlaceNotFoundException;
 
+    Place findPlaceByAddress(String address) throws PlaceNotFoundException;
+
+    Place findPlaceByCoordinates(Double lat, Double lng) throws PlaceNotFoundException;
+
     Place createPlace(PlaceRequest request) throws PlaceSaveException;
 
     Place removePlace(Integer id) throws PlaceNotFoundException;

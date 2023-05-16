@@ -45,6 +45,25 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public Place findPlaceByAddress(String address) throws PlaceNotFoundException {
+        PlaceRequest request = new PlaceRequest();
+        request.setAddress(address);
+        GeolocationResponse response = geolocationUtils.getGeolocationByAddressOrCoordinates(request);
+        Place place = new Place(response);
+        return place;
+    }
+
+    @Override
+    public Place findPlaceByCoordinates(Double lat, Double lng) throws PlaceNotFoundException {
+        PlaceRequest request = new PlaceRequest();
+        request.setLatitude(lat);
+        request.setLongitude(lng);
+        GeolocationResponse response = geolocationUtils.getGeolocationByAddressOrCoordinates(request);
+        Place place = new Place(response);
+        return place;
+    }
+
+    @Override
     public Place findPlaceById(Integer id) throws PlaceNotFoundException {
         Optional<Place> placeOptional = placeRepository.findById(id);
         return placeOptional.orElseThrow(() -> new PlaceNotFoundException("Place with ID " + id + " not found"));
