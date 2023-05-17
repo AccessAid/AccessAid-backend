@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,14 +41,17 @@ public class User {
 
     @Schema(example = "username", description = "")
     @JsonProperty("username")
+    @NotNull(message = "username is required")
     private String username;
 
     @Schema(example = "email@email.com", description = "")
     @JsonProperty("email")
+    @NotNull(message = "email is required")
     @Email
     private String email;
 
     @Schema(example = "password", description = "")
+    @NotNull(message = "password is required")
     private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

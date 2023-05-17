@@ -143,8 +143,7 @@ public class UserController {
     })
     @GetMapping("/profile/{profileId}")
     public UserResponse seeUserByProfile(@PathVariable Integer profileId) {
-        Profile profile = profileService.getProfileById(profileId);
-        User user = userService.getUserByProfile(profile);
+        User user = userService.getUserByProfile(profileId);
         return UserMapper.toUserResponse(user);
 
     }
@@ -161,7 +160,7 @@ public class UserController {
 
     }
 
-    @Operation(summary = "See user by email")
+    @Operation(summary = "See user by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)

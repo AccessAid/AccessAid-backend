@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.User.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -86,10 +87,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
+        if (!user.isPresent())
             throw new UserNotFoundException("User not found");
 
-        }
         return user.get();
     }
 
@@ -105,56 +105,58 @@ public class UserServiceImpl implements UserService {
     @Override
     public User changeUser(User user) throws UserNotFoundException, UserSaveException {
         Optional<User> userToChange = userRepository.findById(user.getId());
-        if (!userToChange.isPresent()) {
+        if (!userToChange.isPresent())
             throw new UserNotFoundException("User not found");
-        }
+
+        if (userRepository.existsByUsername(user.getUsername()))
+            throw new UserSaveException("username already exists");
+
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new UserSaveException("email already exists");
 
         User existingUser = userToChange.get();
-        if (user.getEmail() != null) {
+        if (user.getEmail() != null)
             existingUser.setEmail(user.getEmail());
-        }
-        if (user.getUsername() != null) {
+
+        if (user.getUsername() != null)
             existingUser.setUsername(user.getUsername());
-        }
-        if (user.getPassword() != null) {
+
+        if (user.getPassword() != null)
             existingUser.setPassword(encoder.encode(user.getPassword()));
-        }
 
         return userRepository.save(existingUser);
     }
 
     @Override
+    @Transactional
     public User removeUser(Integer id) throws UserNotFoundException {
         Optional<User> userToDelete = userRepository.findById(id);
-        if (!userToDelete.isPresent()) {
+        if (!userToDelete.isPresent())
             throw new UserNotFoundException("User not found");
-        }
+
         userRepository.deleteById(id);
 
         Optional<Profile> profileToDelete = profileRepository.findByUser(userToDelete.get());
-        if (profileToDelete.isPresent()) {
+        if (profileToDelete.isPresent())
             profileRepository.delete(profileToDelete.get());
-        }
+
         return userToDelete.get();
-
     }
-
     @Override
-    public User getUserByProfile(Profile profile) throws UserNotFoundException {
-        Optional<User> user = userRepository.findByProfile(profile);
-        if (!user.isPresent()) {
-            throw new UserNotFoundException("User not found");
-        }
+    public User getUserByProfile(Integer profileId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findByProfileId(profileId);
+        if (!user.isPresent())
+            throw new UserNotFoundException("User not found -profile does not exists");
+
         return user.get();
 
     }
-
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            throw new UserNotFoundException("User not found");
-        }
+        if (!user.isPresent())
+            throw new UserNotFoundException("User not found -email does not exists");
+
         return user.get();
 
     }
@@ -162,9 +164,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) throws UserNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
-        if (!user.isPresent()) {
-            throw new UserNotFoundException("User not found");
-        }
+        if (!user.isPresent())
+            throw new UserNotFoundException("User not found -username does not exists");
+
         return user.get();
 
     }

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
@@ -32,7 +31,7 @@ public interface UserService {
 
     User removeUser(Integer id) throws UserNotFoundException;
 
-    User getUserByProfile(Profile profile) throws UserNotFoundException;
+    User getUserByProfile(Integer profileId) throws UserNotFoundException;
 
     User getUserByEmail(String email) throws UserNotFoundException;
 
