@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
