@@ -22,7 +22,6 @@ import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
-import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileResponseExample;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -41,6 +40,7 @@ public class ProfileController {
 
     @Autowired
     private ProfileServiceImpl profileService;
+
     @Operation(summary = "See a list of profiles")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
