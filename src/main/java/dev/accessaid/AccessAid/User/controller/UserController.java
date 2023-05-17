@@ -161,7 +161,7 @@ public class UserController {
 
     }
 
-    @Operation(summary = "See user by email")
+    @Operation(summary = "See user by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
