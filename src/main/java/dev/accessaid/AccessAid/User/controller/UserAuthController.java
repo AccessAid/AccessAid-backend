@@ -1,4 +1,4 @@
-package dev.accessaid.AccessAid.controller;
+package dev.accessaid.AccessAid.User.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
