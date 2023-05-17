@@ -3,9 +3,6 @@ package dev.accessaid.AccessAid.Comments.service;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +19,9 @@ import dev.accessaid.AccessAid.Places.repository.PlaceRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -43,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAll();
 
     }
+
     @Override
     public Page<Comment> getComments(Pageable pageable) {
         return commentRepository.findAll(pageable);
@@ -56,8 +57,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment createComment(Comment comment) throws
-            UserNotFoundException, PlaceNotFoundException, CommentNotFoundException, CommentSaveException {
+    public Comment createComment(Comment comment)
+            throws UserNotFoundException, PlaceNotFoundException, CommentNotFoundException, CommentSaveException {
 
         User user = userRepository.findById(comment.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + comment.getUser().getId()));
@@ -69,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
         if (comment.getReplyToComment() != null) {
             Comment replyToComment = comment.getReplyToComment();
             if (replyToComment.getId() != null) {
-                Comment repliedComment = commentRepository.findById(replyToComment.getId())
+                commentRepository.findById(replyToComment.getId())
                         .orElseThrow(() -> new CommentNotFoundException("Reply-to comment not found"));
             } else {
                 throw new CommentSaveException("reply-to comment can not be null");
