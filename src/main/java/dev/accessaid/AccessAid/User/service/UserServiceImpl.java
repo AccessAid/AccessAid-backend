@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByProfile(Integer profileId) throws UserNotFoundException {
         Optional<User> user = userRepository.findByProfileId(profileId);
         if (!user.isPresent())
-            throw new UserNotFoundException("User not found -profile do not exists");
+            throw new UserNotFoundException("Profile do not exists");
 
         return user.get();
 
