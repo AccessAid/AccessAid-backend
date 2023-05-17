@@ -3,7 +3,6 @@ package dev.accessaid.AccessAid.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +17,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
+import dev.accessaid.AccessAid.Contact.exceptions.ContactNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
+import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -93,6 +94,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(ProfileNotFoundException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleProfileNotFoundException(ProfileNotFoundException e) {
@@ -110,9 +112,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  org.springframework.http.HttpHeaders headers,
-                                                                  HttpStatusCode status,
-                                                                  WebRequest request) {
+            org.springframework.http.HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -122,5 +124,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ContactNotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleContactNotFoundException(ContactNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

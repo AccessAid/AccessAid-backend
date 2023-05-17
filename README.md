@@ -33,9 +33,26 @@ spring.jpa.generate-ddl=true
 spring.jpa.hibernate.ddl-auto = create-drop
 spring.jpa.properties.hibernate.format_sql=true
 spring.mvc.pathmatch.matching-strategy=ant-path-matcher
+
+# Api Key from 3rd party
 spring.sendgrid.api-key=[YOUR_API_KEY]
+
 app.jwt.secret=[YOUR_SECRET_256-bit]
+
+# Pagination
 api.pagination.default-size=5
+
+# Email configuration
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.protocol=smtp
+spring.mail.username=accessaid.app@gmail.com
+spring.mail.password=[EMAIL_PASSWORD]
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.setTo=[NOTIFICATION_RECEIVING_EMAIL]
+spring.mail.subject=AccessAid - New contact message
+spring.mail.text=A new contact message has been received:\n\n
 
 ```
 Make sure to replace the username and password with your local database credentials.
