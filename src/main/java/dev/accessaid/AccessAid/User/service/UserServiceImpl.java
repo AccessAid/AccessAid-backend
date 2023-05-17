@@ -137,17 +137,15 @@ public class UserServiceImpl implements UserService {
         return userToDelete.get();
 
     }
-
     @Override
-    public User getUserByProfile(Profile profile) throws UserNotFoundException {
-        Optional<User> user = userRepository.findByProfile(profile);
-        if (!user.isPresent()) {
-            throw new UserNotFoundException("User not found");
-        }
+    public User getUserByProfile(Integer profileId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findByProfileId(profileId);
+        if (!user.isPresent())
+            throw new UserNotFoundException("User not found -profile do not exists");
+
         return user.get();
 
     }
-
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);

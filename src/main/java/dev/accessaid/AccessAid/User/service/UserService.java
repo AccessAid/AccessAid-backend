@@ -32,7 +32,7 @@ public interface UserService {
 
     User removeUser(Integer id) throws UserNotFoundException;
 
-    User getUserByProfile(Profile profile) throws UserNotFoundException;
+    User getUserByProfile(Integer profileId) throws UserNotFoundException;
 
     User getUserByEmail(String email) throws UserNotFoundException;
 

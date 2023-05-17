@@ -143,8 +143,7 @@ public class UserController {
     })
     @GetMapping("/profile/{profileId}")
     public UserResponse seeUserByProfile(@PathVariable Integer profileId) {
-        Profile profile = profileService.getProfileById(profileId);
-        User user = userService.getUserByProfile(profile);
+        User user = userService.getUserByProfile(profileId);
         return UserMapper.toUserResponse(user);
 
     }
