@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Accessibility.response.AccessibilityResponse;
+import dev.accessaid.AccessAid.Accessibility.response.PlaceAndNearbyPlacesResponse;
 import dev.accessaid.AccessAid.Accessibility.service.AccessibilityService;
 import dev.accessaid.AccessAid.config.ErrorResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,4 +31,21 @@ public class AccessibilityController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    @GetMapping("/api/accessibility/nearbyplaces")
+    public ResponseEntity<?> getNearbyPlaces(
+            @RequestParam(required = false) Double latitude,
+            @RequestParam(required = false) Double longitude,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) String type) {
+        try {
+            PlaceAndNearbyPlacesResponse response = accessibilityService.getNearbyPlaces(latitude, longitude, address,
+                    type);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("INVALID_REQUEST");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
 }
