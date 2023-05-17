@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Profile.model.Profile;
-import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
@@ -45,9 +43,6 @@ public class UserController {
 
     @Autowired
     private UserServiceImpl userService;
-
-    @Autowired
-    private ProfileServiceImpl profileService;
 
     @Operation(summary = "See a list of users")
     @ApiResponses(value = {
