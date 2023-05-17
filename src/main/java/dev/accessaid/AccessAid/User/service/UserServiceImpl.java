@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByProfile(Integer profileId) throws UserNotFoundException {
         Optional<User> user = userRepository.findByProfileId(profileId);
         if (!user.isPresent())
-            throw new UserNotFoundException("Profile do not exists");
+            throw new UserNotFoundException("User not found -profile does not exists");
 
         return user.get();
 
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
         if (!user.isPresent())
-            throw new UserNotFoundException("User not found -email do not exists");
+            throw new UserNotFoundException("User not found -email does not exists");
 
         return user.get();
 
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username) throws UserNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent())
-            throw new UserNotFoundException("User not found -username do not exists");
+            throw new UserNotFoundException("User not found -username does not exists");
 
         return user.get();
 
