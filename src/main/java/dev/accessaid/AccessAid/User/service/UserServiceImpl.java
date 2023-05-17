@@ -149,9 +149,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            throw new UserNotFoundException("User not found");
-        }
+        if (!user.isPresent())
+            throw new UserNotFoundException("User not found -email do not exists");
+
         return user.get();
 
     }
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username) throws UserNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent())
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User not found -username do not exists");
 
         return user.get();
 
