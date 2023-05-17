@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.User.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -123,19 +124,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User removeUser(Integer id) throws UserNotFoundException {
         Optional<User> userToDelete = userRepository.findById(id);
-        if (!userToDelete.isPresent()) {
+        if (!userToDelete.isPresent())
             throw new UserNotFoundException("User not found");
-        }
+
         userRepository.deleteById(id);
 
         Optional<Profile> profileToDelete = profileRepository.findByUser(userToDelete.get());
-        if (profileToDelete.isPresent()) {
+        if (profileToDelete.isPresent())
             profileRepository.delete(profileToDelete.get());
-        }
-        return userToDelete.get();
 
+        return userToDelete.get();
     }
     @Override
     public User getUserByProfile(Integer profileId) throws UserNotFoundException {
