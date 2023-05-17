@@ -105,20 +105,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User changeUser(User user) throws UserNotFoundException, UserSaveException {
         Optional<User> userToChange = userRepository.findById(user.getId());
-        if (!userToChange.isPresent()) {
+        if (!userToChange.isPresent())
             throw new UserNotFoundException("User not found");
-        }
+
+        if (userRepository.existsByUsername(user.getUsername()))
+            throw new UserSaveException("username already exists");
+
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new UserSaveException("email already exists");
 
         User existingUser = userToChange.get();
-        if (user.getEmail() != null) {
+        if (user.getEmail() != null)
             existingUser.setEmail(user.getEmail());
-        }
-        if (user.getUsername() != null) {
+
+        if (user.getUsername() != null)
             existingUser.setUsername(user.getUsername());
-        }
-        if (user.getPassword() != null) {
+
+        if (user.getPassword() != null)
             existingUser.setPassword(encoder.encode(user.getPassword()));
-        }
 
         return userRepository.save(existingUser);
     }
