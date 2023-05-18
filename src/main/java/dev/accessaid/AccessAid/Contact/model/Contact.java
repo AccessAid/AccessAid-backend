@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class Contact {
 
     @Schema(example = "email@email.com", description = "")
     @JsonProperty("email")
+    @NotNull(message = "email is required")
     @Email(message = "Please enter a valid email")
     private String email;
 
@@ -45,6 +47,7 @@ public class Contact {
 
     @Schema(example = "message", description = "")
     @JsonProperty("message")
+    @NotNull(message = "message is required")
     private String message;
 
     @Schema(example = "2022-09-10T10:00:00", description = "")

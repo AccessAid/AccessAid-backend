@@ -44,9 +44,7 @@ public class ContactController {
     })
     @GetMapping("")
     public Page<ContactResponse> seeAllContacts(Pageable pageable) {
-        Page<Contact> contacts = contactService.getContacts(pageable);
-        return ContactMapper.toContactResponses(contacts, pageable);
-
+        return ContactMapper.toContactResponses(contactService.getContacts(pageable), pageable);
     }
 
     @Operation(summary = "See a contact by id")
@@ -56,9 +54,7 @@ public class ContactController {
     })
     @GetMapping("/{id}")
     public ContactResponse seeContactById(@PathVariable Integer id) {
-        Contact contact = contactService.getContactById(id);
-        return ContactMapper.toContactResponse(contact);
-
+        return ContactMapper.toContactResponse(contactService.getContactById(id));
     }
 
     @Operation(summary = "Add contact", description = "Create a new contact")
@@ -71,10 +67,7 @@ public class ContactController {
     @ResponseStatus(HttpStatus.CREATED)
     public ContactResponse addContact(
             @RequestBody @Valid @Schema(implementation = ContactRequestExample.class) Contact contact) {
-        Contact newContact = contactService.createContact(contact);
-        contactService.sendEmailNotification(contact);
-        return ContactMapper.toContactResponse(newContact);
-
+        return ContactMapper.toContactResponse(contactService.createContact(contact));
     }
 
     @Operation(summary = "See contact by email")
@@ -85,9 +78,7 @@ public class ContactController {
     @GetMapping("/email/{email}")
     public ContactResponse seeContactByEmail(
             @PathVariable @Validated @Email(message = "Invalid email format") String email) {
-        Contact contact = contactService.getContactByEmail(email);
-        return ContactMapper.toContactResponse(contact);
-
+        return ContactMapper.toContactResponse(contactService.getContactByEmail(email));
     }
 
 }

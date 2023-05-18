@@ -1,7 +1,6 @@
 package dev.accessaid.AccessAid.Contact.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,12 +27,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Autowired
     private EmailText emailText;
-
-    @Override
-    public List<Contact> getContacts() {
-        return contactRepository.findAll();
-    }
-
     @Override
     public Page<Contact> getContacts(Pageable pageable) {
         return contactRepository.findAll(pageable);
@@ -45,10 +38,12 @@ public class ContactServiceImpl implements ContactService {
                 .orElseThrow(() -> new ContactNotFoundException("Contact not found with ID: " + id));
     }
 
+
     @Override
     public Contact createContact(Contact contact) throws ContactSaveException {
         try {
             contact.setSentDate(LocalDateTime.now());
+            sendEmailNotification(contact);
             return contactRepository.save(contact);
         } catch (Exception e) {
             throw new ContactSaveException("Error saving contact: " + e.getMessage());
