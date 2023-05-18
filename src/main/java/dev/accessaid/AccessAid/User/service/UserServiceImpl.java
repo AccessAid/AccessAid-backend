@@ -140,7 +140,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found -email does not exists");
 
         return user.get();
-
     }
 
     @Override
