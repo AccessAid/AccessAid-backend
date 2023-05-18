@@ -78,9 +78,7 @@ public class ContactController {
     @GetMapping("/email/{email}")
     public ContactResponse seeContactByEmail(
             @PathVariable @Validated @Email(message = "Invalid email format") String email) {
-        Contact contact = contactService.getContactByEmail(email);
-        return ContactMapper.toContactResponse(contact);
-
+        return ContactMapper.toContactResponse(contactService.getContactByEmail(email));
     }
 
 }
