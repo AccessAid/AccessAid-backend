@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.accessaid.AccessAid.Contact.exceptions.ContactSaveException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 
 import org.springframework.http.HttpStatus;
@@ -119,6 +120,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ContactNotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleContactNotFoundException(ContactNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ContactSaveException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleContactSaveException(ContactSaveException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             org.springframework.http.HttpHeaders headers,
@@ -135,11 +152,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ContactNotFoundException.class)
-    @ResponseBody
-    public ResponseEntity<ErrorResponse> handleContactNotFoundException(ContactNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
 }
