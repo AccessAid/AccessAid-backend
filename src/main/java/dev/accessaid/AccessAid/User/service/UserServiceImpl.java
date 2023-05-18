@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
     }
     @Override
-    public Page<User> getUsers(Pageable pageable) throws UserNotFoundException {
+    public Page<User> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 

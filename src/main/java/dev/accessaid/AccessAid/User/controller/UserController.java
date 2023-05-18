@@ -61,9 +61,7 @@ public class UserController {
     })
     @GetMapping("/{id}")
     public UserResponse seeUserById(@PathVariable Integer id) {
-        User user = userService.getUserById(id);
-        return UserMapper.toUserResponse(user);
-
+        return UserMapper.toUserResponse(userService.getUserById(id));
     }
 
     @Hidden

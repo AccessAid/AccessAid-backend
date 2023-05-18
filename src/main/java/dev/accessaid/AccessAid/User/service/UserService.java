@@ -18,19 +18,12 @@ public interface UserService {
     ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest);
     ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest);
     Page<User> getUsers(Pageable pageable) throws UserNotFoundException;
-
     User getUserById(Integer id) throws UserNotFoundException;
-
     User createUser(User user) throws UserSaveException;
-
     User changeUser(User user) throws UserNotFoundException, UserSaveException;
-
     User removeUser(Integer id) throws UserNotFoundException;
-
     User getUserByProfile(Integer profileId) throws UserNotFoundException;
-
     User getUserByEmail(String email) throws UserNotFoundException;
-
     User getUserByUsername(String username) throws UserNotFoundException;
 
 }
