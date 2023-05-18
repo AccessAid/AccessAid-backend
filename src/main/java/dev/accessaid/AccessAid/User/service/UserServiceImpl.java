@@ -149,6 +149,5 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found -username does not exists");
 
         return user.get();
-
     }
 }

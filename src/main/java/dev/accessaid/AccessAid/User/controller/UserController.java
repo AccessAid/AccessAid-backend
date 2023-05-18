@@ -120,9 +120,7 @@ public class UserController {
     })
     @GetMapping("/username/{username}")
     public UserResponse seeUserByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
-        return UserMapper.toUserResponse(user);
-
+        return UserMapper.toUserResponse(userService.getUserByUsername(username));
     }
 
 }
