@@ -54,9 +54,7 @@ public class ContactController {
     })
     @GetMapping("/{id}")
     public ContactResponse seeContactById(@PathVariable Integer id) {
-        Contact contact = contactService.getContactById(id);
-        return ContactMapper.toContactResponse(contact);
-
+        return ContactMapper.toContactResponse(contactService.getContactById(id));
     }
 
     @Operation(summary = "Add contact", description = "Create a new contact")
