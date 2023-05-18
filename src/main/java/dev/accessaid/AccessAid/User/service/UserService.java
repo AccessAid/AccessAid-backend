@@ -16,11 +16,7 @@ import dev.accessaid.AccessAid.security.payload.RegisterRequest;
 
 public interface UserService {
     ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest);
-
     ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest);
-
-    List<User> getUsers() throws UserNotFoundException;
-
     Page<User> getUsers(Pageable pageable) throws UserNotFoundException;
 
     User getUserById(Integer id) throws UserNotFoundException;

@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
         return new ResponseEntity<>(new MessageResponse("user was registered correctly"), HttpStatus.CREATED);
     }
-
     @Override
     public ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest) {
 
@@ -73,12 +72,6 @@ public class UserServiceImpl implements UserService {
         String jwt = jwtTokenUtil.generateJwtToken(authentication);
         return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
     }
-
-    @Override
-    public List<User> getUsers() throws UserNotFoundException {
-        return userRepository.findAll();
-    }
-
     @Override
     public Page<User> getUsers(Pageable pageable) throws UserNotFoundException {
         return userRepository.findAll(pageable);
