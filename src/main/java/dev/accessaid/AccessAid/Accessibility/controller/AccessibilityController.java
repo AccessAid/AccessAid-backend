@@ -43,7 +43,7 @@ public class AccessibilityController {
                     type);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse("INVALID_REQUEST");
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }

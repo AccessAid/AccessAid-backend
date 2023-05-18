@@ -27,69 +27,76 @@ import okhttp3.ResponseBody;
 @Service
 public class AccessibilityService {
 
-    @Value("${spring.sendgrid.api-key}")
-    String apiKey;
+        @Value("${spring.sendgrid.api-key}")
+        String apiKey;
 
-    @Autowired
-    private GeolocationUtils geolocationUtils;
+        @Autowired
+        private GeolocationUtils geolocationUtils;
 
-    private final GeoApiContext context;
+        private final GeoApiContext context;
 
-    public AccessibilityService(@Value("${spring.sendgrid.api-key}") String apiKey) {
-        this.context = new GeoApiContext.Builder()
-                .apiKey(apiKey)
-                .build();
-    }
+        public AccessibilityService(@Value("${spring.sendgrid.api-key}") String apiKey) {
+                this.context = new GeoApiContext.Builder()
+                                .apiKey(apiKey)
+                                .build();
+        }
 
-    public AccessibilityResponse getPlaceDetails(String placeId) throws Exception {
+        public AccessibilityResponse getPlaceDetails(String placeId) throws Exception {
 
-        PlaceDetails details = PlacesApi.placeDetails(context, placeId).await();
+                PlaceDetails details = PlacesApi.placeDetails(context, placeId).await();
 
-        String name = details.name != null ? details.name : null;
-        String phone = details.formattedPhoneNumber != null ? details.formattedPhoneNumber : null;
-        String url = details.url != null ? details.url.toString() : null;
-        Boolean wheelchair_accessible_entrance = details.wheelchairAccessibleEntrance != null
-                ? details.wheelchairAccessibleEntrance
-                : null;
-        String website = details.website != null ? details.website.toString() : null;
-        AddressType[] types = details.types != null ? details.types : null;
-        Photo[] photos = details.photos != null ? details.photos : null;
+                String name = details.name != null ? details.name : null;
+                String phone = details.formattedPhoneNumber != null ? details.formattedPhoneNumber : null;
+                String url = details.url != null ? details.url.toString() : null;
+                Boolean wheelchair_accessible_entrance = details.wheelchairAccessibleEntrance != null
+                                ? details.wheelchairAccessibleEntrance
+                                : null;
+                String website = details.website != null ? details.website.toString() : null;
+                AddressType[] types = details.types != null ? details.types : null;
+                Photo[] photos = details.photos != null ? details.photos : null;
 
-        AccessibilityResponse response = new AccessibilityResponse(name, phone, url, wheelchair_accessible_entrance,
-                website,
-                types, photos);
-        return response;
-    }
+                AccessibilityResponse response = new AccessibilityResponse(name, phone, url,
+                                wheelchair_accessible_entrance,
+                                website,
+                                types, photos);
+                return response;
+        }
 
-    public PlaceAndNearbyPlacesResponse getNearbyPlaces(Double lat, Double lng, String address, String type)
-            throws Exception {
+        public PlaceAndNearbyPlacesResponse getNearbyPlaces(Double lat, Double lng, String address, String type)
+                        throws Exception {
 
-        PlaceRequest placeRequest = new PlaceRequest(address, lat, lng);
+                PlaceRequest placeRequest = new PlaceRequest(address, lat, lng);
 
-        GeolocationResponse geolocationResponse = geolocationUtils
-                .getGeolocationByAddressOrCoordinates(placeRequest);
+                GeolocationResponse geolocationResponse = geolocationUtils
+                                .getGeolocationByAddressOrCoordinates(placeRequest);
 
-        double latitud = geolocationResponse.getLatitude();
-        double longitude = geolocationResponse.getLongitude();
+                double latitud = geolocationResponse.getLatitude();
+                double longitude = geolocationResponse.getLongitude();
 
-        String addressType = type == null ? "" : type.toLowerCase();
-        Response response = NearbyPlaceUtils.getResponse(latitud, longitude, addressType, apiKey);
+                String addressType = type == null ? "" : type.toLowerCase();
+                Response response = NearbyPlaceUtils.getResponse(latitud, longitude, addressType, apiKey);
 
-        AccessibilityResponse accessibilityResponse = getPlaceDetails(geolocationResponse.getPlaceId());
+                AccessibilityResponse accessibilityResponse = getPlaceDetails(geolocationResponse.getPlaceId());
 
-        ResponseBody responseBody = response.body();
-        String json = responseBody != null ? responseBody.string() : "";
+                ResponseBody responseBody = response.body();
+                String json = responseBody != null ? responseBody.string() : "";
 
-        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-        JsonElement results = jsonObject.get("results");
-        String next_page_token = jsonObject.get("next_page_token").getAsString();
+                JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+                JsonElement results = jsonObject.get("results");
+                JsonElement status = jsonObject.get("status");
+                if (!status.getAsString().equals("OK")) {
+                        throw new Exception(status.getAsString());
 
-        List<NearbyPlacesResponse> nearbyPlaces = NearbyPlaceUtils.getNearbyPlaces(results);
+                }
 
-        PlaceAndNearbyPlacesResponse placeAndNearbyPlacesResponse = new PlaceAndNearbyPlacesResponse(
-                accessibilityResponse, nearbyPlaces, next_page_token);
+                String next_page_token = jsonObject.get("next_page_token").getAsString();
 
-        return placeAndNearbyPlacesResponse;
-    }
+                List<NearbyPlacesResponse> nearbyPlaces = NearbyPlaceUtils.getNearbyPlaces(results);
+
+                PlaceAndNearbyPlacesResponse placeAndNearbyPlacesResponse = new PlaceAndNearbyPlacesResponse(
+                                accessibilityResponse, nearbyPlaces, next_page_token);
+
+                return placeAndNearbyPlacesResponse;
+        }
 
 }
