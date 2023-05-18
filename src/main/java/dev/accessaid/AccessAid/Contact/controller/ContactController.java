@@ -67,10 +67,7 @@ public class ContactController {
     @ResponseStatus(HttpStatus.CREATED)
     public ContactResponse addContact(
             @RequestBody @Valid @Schema(implementation = ContactRequestExample.class) Contact contact) {
-        Contact newContact = contactService.createContact(contact);
-        contactService.sendEmailNotification(contact);
-        return ContactMapper.toContactResponse(newContact);
-
+        return ContactMapper.toContactResponse(contactService.createContact(contact));
     }
 
     @Operation(summary = "See contact by email")
