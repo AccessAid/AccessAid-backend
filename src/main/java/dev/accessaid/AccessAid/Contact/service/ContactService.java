@@ -11,9 +11,6 @@ import dev.accessaid.AccessAid.Contact.exceptions.EmailSendException;
 import dev.accessaid.AccessAid.Contact.model.Contact;
 
 public interface ContactService {
-
-    List<Contact> getContacts();
-
     Page<Contact> getContacts(Pageable pageable);
 
     Contact getContactById(Integer id) throws ContactNotFoundException;

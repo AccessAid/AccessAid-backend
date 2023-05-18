@@ -44,9 +44,7 @@ public class ContactController {
     })
     @GetMapping("")
     public Page<ContactResponse> seeAllContacts(Pageable pageable) {
-        Page<Contact> contacts = contactService.getContacts(pageable);
-        return ContactMapper.toContactResponses(contacts, pageable);
-
+        return ContactMapper.toContactResponses(contactService.getContacts(pageable), pageable);
     }
 
     @Operation(summary = "See a contact by id")

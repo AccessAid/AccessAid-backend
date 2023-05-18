@@ -28,12 +28,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Autowired
     private EmailText emailText;
-
-    @Override
-    public List<Contact> getContacts() {
-        return contactRepository.findAll();
-    }
-
     @Override
     public Page<Contact> getContacts(Pageable pageable) {
         return contactRepository.findAll(pageable);
