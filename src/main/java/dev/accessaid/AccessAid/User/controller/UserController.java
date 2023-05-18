@@ -63,25 +63,6 @@ public class UserController {
     public UserResponse seeUserById(@PathVariable Integer id) {
         return UserMapper.toUserResponse(userService.getUserById(id));
     }
-
-    @Hidden
-    @PostMapping("")
-    public ResponseEntity<?> addUser(@RequestBody User user) {
-        try {
-            User newUser = userService.createUser(user);
-            UserResponse response = UserMapper.toUserResponse(newUser);
-            return ResponseEntity.ok(response);
-        } catch (UserSaveException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-
-    }
-
     @Operation(summary = "Update an existing profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Profile updated successfully", content = @Content(schema = @Schema(implementation = UserResponseExample.class))),
@@ -99,7 +80,6 @@ public class UserController {
         userToUpdate.updateFields(user);
         User updatedUser = userService.changeUser(userToUpdate);
         return UserMapper.toUserResponse(updatedUser);
-
     }
 
     @Operation(summary = "Delete an existing user")
@@ -111,7 +91,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Integer id) {
         userService.removeUser(id);
-
     }
 
     @Operation(summary = "See user by profile")
@@ -121,9 +100,7 @@ public class UserController {
     })
     @GetMapping("/profile/{profileId}")
     public UserResponse seeUserByProfile(@PathVariable Integer profileId) {
-        User user = userService.getUserByProfile(profileId);
-        return UserMapper.toUserResponse(user);
-
+        return UserMapper.toUserResponse(userService.getUserByProfile(profileId));
     }
 
     @Operation(summary = "See user by email")

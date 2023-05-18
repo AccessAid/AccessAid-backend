@@ -85,16 +85,6 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
-
-    @Override
-    public User createUser(User user) throws UserSaveException {
-        Optional<User> userToCreate = userRepository.findByEmail(user.getEmail());
-        if (userToCreate.isPresent()) {
-            throw new UserSaveException("User already exists");
-        }
-        return userRepository.save(user);
-    }
-
     @Override
     public User changeUser(User user) throws UserNotFoundException, UserSaveException {
         Optional<User> userToChange = userRepository.findById(user.getId());
@@ -142,7 +132,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found -profile does not exists");
 
         return user.get();
-
     }
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
