@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.config.documentation.Places;
 
 import com.google.maps.model.AddressType;
+import com.google.maps.model.OpeningHours;
 import com.google.maps.model.Photo;
 
 import dev.accessaid.AccessAid.Accessibility.response.AccessibilityResponse;
@@ -39,6 +40,9 @@ public class PlaceResponseExample {
 
         @Schema(example = ExamplesValues.IS_ACCESSIBLE, description = "")
         Boolean isAccessible;
+
+        @Schema(example = ExamplesValues.OPENING_HOURS_STRING, description = "")
+        OpeningHours openingHours;
 
         @Schema(example = ExamplesValues.WEBSITE, description = "")
         String website;
