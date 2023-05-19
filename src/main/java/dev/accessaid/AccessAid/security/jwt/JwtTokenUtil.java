@@ -41,7 +41,8 @@ public class JwtTokenUtil {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        Instant expiration = issuedAt.plus(30, ChronoUnit.MINUTES);
+        //Instant expiration = issuedAt.plus(30, ChronoUnit.MINUTES);
+        Instant expiration = issuedAt.plus(1, ChronoUnit.MINUTES);
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
@@ -63,6 +64,7 @@ public class JwtTokenUtil {
             log.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
             log.error("JWT token is expired: {}", e.getMessage());
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
