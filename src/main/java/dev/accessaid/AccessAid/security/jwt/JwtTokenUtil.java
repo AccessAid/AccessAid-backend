@@ -41,8 +41,7 @@ public class JwtTokenUtil {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        //Instant expiration = issuedAt.plus(30, ChronoUnit.MINUTES);
-        Instant expiration = issuedAt.plus(1, ChronoUnit.MINUTES);
+        Instant expiration = issuedAt.plus(30, ChronoUnit.MINUTES);
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
