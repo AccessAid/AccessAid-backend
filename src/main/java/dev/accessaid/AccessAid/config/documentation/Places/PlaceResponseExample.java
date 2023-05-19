@@ -61,6 +61,7 @@ public class PlaceResponseExample {
                                         ExamplesValues.PLACE_PHONE,
                                         ExamplesValues.PLACE_URL,
                                         Boolean.parseBoolean(ExamplesValues.IS_ACCESSIBLE),
+                                        ExamplesValues.OPENING_HOURS,
                                         ExamplesValues.WEBSITE,
                                         ExamplesValues.PLACE_TYPES,
                                         ExamplesValues_Photos.PLACE_PHOTOS));
