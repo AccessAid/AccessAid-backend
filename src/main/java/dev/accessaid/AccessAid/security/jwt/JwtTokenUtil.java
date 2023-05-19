@@ -12,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -74,4 +76,15 @@ public class JwtTokenUtil {
 
         return false;
     }
+
+    public Instant extractTokenExpiration(String jwtToken) {
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(jwtToken);
+
+        Date expirationDate = claimsJws.getBody().getExpiration();
+        return expirationDate.toInstant();
+    }
+
 }
