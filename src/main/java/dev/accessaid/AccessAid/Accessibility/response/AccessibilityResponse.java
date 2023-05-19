@@ -2,6 +2,7 @@ package dev.accessaid.AccessAid.Accessibility.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.AddressType;
+import com.google.maps.model.OpeningHours;
 import com.google.maps.model.Photo;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class AccessibilityResponse {
 
     @JsonProperty("accessibility")
     private Boolean wheelchair_accessible_entrance;
+
+    @JsonProperty("opening_hours")
+    private OpeningHours opening_hours;
 
     @JsonProperty("website")
     private String website;
