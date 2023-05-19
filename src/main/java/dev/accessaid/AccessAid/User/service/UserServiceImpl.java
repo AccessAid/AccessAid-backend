@@ -1,6 +1,8 @@
 package dev.accessaid.AccessAid.User.service;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,8 +75,10 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenUtil.generateJwtToken(authentication);
         Instant expiration = jwtTokenUtil.extractTokenExpiration(jwt);
+        ZoneId cetZone = ZoneId.of("CET");
+        ZonedDateTime expirationCET = ZonedDateTime.ofInstant(expiration, cetZone);
 
-        return new ResponseEntity<>(new JwtResponse(jwt, expiration.toString()), HttpStatus.OK);
+        return new ResponseEntity<>(new JwtResponse(jwt, expirationCET.toString()), HttpStatus.OK);
     }
 
     @Override
