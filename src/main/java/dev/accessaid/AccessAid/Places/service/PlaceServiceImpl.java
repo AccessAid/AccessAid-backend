@@ -34,13 +34,11 @@ public class PlaceServiceImpl implements PlaceService {
     @Autowired
     private GeolocationUtils geolocationUtils;
 
-    @Override
-    public List<Place> findAllPlaces() throws PlaceNotFoundException {
-        return placeRepository.findAll();
-    }
+    @Autowired
+    private AccessibilityUtils accessibilityUtils;
 
     @Override
-    public Page<Place> findAllPlaces(Pageable pageable) throws PlaceNotFoundException {
+    public Page<Place> findAllPlaces(Pageable pageable) {
         return placeRepository.findAll(pageable);
     }
 
@@ -93,14 +91,6 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Place> findPlacesByUser(Integer userId) throws UserNotFoundException {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId))
-                .getPlaces();
-
-    }
-
-    @Override
     public Page<Place> findPlacesByUser(Integer userId, Pageable pageable) throws UserNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
@@ -108,15 +98,6 @@ public class PlaceServiceImpl implements PlaceService {
         List<Place> places = user.getPlaces();
         return new PageImpl<>(places, pageable, places.size());
 
-    }
-
-    @Override
-    public List<User> findUsersByPlace(Integer placeId) throws PlaceNotFoundException, UserNotFoundException {
-        Optional<Place> optionalPlace = placeRepository.findById(placeId);
-        if (!optionalPlace.isPresent()) {
-            throw new PlaceNotFoundException("Place not found with id: " + placeId);
-        }
-        return optionalPlace.get().getUsers();
     }
 
     @Override
@@ -129,16 +110,6 @@ public class PlaceServiceImpl implements PlaceService {
         List<User> users = optionalPlace.get().getUsers();
         return new PageImpl<>(users, pageable, users.size());
 
-    }
-
-    @Override
-    public List<Comment> findCommentsByPlace(Integer placeId) throws PlaceNotFoundException {
-
-        Optional<Place> optionalPlace = placeRepository.findById(placeId);
-        if (!optionalPlace.isPresent()) {
-            throw new PlaceNotFoundException("Place not found with id: " + placeId);
-        }
-        return optionalPlace.get().getComments();
     }
 
     @Override
@@ -164,16 +135,6 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Rating> findAllRatingsByPlace(Integer placeId) throws PlaceNotFoundException {
-        Optional<Place> optionalPlace = placeRepository.findById(placeId);
-        if (!optionalPlace.isPresent()) {
-            throw new PlaceNotFoundException("Place not found with id: " + placeId);
-        }
-        return optionalPlace.get().getRatings();
-
-    }
-
-    @Override
     public Page<Rating> findAllRatingsByPlace(Integer placeId, Pageable pageable)
             throws PlaceNotFoundException {
         Optional<Place> optionalPlace = placeRepository.findById(placeId);
@@ -183,6 +144,11 @@ public class PlaceServiceImpl implements PlaceService {
         List<Rating> ratings = optionalPlace.get().getRatings();
         return new PageImpl<>(ratings, pageable, ratings.size());
 
+    }
+
+    @Override
+    public Place findPlaceByApiPlaceId(String apiPlaceId) {
+        return new Place(accessibilityUtils.getGeolocationResponseByApiPlaceId(apiPlaceId));
     }
 
 }
