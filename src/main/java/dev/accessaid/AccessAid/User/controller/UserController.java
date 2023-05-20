@@ -62,7 +62,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @PutMapping("/{userId}")
-    public UserResponse updateUser(@Validated @RequestBody @Schema(implementation = UserRequestExample.class) User user,
+    public UserResponse updateUser(@RequestBody @Schema(implementation = UserRequestExample.class) User user,
                                    @PathVariable Integer userId) {
         return UserMapper.toUserResponse(userService.changeUser(user, userId));
     }
