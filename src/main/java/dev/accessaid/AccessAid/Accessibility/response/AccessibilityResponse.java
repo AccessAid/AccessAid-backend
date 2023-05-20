@@ -24,10 +24,10 @@ public class AccessibilityResponse {
     private String url;
 
     @JsonProperty("accessibility")
-    private Boolean wheelchair_accessible_entrance;
+    private Boolean wheelchairAccessibleEntrance;
 
-    @JsonProperty("opening_hours")
-    private OpeningHours opening_hours;
+    @JsonProperty("openingHours")
+    private OpeningHours openingHours;
 
     @JsonProperty("website")
     private String website;
