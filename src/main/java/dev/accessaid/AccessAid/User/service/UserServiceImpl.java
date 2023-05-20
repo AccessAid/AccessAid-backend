@@ -1,7 +1,11 @@
 package dev.accessaid.AccessAid.User.service;
 
-import java.util.Optional;
 import jakarta.transaction.Transactional;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +28,7 @@ import dev.accessaid.AccessAid.security.payload.JwtResponse;
 import dev.accessaid.AccessAid.security.payload.LoginRequest;
 import dev.accessaid.AccessAid.security.payload.MessageResponse;
 import dev.accessaid.AccessAid.security.payload.RegisterRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -67,7 +72,11 @@ public class UserServiceImpl implements UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenUtil.generateJwtToken(authentication);
-        return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
+        Instant expiration = jwtTokenUtil.extractTokenExpiration(jwt);
+        ZoneId cetZone = ZoneId.of("CET");
+        ZonedDateTime expirationCET = ZonedDateTime.ofInstant(expiration, cetZone);
+
+        return new ResponseEntity<>(new JwtResponse(jwt, expirationCET.toString()), HttpStatus.OK);
     }
     @Override
     public Page<User> getUsers(Pageable pageable) {
@@ -123,6 +132,7 @@ public class UserServiceImpl implements UserService {
 
         return userToDelete.get();
     }
+
     @Override
     public User getUserByProfile(Integer profileId) throws UserNotFoundException {
         Optional<User> user = userRepository.findByProfileId(profileId);
@@ -131,6 +141,7 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
+
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
