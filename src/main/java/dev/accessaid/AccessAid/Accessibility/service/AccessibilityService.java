@@ -104,4 +104,17 @@ public class AccessibilityService {
                 return placeAndNearbyPlacesResponse;
         }
 
+        public GeolocationResponse getGeolocationResponse(String placeId) throws Exception {
+
+                PlaceDetails details = PlacesApi.placeDetails(context, placeId).await();
+
+                double latitud = details.geometry.location.lat;
+                double longitude = details.geometry.location.lng;
+                String formattedAddress = details.formattedAddress != null ? details.formattedAddress : null;
+
+                GeolocationResponse response = new GeolocationResponse(latitud, longitude, formattedAddress,
+                                placeId);
+                return response;
+        }
+
 }
