@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlaceAndNearbyPlacesResponse {
 
-    @JsonProperty("current_place")
-    private AccessibilityResponse current_place;
+    @JsonProperty("currentPlace")
+    private AccessibilityResponse currentPlace;
 
-    @JsonProperty("nearby_places")
-    private List<NearbyPlacesResponse> nearby_places;
+    @JsonProperty("nearbyPlaces")
+    private List<NearbyPlacesResponse> nearbyPlaces;
 
-    @JsonProperty("next_page_token")
-    private String next_page_token;
+    @JsonProperty("nextPageToken")
+    private String nextPageToken;
 
 }

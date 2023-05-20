@@ -20,10 +20,10 @@ public class NearbyPlacesResponse {
     @JsonProperty("longitude")
     private Double longitude;
 
-    @JsonProperty("place_id")
-    private String place_id;
+    @JsonProperty("placeId")
+    private String placeId;
 
     @JsonProperty("accessibility")
-    private Boolean wheelchair_accessible_entrance;
+    private Boolean wheelchairAccessibleEntrance;
 
 }
