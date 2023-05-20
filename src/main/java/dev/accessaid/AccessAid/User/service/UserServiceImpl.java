@@ -1,8 +1,6 @@
 package dev.accessaid.AccessAid.User.service;
 
-import java.util.List;
 import java.util.Optional;
-
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -86,8 +83,9 @@ public class UserServiceImpl implements UserService {
         return user.get();
     }
     @Override
-    public User changeUser(User user) throws UserNotFoundException, UserSaveException {
-        Optional<User> userToChange = userRepository.findById(user.getId());
+    public User changeUser(User user, Integer userId) throws UserNotFoundException, UserSaveException {
+        user.setId(userId);
+        Optional<User> userToChange = userRepository.findById(userId);
         if (!userToChange.isPresent())
             throw new UserNotFoundException("User not found");
 
