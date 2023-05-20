@@ -14,10 +14,10 @@ public class CommentResponseExample {
     private String comment;
 
     @Schema(description = "ID of user who made the comment", example = "1")
-    private Integer user_id;
+    private Integer userId;
 
     @Schema(description = "ID of place related to the comment", example = "1")
-    private Integer place_id;
+    private Integer placeId;
 
     @Schema(description = "Id of the comment that this comment is replying to", example = "1")
     private Integer replyToComment;

@@ -20,16 +20,16 @@ public class CommentRequestExample {
 
     @Schema(description = "user", example = "{\"id\":1}")
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
     @Schema(description = "place", example = "{\"id\":1}")
     @ManyToOne
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "placeId")
     Place place;
 
     @Schema(description = "replyToComment", example = "{\"id\":1}")
     @OneToOne
-    @JoinColumn(name = "reply_to_comment_id")
+    @JoinColumn(name = "replyToComment")
     Comment replyToComment;
 }

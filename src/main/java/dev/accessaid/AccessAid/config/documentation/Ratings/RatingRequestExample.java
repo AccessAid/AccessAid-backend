@@ -20,10 +20,10 @@ public class RatingRequestExample {
     Double rating;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
     @ManyToOne
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "placeId")
     Place place;
 }

@@ -17,9 +17,9 @@ public class RatingResponse {
     @JsonProperty("rating")
     private double rating;
 
-    @JsonProperty("user_id")
-    private Integer user_id;
+    @JsonProperty("userId")
+    private Integer userId;
 
-    @JsonProperty("place_id")
-    private Integer place_id;
+    @JsonProperty("placeId")
+    private Integer placeId;
 }

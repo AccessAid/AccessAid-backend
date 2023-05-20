@@ -27,7 +27,7 @@ public class PlaceResponseExample {
         private String address;
 
         @Schema(example = ExamplesValues.API_PLACE_ID)
-        private String api_placeId;
+        private String apiPlaceId;
 
         @Schema(example = "")
         private Double totalRating = 4.5;

@@ -82,7 +82,7 @@ public class CommentControllerTest {
                 .latitude(Double.parseDouble(ExamplesValues.LATITUDE))
                 .longitude(Double.parseDouble(ExamplesValues.LONGITUDE))
                 .address(ExamplesValues.ADDRESS)
-                .api_placeId(ExamplesValues.API_PLACE_ID)
+                .apiPlaceId(ExamplesValues.API_PLACE_ID)
                 .totalRating(ExamplesValues.TOTAL_RATING)
                 .ratings(new ArrayList<>())
                 .build();

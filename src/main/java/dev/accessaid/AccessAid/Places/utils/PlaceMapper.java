@@ -22,14 +22,14 @@ public class PlaceMapper {
 
     public PlaceResponse toPlaceResponse(Place place) {
 
-        String api_placeId = place.getApi_placeId();
-        AccessibilityResponse placeDetails = accessibilityUtils.getPlaceDetailsByPlaceId(api_placeId);
+        String apiPlaceId = place.getApiPlaceId();
+        AccessibilityResponse placeDetails = accessibilityUtils.getPlaceDetailsByPlaceId(apiPlaceId);
         return new PlaceResponse(
                 place.getId(),
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getAddress(),
-                api_placeId,
+                apiPlaceId,
                 place.getTotalRating(),
                 placeDetails);
     }
