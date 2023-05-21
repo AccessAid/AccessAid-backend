@@ -104,8 +104,13 @@ public class UserServiceImpl implements UserService {
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String token = jwtTokenUtil.generateTokenFromUsername(user.getUsername());
+                    Instant expiration = jwtTokenUtil.extractTokenExpiration(token);
+                    ZoneId cetZone = ZoneId.of("CET");
+                    ZonedDateTime expirationCET = ZonedDateTime.ofInstant(expiration, cetZone);
+
                     RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
-                    return ResponseEntity.ok(new TokenRefreshResponse(token, refreshToken.getToken()));
+
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, refreshToken.getToken(), expirationCET.toString()));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
