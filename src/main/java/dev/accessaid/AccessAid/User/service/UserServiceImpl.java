@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import dev.accessaid.AccessAid.security.model.RefreshToken;
+import dev.accessaid.AccessAid.security.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +51,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @Override
     public ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest) {
 
@@ -78,7 +83,10 @@ public class UserServiceImpl implements UserService {
         ZoneId cetZone = ZoneId.of("CET");
         ZonedDateTime expirationCET = ZonedDateTime.ofInstant(expiration, cetZone);
 
-        return new ResponseEntity<>(new JwtResponse(jwt, expirationCET.toString()), HttpStatus.OK);
+        User user = userRepository.findByUsername(loginRequest.getUsername()).get();
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+
+        return new ResponseEntity<>(new JwtResponse(jwt, refreshToken.getToken(), expirationCET.toString()), HttpStatus.OK);
     }
 
     @Override
