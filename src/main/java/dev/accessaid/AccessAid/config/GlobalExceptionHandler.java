@@ -1,14 +1,8 @@
 package dev.accessaid.AccessAid.config;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import dev.accessaid.AccessAid.Contact.exceptions.ContactSaveException;
-import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
-
-import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Contact.exceptions.ContactNotFoundException;
+import dev.accessaid.AccessAid.Contact.exceptions.ContactSaveException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceSaveException;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
@@ -32,6 +27,8 @@ import dev.accessaid.AccessAid.Ratings.exceptions.RatingDuplicateUserPlaceExcept
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingSaveException;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
+import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
+import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -161,6 +158,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
 
 }
