@@ -5,6 +5,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
+import dev.accessaid.AccessAid.security.model.RefreshToken;
+import dev.accessaid.AccessAid.security.payload.*;
+import dev.accessaid.AccessAid.security.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +50,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @Override
     public ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest) {
 
@@ -63,7 +70,9 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(new MessageResponse("user was registered correctly"), HttpStatus.CREATED);
     }
     @Override
-    public ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest) {
+    public ResponseEntity<MessageResponse> loginUser(LoginRequest loginRequest) {
+        if (Boolean.FALSE.equals(userRepository.existsByUsername(loginRequest.getUsername())))
+            return new ResponseEntity<>(new MessageResponse("this username doesn't exist"), HttpStatus.BAD_REQUEST);
 
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
@@ -74,8 +83,35 @@ public class UserServiceImpl implements UserService {
         ZoneId cetZone = ZoneId.of("CET");
         ZonedDateTime expirationCET = ZonedDateTime.ofInstant(expiration, cetZone);
 
-        return new ResponseEntity<>(new JwtResponse(jwt, expirationCET.toString()), HttpStatus.OK);
+        User user = userRepository.findByUsername(loginRequest.getUsername()).get();
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+
+        return new ResponseEntity<>(new JwtResponse(jwt, refreshToken.getToken(), expirationCET.toString()), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> refreshtoken(TokenRefreshRequest request) {
+
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtTokenUtil.generateTokenFromUsername(user.getUsername());
+                    RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, refreshToken.getToken()));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
+    }
+
+
+    @Override
+    public List<User> getUsers() throws UserNotFoundException {
+        return userRepository.findAll();
+    }
+
     @Override
     public Page<User> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable);

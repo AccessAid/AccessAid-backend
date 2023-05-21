@@ -1,11 +1,14 @@
 package dev.accessaid.AccessAid.config;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import dev.accessaid.AccessAid.Contact.exceptions.ContactSaveException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 
+import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -134,6 +137,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = TokenRefreshException.class)
+    public ResponseEntity<ErrorResponse> handleTokenRefreshException(TokenRefreshException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     @Override

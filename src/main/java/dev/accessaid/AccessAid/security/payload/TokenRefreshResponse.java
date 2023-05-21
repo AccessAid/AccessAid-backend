@@ -7,14 +7,16 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
-public class JwtResponse extends MessageResponse{
+@Setter
+public class TokenRefreshResponse {
 
     private String token;
-
     private String refreshToken;
+    private String tokenType = "Bearer";
 
-    private String expiration;
-
+    public TokenRefreshResponse(String token, String refreshToken) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+    }
 }
