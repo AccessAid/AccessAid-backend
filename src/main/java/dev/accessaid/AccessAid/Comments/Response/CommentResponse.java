@@ -17,18 +17,18 @@ public class CommentResponse {
     @JsonProperty("comment")
     private String comment;
 
-    @JsonProperty("user_id")
+    @JsonProperty("userId")
     private Integer user_id;
 
-    @JsonProperty("place_id")
+    @JsonProperty("placeId")
     private Integer place_id;
 
-    @JsonProperty("replyToComment_id")
+    @JsonProperty("replyToCommentId")
     private Integer replyToComment_id;
 
-    @JsonProperty("responseByComment_id")
+    @JsonProperty("responseByCommentId")
     private Integer responseByComment_id;
 
-    @JsonProperty("has_response")
+    @JsonProperty("hasResponse")
     private boolean hasResponse;
 }

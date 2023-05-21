@@ -6,12 +6,17 @@ import org.springframework.stereotype.Component;
 
 import dev.accessaid.AccessAid.Accessibility.controller.AccessibilityController;
 import dev.accessaid.AccessAid.Accessibility.response.AccessibilityResponse;
+import dev.accessaid.AccessAid.Accessibility.service.AccessibilityService;
+import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
 
 @Component
 public class AccessibilityUtils {
 
     @Autowired
     AccessibilityController accessibilityController;
+
+    @Autowired
+    AccessibilityService accessibilityService;
 
     public AccessibilityResponse getPlaceDetailsByPlaceId(String placeId) {
         ResponseEntity<?> placeDetails = accessibilityController.getPlaceDetails(placeId);
@@ -21,4 +26,12 @@ public class AccessibilityUtils {
         return response;
     }
 
+    public GeolocationResponse getGeolocationResponseByApiPlaceId(String placeId) {
+        try {
+            GeolocationResponse response = accessibilityService.getGeolocationResponse(placeId);
+            return response;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 };

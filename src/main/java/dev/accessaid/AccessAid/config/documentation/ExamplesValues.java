@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.config.documentation;
 
 import com.google.maps.model.AddressType;
+import com.google.maps.model.OpeningHours;
 
 public class ExamplesValues {
 
@@ -83,4 +84,21 @@ public class ExamplesValues {
     public static final String SUBJECT = "Test Email subject";
 
     public static final String MESSAGE = "This is an example message for testing purposes.";
+
+    public static final String OPENING_HOURS_STRING = "{\"open_now\":true,\"weekday_text\":[\"Monday: Closed\",\"Tuesday: 9:00 AM - 5:00 PM\",\"Wednesday: 9:00 AM - 5:00 PM\",\"Thursday: 9:00 AM - 5:00 PM\",\"Friday: 9:00 AM - 5:00 PM\",\"Saturday: 9:00 AM - 5:00 PM\",\"Sunday: 9:00 AM - 5:00 PM\"]}";
+
+    public static final OpeningHours OPENING_HOURS = new OpeningHours();
+    static {
+        OPENING_HOURS.openNow = true;
+        OPENING_HOURS.weekdayText = new String[] {
+                "Monday: Closed",
+                "Tuesday: 9:00 AM - 5:00 PM",
+                "Wednesday: 9:00 AM - 5:00 PM",
+                "Thursday: 9:00 AM - 5:00 PM",
+                "Friday: 9:00 AM - 5:00 PM",
+                "Saturday: 9:00 AM - 5:00 PM",
+                "Sunday: 9:00 AM - 5:00 PM"
+        };
+    }
+
 }

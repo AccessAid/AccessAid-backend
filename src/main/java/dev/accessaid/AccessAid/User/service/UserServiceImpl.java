@@ -1,11 +1,10 @@
 package dev.accessaid.AccessAid.User.service;
 
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Optional;
-
 import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
 import dev.accessaid.AccessAid.security.model.RefreshToken;
 import dev.accessaid.AccessAid.security.payload.*;
@@ -21,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -29,7 +27,10 @@ import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
 import dev.accessaid.AccessAid.security.jwt.JwtTokenUtil;
-import jakarta.transaction.Transactional;
+import dev.accessaid.AccessAid.security.payload.JwtResponse;
+import dev.accessaid.AccessAid.security.payload.LoginRequest;
+import dev.accessaid.AccessAid.security.payload.MessageResponse;
+import dev.accessaid.AccessAid.security.payload.RegisterRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -68,7 +69,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
         return new ResponseEntity<>(new MessageResponse("user was registered correctly"), HttpStatus.CREATED);
     }
-
     @Override
     public ResponseEntity<MessageResponse> loginUser(LoginRequest loginRequest) {
         if (Boolean.FALSE.equals(userRepository.existsByUsername(loginRequest.getUsername())))
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getUsers(Pageable pageable) throws UserNotFoundException {
+    public Page<User> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
@@ -125,26 +125,17 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
-
     @Override
-    public User createUser(User user) throws UserSaveException {
-        Optional<User> userToCreate = userRepository.findByEmail(user.getEmail());
-        if (userToCreate.isPresent()) {
-            throw new UserSaveException("User already exists");
-        }
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User changeUser(User user) throws UserNotFoundException, UserSaveException {
-        Optional<User> userToChange = userRepository.findById(user.getId());
+    public User changeUser(User user, Integer userId) throws UserNotFoundException, UserSaveException {
+        user.setId(userId);
+        Optional<User> userToChange = userRepository.findById(userId);
         if (!userToChange.isPresent())
             throw new UserNotFoundException("User not found");
 
-        if (userRepository.existsByUsername(user.getUsername()))
+        if (!userToChange.get().getUsername().equals(user.getUsername()) && userRepository.existsByUsername(user.getUsername()))
             throw new UserSaveException("username already exists");
 
-        if (userRepository.existsByEmail(user.getEmail()))
+        if (!userToChange.get().getEmail().equals(user.getEmail()) && userRepository.existsByEmail(user.getEmail()))
             throw new UserSaveException("email already exists");
 
         User existingUser = userToChange.get();
@@ -183,7 +174,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found -profile does not exists");
 
         return user.get();
-
     }
 
     @Override
@@ -193,7 +183,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found -email does not exists");
 
         return user.get();
-
     }
 
     @Override
@@ -203,6 +192,5 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found -username does not exists");
 
         return user.get();
-
     }
 }

@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.config.documentation.Places;
 
 import com.google.maps.model.AddressType;
+import com.google.maps.model.OpeningHours;
 import com.google.maps.model.Photo;
 
 import dev.accessaid.AccessAid.Accessibility.response.AccessibilityResponse;
@@ -26,7 +27,7 @@ public class PlaceResponseExample {
         private String address;
 
         @Schema(example = ExamplesValues.API_PLACE_ID)
-        private String api_placeId;
+        private String apiPlaceId;
 
         @Schema(example = "")
         private Double totalRating = 4.5;
@@ -39,6 +40,9 @@ public class PlaceResponseExample {
 
         @Schema(example = ExamplesValues.IS_ACCESSIBLE, description = "")
         Boolean isAccessible;
+
+        @Schema(example = ExamplesValues.OPENING_HOURS_STRING, description = "")
+        OpeningHours openingHours;
 
         @Schema(example = ExamplesValues.WEBSITE, description = "")
         String website;
@@ -61,6 +65,7 @@ public class PlaceResponseExample {
                                         ExamplesValues.PLACE_PHONE,
                                         ExamplesValues.PLACE_URL,
                                         Boolean.parseBoolean(ExamplesValues.IS_ACCESSIBLE),
+                                        ExamplesValues.OPENING_HOURS,
                                         ExamplesValues.WEBSITE,
                                         ExamplesValues.PLACE_TYPES,
                                         ExamplesValues_Photos.PLACE_PHOTOS));

@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@JsonPropertyOrder({ "id", "latitude", "longitude", "address", "api_placeId", "totalRating", "accessibility" })
+@JsonPropertyOrder({ "id", "latitude", "longitude", "address", "apiPlaceId", "totalRating", "accessibilityData" })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,15 +23,15 @@ public class PlaceResponse extends GeolocationResponse {
     @JsonProperty("totalRating")
     private double totalRating;
 
-    @JsonProperty("accessibility")
-    private AccessibilityResponse accessibility;
+    @JsonProperty("accessibilityData")
+    private AccessibilityResponse accessibilityData;
 
     public PlaceResponse(Integer id, double latitude, double longitude, String address,
-            String api_placeId, double totalRating, AccessibilityResponse accessibility) {
-        super(latitude, longitude, address, api_placeId);
+            String apiPlaceId, double totalRating, AccessibilityResponse accessibility) {
+        super(latitude, longitude, address, apiPlaceId);
         this.id = id;
         this.totalRating = totalRating;
-        this.accessibility = accessibility;
+        this.accessibilityData = accessibility;
     }
 
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 public class TotalRatingResponseExample {
 
     @Schema(description = "Place Id", example = "1")
-    private Integer place_id;
+    private Integer placeId;
 
     @Schema(description = "Total Rating", example = "4.5")
     private double totalRating;

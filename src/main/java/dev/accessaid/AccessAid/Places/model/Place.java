@@ -49,7 +49,7 @@ public class Place {
     String address;
 
     @Schema(example = ExamplesValues.API_PLACE_ID, description = "")
-    String api_placeId;
+    String apiPlaceId;
 
     @JsonIgnore
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
@@ -71,7 +71,7 @@ public class Place {
         this.latitude = geolocationResponse.getLatitude();
         this.longitude = geolocationResponse.getLongitude();
         this.address = geolocationResponse.getFormattedAddress();
-        this.api_placeId = geolocationResponse.getPlaceId();
+        this.apiPlaceId = geolocationResponse.getPlaceId();
         this.ratings = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.totalRating = 0.0;

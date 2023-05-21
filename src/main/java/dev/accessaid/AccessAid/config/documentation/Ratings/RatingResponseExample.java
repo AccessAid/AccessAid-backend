@@ -13,8 +13,8 @@ public class RatingResponseExample {
     private double rating;
 
     @Schema(description = "User ID", example = "1")
-    private Integer user_id;
+    private Integer userId;
 
     @Schema(description = "Place ID", example = "1")
-    private Integer place_id;
+    private Integer placeId;
 }

@@ -40,7 +40,7 @@ public class ContactResponse {
     private String message;
 
     @Schema(example = ExamplesValues.SENT_DATE, description = "")
-    @JsonProperty("sent_date")
+    @JsonProperty("sentDate")
     private LocalDateTime sentDate;
 
 }
