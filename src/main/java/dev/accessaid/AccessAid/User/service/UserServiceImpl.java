@@ -1,14 +1,10 @@
 package dev.accessaid.AccessAid.User.service;
 
-import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
-import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
-import dev.accessaid.AccessAid.security.model.RefreshToken;
-import dev.accessaid.AccessAid.security.payload.*;
-import dev.accessaid.AccessAid.security.service.RefreshTokenService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,17 +16,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
+import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
 import dev.accessaid.AccessAid.security.jwt.JwtTokenUtil;
+import dev.accessaid.AccessAid.security.model.RefreshToken;
 import dev.accessaid.AccessAid.security.payload.JwtResponse;
 import dev.accessaid.AccessAid.security.payload.LoginRequest;
 import dev.accessaid.AccessAid.security.payload.MessageResponse;
 import dev.accessaid.AccessAid.security.payload.RegisterRequest;
+import dev.accessaid.AccessAid.security.payload.TokenRefreshRequest;
+import dev.accessaid.AccessAid.security.payload.TokenRefreshResponse;
+import dev.accessaid.AccessAid.security.service.RefreshTokenService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -69,6 +72,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
         return new ResponseEntity<>(new MessageResponse("user was registered correctly"), HttpStatus.CREATED);
     }
+
     @Override
     public ResponseEntity<MessageResponse> loginUser(LoginRequest loginRequest) {
         if (Boolean.FALSE.equals(userRepository.existsByUsername(loginRequest.getUsername())))
@@ -86,7 +90,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(loginRequest.getUsername()).get();
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
-        return new ResponseEntity<>(new JwtResponse(jwt, refreshToken.getToken(), expirationCET.toString()), HttpStatus.OK);
+        return new ResponseEntity<>(new JwtResponse(jwt, refreshToken.getToken(), expirationCET.toString()),
+                HttpStatus.OK);
     }
 
     @Override
@@ -106,12 +111,6 @@ public class UserServiceImpl implements UserService {
                         "Refresh token is not in database!"));
     }
 
-
-    @Override
-    public List<User> getUsers() throws UserNotFoundException {
-        return userRepository.findAll();
-    }
-
     @Override
     public Page<User> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
@@ -125,6 +124,7 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
+
     @Override
     public User changeUser(User user, Integer userId) throws UserNotFoundException, UserSaveException {
         user.setId(userId);
@@ -132,7 +132,8 @@ public class UserServiceImpl implements UserService {
         if (!userToChange.isPresent())
             throw new UserNotFoundException("User not found");
 
-        if (!userToChange.get().getUsername().equals(user.getUsername()) && userRepository.existsByUsername(user.getUsername()))
+        if (!userToChange.get().getUsername().equals(user.getUsername())
+                && userRepository.existsByUsername(user.getUsername()))
             throw new UserSaveException("username already exists");
 
         if (!userToChange.get().getEmail().equals(user.getEmail()) && userRepository.existsByEmail(user.getEmail()))

@@ -1,8 +1,5 @@
 package dev.accessaid.AccessAid.User.controller;
 
-import dev.accessaid.AccessAid.security.jwt.JwtTokenUtil;
-import dev.accessaid.AccessAid.security.payload.*;
-import dev.accessaid.AccessAid.security.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +12,12 @@ import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Users.LoginRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Users.MessageResponseAUTHExample;
 import dev.accessaid.AccessAid.config.documentation.Users.UserRequestExample;
+import dev.accessaid.AccessAid.security.payload.JwtResponse;
+import dev.accessaid.AccessAid.security.payload.LoginRequest;
+import dev.accessaid.AccessAid.security.payload.MessageResponse;
+import dev.accessaid.AccessAid.security.payload.RegisterRequest;
+import dev.accessaid.AccessAid.security.payload.TokenRefreshRequest;
+import dev.accessaid.AccessAid.security.payload.TokenRefreshResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,12 +31,6 @@ public class UserAuthController {
 
         @Autowired
         private UserService userService;
-
-        @Autowired
-        private RefreshTokenService refreshTokenService;
-
-        @Autowired
-        private JwtTokenUtil jwtTokenUtil;
 
         public UserAuthController(UserService userService) {
                 this.userService = userService;
@@ -67,10 +64,10 @@ public class UserAuthController {
 
         @Operation(summary = "Refresh token", description = "Refresh token")
         @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "Ok", content = {
-                        @Content(mediaType = "application/json", schema = @Schema(implementation = TokenRefreshResponse.class))
-                }),
-                @ApiResponse(responseCode = "401", description = "unauthorized"),
+                        @ApiResponse(responseCode = "200", description = "Ok", content = {
+                                        @Content(mediaType = "application/json", schema = @Schema(implementation = TokenRefreshResponse.class))
+                        }),
+                        @ApiResponse(responseCode = "401", description = "unauthorized"),
         })
         @PostMapping("/refreshtoken")
         public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
