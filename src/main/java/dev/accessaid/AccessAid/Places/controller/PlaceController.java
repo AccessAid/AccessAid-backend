@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Places.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
@@ -27,12 +24,9 @@ import dev.accessaid.AccessAid.Places.response.PlaceResponse;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.Places.utils.PlaceMapper;
 import dev.accessaid.AccessAid.Places.utils.PlaceRequest;
-import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.response.TotalRatingResponse;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
-import dev.accessaid.AccessAid.User.model.User;
-import dev.accessaid.AccessAid.User.response.UserResponse;
 import dev.accessaid.AccessAid.User.utils.UserMapper;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentResponseExample;
 import dev.accessaid.AccessAid.config.documentation.Places.PlaceRequestExample;
@@ -40,7 +34,6 @@ import dev.accessaid.AccessAid.config.documentation.Places.PlaceResponseExample;
 import dev.accessaid.AccessAid.config.documentation.Ratings.RatingResponseExample;
 import dev.accessaid.AccessAid.config.documentation.Ratings.TotalRatingResponseExample;
 import dev.accessaid.AccessAid.config.documentation.Users.UserResponseExample;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -65,22 +58,9 @@ public class PlaceController {
                         @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceResponseExample.class)))),
                         @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
         })
-        @Hidden
-        @GetMapping("/unpaged")
-        public List<PlaceResponse> seeAllPlaces() {
-                List<Place> places = placeService.findAllPlaces();
-                return placeMapper.toPlaceResponses(places);
-        }
-
-        @Operation(summary = "See a list of places")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceResponseExample.class)))),
-                        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-        })
         @GetMapping("")
         public Page<PlaceResponse> seeAllPlaces(Pageable pageable) {
-                Page<Place> places = placeService.findAllPlaces(pageable);
-                return placeMapper.toPlaceResponses(places, pageable);
+                return placeMapper.toPlaceResponses(placeService.findAllPlaces(pageable), pageable);
         }
 
         @Operation(summary = "See a place by id")
@@ -90,9 +70,7 @@ public class PlaceController {
         })
         @GetMapping("/{id}")
         public ResponseEntity<PlaceResponse> seePlaceById(@PathVariable Integer id) {
-                Place place = placeService.findPlaceById(id);
-                PlaceResponse response = placeMapper.toPlaceResponse(place);
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(placeMapper.toPlaceResponse(placeService.findPlaceById(id)));
         }
 
         @Operation(summary = "See a place by address")
@@ -102,9 +80,7 @@ public class PlaceController {
         })
         @GetMapping("/byaddress")
         public ResponseEntity<PlaceResponse> seePlaceByAddress(@RequestParam("address") String address) {
-                Place place = placeService.findPlaceByAddress(address);
-                PlaceResponse response = placeMapper.toPlaceResponse(place);
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(placeMapper.toPlaceResponse(placeService.findPlaceByAddress(address)));
         }
 
         @Operation(summary = "See a place by coordinates")
@@ -115,9 +91,18 @@ public class PlaceController {
         @GetMapping("/bycoordinates")
         public ResponseEntity<PlaceResponse> seePlaceByCoordinates(@RequestParam("latitude") double latitude,
                         @RequestParam("longitude") double longitude) {
-                Place place = placeService.findPlaceByCoordinates(latitude, longitude);
-                PlaceResponse response = placeMapper.toPlaceResponse(place);
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(placeMapper.toPlaceResponse(
+                                placeService.findPlaceByCoordinates(latitude, longitude)));
+        }
+
+        @Operation(summary = "See a place by apiPlaceId")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Place found", content = @Content(schema = @Schema(implementation = PlaceResponseExample.class))),
+                        @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
+        })
+        @GetMapping("/byApiPlaceId")
+        public ResponseEntity<PlaceResponse> seePlaceByApiPlaceId(@RequestParam("ApiPlaceId") String apiPlaceId) {
+                return ResponseEntity.ok(placeMapper.toPlaceResponse(placeService.findPlaceByApiPlaceId(apiPlaceId)));
         }
 
         @Operation(summary = "Add a new place to the database")
@@ -130,8 +115,7 @@ public class PlaceController {
         @ResponseStatus(HttpStatus.CREATED)
         public PlaceResponse addPlace(
                         @RequestBody @Validated @Schema(oneOf = { PlaceRequestExample.class }) PlaceRequest request) {
-                Place newPlace = placeService.createPlace(request);
-                return placeMapper.toPlaceResponse(newPlace);
+                return placeMapper.toPlaceResponse(placeService.createPlace(request));
         }
 
         @Operation(summary = "Delete a place by id")
@@ -144,22 +128,7 @@ public class PlaceController {
         public ResponseEntity<?> deletePlace(@PathVariable Integer id) throws PlaceNotFoundException {
                 Place place = placeService.findPlaceById(id);
                 placeService.removePlace(id);
-                PlaceResponse response = placeMapper.toPlaceResponse(place);
-                return ResponseEntity.ok(response);
-        }
-
-        @Operation(summary = "See all ratings for a place")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-                        @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
-        })
-        @Hidden
-        @GetMapping("/{id}/ratings/unpaged")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<List<RatingResponse>> seePlaceRatings(@PathVariable Integer id) {
-                List<Rating> ratings = placeService.findAllRatingsByPlace(id);
-                List<RatingResponse> response = RatingMapper.toRatingResponses(ratings);
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(placeMapper.toPlaceResponse(place));
         }
 
         @Operation(summary = "See all ratings for a place")
@@ -170,23 +139,8 @@ public class PlaceController {
         @GetMapping("/{id}/ratings")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Page<RatingResponse>> seePlaceRatings(@PathVariable Integer id, Pageable pageable) {
-                Page<Rating> ratings = placeService.findAllRatingsByPlace(id, pageable);
-                Page<RatingResponse> response = RatingMapper.toRatingResponses(ratings, pageable);
-                return ResponseEntity.ok(response);
-        }
-
-        @Operation(summary = "See users that have rated or commented a place")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponseExample.class)))),
-                        @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
-        })
-        @Hidden
-        @GetMapping("/{id}/users/unpaged")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<?> seeUsersByPlace(@PathVariable Integer id) {
-                List<User> users = placeService.findUsersByPlace(id);
-                List<UserResponse> response = UserMapper.toUserResponses(users);
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(RatingMapper.toRatingResponses(
+                                placeService.findAllRatingsByPlace(id, pageable), pageable));
         }
 
         @Operation(summary = "See users that have rated or commented a place")
@@ -197,21 +151,8 @@ public class PlaceController {
         @GetMapping("/{id}/users")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<?> seeUsersByPlace(@PathVariable Integer id, Pageable pageable) {
-                Page<User> users = placeService.findUsersByPlace(id, pageable);
-                Page<UserResponse> response = UserMapper.toUserResponses(users, pageable);
-                return ResponseEntity.ok(response);
-        }
-
-        @Operation(summary = "See the comments for a place")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
-                        @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content)
-        })
-        @Hidden
-        @GetMapping("/{id}/comments/unpaged")
-        public List<CommentResponse> seeCommentsByPlace(@PathVariable Integer id) {
-                List<Comment> comments = placeService.findCommentsByPlace(id);
-                return CommentMapper.toCommentResponses(comments);
+                return ResponseEntity.ok(UserMapper.toUserResponses(
+                                placeService.findUsersByPlace(id, pageable), pageable));
         }
 
         @Operation(summary = "See the comments for a place")
@@ -221,8 +162,7 @@ public class PlaceController {
         })
         @GetMapping("/{id}/comments")
         public Page<CommentResponse> seeCommentsByPlace(@PathVariable Integer id, Pageable pageable) {
-                Page<Comment> comments = placeService.findCommentsByPlace(id, pageable);
-                return CommentMapper.toCommentResponses(comments, pageable);
+                return CommentMapper.toCommentResponses(placeService.findCommentsByPlace(id, pageable), pageable);
         }
 
         @Operation(summary = "See total rating for a place")
@@ -240,24 +180,10 @@ public class PlaceController {
                         @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceResponseExample.class)))),
                         @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
         })
-        @Hidden
-        @GetMapping("/user/{userid}/unpaged")
-        public ResponseEntity<List<PlaceResponse>> seePlacesByUser(@PathVariable Integer userid) {
-                List<Place> places = placeService.findPlacesByUser(userid);
-                List<PlaceResponse> response = placeMapper.toPlaceResponses(places);
-                return ResponseEntity.ok(response);
-        }
-
-        @Operation(summary = "See places where a user has commented or rated")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceResponseExample.class)))),
-                        @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)
-        })
         @GetMapping("/user/{userid}")
         public ResponseEntity<Page<PlaceResponse>> seePlacesByUser(@PathVariable Integer userid, Pageable pageable) {
-                Page<Place> places = placeService.findPlacesByUser(userid, pageable);
-                Page<PlaceResponse> response = placeMapper.toPlaceResponses(places, pageable);
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(placeMapper.toPlaceResponses(
+                                placeService.findPlacesByUser(userid, pageable), pageable));
         }
 
 }

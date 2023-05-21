@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TotalRatingResponse {
 
-    @JsonProperty("place_id")
-    private Integer place_id;
+    @JsonProperty("placeId")
+    private Integer placeId;
 
     @JsonProperty("totalRating")
     private double totalRating;

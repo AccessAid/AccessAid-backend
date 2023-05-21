@@ -25,12 +25,12 @@ public class GeolocationResponse {
         return longitude;
     }
 
-    @JsonProperty("formatted_address")
+    @JsonProperty("formattedAddress")
     public String getFormattedAddress() {
         return formattedAddress;
     }
 
-    @JsonProperty("place_id")
+    @JsonProperty("placeId")
     public String getPlaceId() {
         return placeId;
     }
