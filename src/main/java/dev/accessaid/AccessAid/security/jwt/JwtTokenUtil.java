@@ -53,6 +53,19 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    public String generateTokenFromUsername(String username) {
+
+        Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        Instant expiration = issuedAt.plus(30, ChronoUnit.MINUTES);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(Date.from(issuedAt))
+                .setExpiration(Date.from(expiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody().getSubject();
     }

@@ -6,7 +6,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
 import dev.accessaid.AccessAid.security.model.RefreshToken;
+import dev.accessaid.AccessAid.security.payload.*;
 import dev.accessaid.AccessAid.security.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,10 +29,6 @@ import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
 import dev.accessaid.AccessAid.security.jwt.JwtTokenUtil;
-import dev.accessaid.AccessAid.security.payload.JwtResponse;
-import dev.accessaid.AccessAid.security.payload.LoginRequest;
-import dev.accessaid.AccessAid.security.payload.MessageResponse;
-import dev.accessaid.AccessAid.security.payload.RegisterRequest;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -88,6 +86,24 @@ public class UserServiceImpl implements UserService {
 
         return new ResponseEntity<>(new JwtResponse(jwt, refreshToken.getToken(), expirationCET.toString()), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> refreshtoken(TokenRefreshRequest request) {
+
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtTokenUtil.generateTokenFromUsername(user.getUsername());
+                    RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, refreshToken.getToken()));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
+    }
+
 
     @Override
     public List<User> getUsers() throws UserNotFoundException {
