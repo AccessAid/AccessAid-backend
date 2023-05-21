@@ -2,6 +2,7 @@ package dev.accessaid.AccessAid.security.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import dev.accessaid.AccessAid.security.jwt.JwtRequestFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
     private JwtAuthEntryPoint unauthorizedHandler;
 
     @Bean

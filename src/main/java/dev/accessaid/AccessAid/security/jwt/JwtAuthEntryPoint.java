@@ -2,8 +2,11 @@ package dev.accessaid.AccessAid.security.jwt;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.accessaid.AccessAid.config.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -24,7 +27,11 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
         log.error("Unauthorized error: {}", authException.getMessage());
 
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+        ErrorResponse errorResponse = new ErrorResponse("bad credentials");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), errorResponse);
 
     }
 }
