@@ -15,12 +15,12 @@ public class GeolocationResponse {
     private String formattedAddress;
     private String placeId;
 
-    @JsonProperty("lat")
+    @JsonProperty("latitude")
     public double getLatitude() {
         return latitude;
     }
 
-    @JsonProperty("lng")
+    @JsonProperty("longitude")
     public double getLongitude() {
         return longitude;
     }
