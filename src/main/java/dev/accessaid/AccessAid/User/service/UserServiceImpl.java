@@ -70,7 +70,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest) {
+    public ResponseEntity<MessageResponse> loginUser(LoginRequest loginRequest) {
+        if (Boolean.FALSE.equals(userRepository.existsByUsername(loginRequest.getUsername())))
+            return new ResponseEntity<>(new MessageResponse("this username doesn't exist"), HttpStatus.BAD_REQUEST);
 
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));

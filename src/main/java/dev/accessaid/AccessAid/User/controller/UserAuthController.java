@@ -60,7 +60,7 @@ public class UserAuthController {
                         @ApiResponse(responseCode = "401", description = "unauthorized"),
         })
         @PostMapping("/login")
-        public ResponseEntity<JwtResponse> loginUser(
+        public ResponseEntity<MessageResponse> loginUser(
                         @RequestBody @Validated @Schema(implementation = LoginRequestExample.class) LoginRequest loginRequest) {
                 return userService.loginUser((loginRequest));
         }

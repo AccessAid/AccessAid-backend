@@ -14,7 +14,7 @@ import dev.accessaid.AccessAid.User.model.User;
 public interface UserService {
     ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest);
 
-    ResponseEntity<JwtResponse> loginUser(LoginRequest loginRequest);
+    ResponseEntity<MessageResponse> loginUser(LoginRequest loginRequest);
 
     ResponseEntity<?> refreshtoken(TokenRefreshRequest request);
 
