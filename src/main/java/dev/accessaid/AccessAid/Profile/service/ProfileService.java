@@ -11,7 +11,7 @@ public interface ProfileService {
     Page<Profile> getAllProfiles(Pageable pageable) throws ProfileNotFoundException;
     Profile getProfileById(Integer id) throws ProfileNotFoundException;
     Profile createProfile(Profile profile) throws ProfileSaveException;
-    Profile changeProfile(Profile profile) throws ProfileSaveException, ProfileNotFoundException;
+    Profile changeProfile(Profile profile, Integer profileId) throws ProfileSaveException, ProfileNotFoundException;
     Profile removeProfile(Integer id) throws ProfileNotFoundException;
     Profile getProfileByUser(Integer userId) throws ProfileNotFoundException;
 }

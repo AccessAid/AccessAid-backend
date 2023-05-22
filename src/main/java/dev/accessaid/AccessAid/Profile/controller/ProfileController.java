@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
@@ -76,17 +75,10 @@ public class ProfileController {
             @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PutMapping("/{id}")
-    public ProfileResponse updateProfile(@PathVariable Integer id,
+    @PutMapping("/{profileId}")
+    public ProfileResponse updateProfile(@PathVariable Integer profileId,
             @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
-        profile.setId(id);
-        Profile profileToUpdate = profileService.getProfileById(id);
-        if (profileToUpdate == null) {
-            throw new ProfileNotFoundException("Profile not found");
-        }
-        Profile updatedProfile = profileService.changeProfile(profile);
-        return ProfileMapper.toProfileResponse(updatedProfile);
-
+        return ProfileMapper.toProfileResponse(profileService.changeProfile(profile, profileId));
     }
 
     @Operation(summary = "Delete an existing profile")
