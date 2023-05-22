@@ -107,8 +107,6 @@ public class ProfileController {
     })
     @GetMapping("/user/{userId}")
     public ProfileResponse seeProfileByUser(@PathVariable Integer userId) {
-        Profile profile = profileService.getProfileByUser(userId);
-        return ProfileMapper.toProfileResponse(profile);
-
+        return ProfileMapper.toProfileResponse(profileService.getProfileByUser(userId));
     }
 }
