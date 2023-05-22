@@ -75,10 +75,10 @@ public class ProfileController {
             @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PutMapping("/{profileId}")
-    public ProfileResponse updateProfile(@PathVariable Integer profileId,
+    @PutMapping("/{id}")
+    public ProfileResponse updateProfile(@PathVariable Integer id,
             @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
-        return ProfileMapper.toProfileResponse(profileService.changeProfile(profile, profileId));
+        return ProfileMapper.toProfileResponse(profileService.changeProfile(profile, id));
     }
 
     @Operation(summary = "Delete an existing profile")
