@@ -67,9 +67,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse addProfile(
             @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
-        Profile newProfile = profileService.createProfile(profile);
-        return ProfileMapper.toProfileResponse(newProfile);
-
+        return ProfileMapper.toProfileResponse(profileService.createProfile(profile));
     }
 
     @Operation(summary = "Update an existing profile")
