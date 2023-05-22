@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Profile.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +22,6 @@ import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileResponseExample;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,20 +37,6 @@ public class ProfileController {
 
     @Autowired
     private ProfileServiceImpl profileService;
-
-    @Operation(summary = "See a list of profiles")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/unpaged")
-    public List<ProfileResponse> seeAllProfiles() {
-        List<Profile> profiles = profileService.getAllProfiles();
-        return ProfileMapper.toProfileResponses(profiles);
-
-    }
-
     @Operation(summary = "See a list of profiles")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
@@ -61,9 +44,7 @@ public class ProfileController {
     })
     @GetMapping("")
     public Page<ProfileResponse> seeAllProfiles(Pageable pageable) {
-        Page<Profile> profiles = profileService.getAllProfiles(pageable);
-        return ProfileMapper.toProfileResponses(profiles, pageable);
-
+        return ProfileMapper.toProfileResponses(profileService.getAllProfiles(pageable), pageable);
     }
 
     @Operation(summary = "See a profile by id")

@@ -1,6 +1,5 @@
 package dev.accessaid.AccessAid.Profile.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,6 @@ public class ProfileServiceImpl implements ProfileService {
     UserRepository userRepository;
 
     @Override
-    public List<Profile> getAllProfiles() throws ProfileNotFoundException {
-        return profileRepository.findAll();
-    }
-
-    @Override
     public Page<Profile> getAllProfiles(Pageable pageable) {
         return profileRepository.findAll(pageable);
     }
@@ -40,9 +34,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public Profile getProfileById(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profile = profileRepository.findById(id);
-        if (!profile.isPresent()) {
+        if (!profile.isPresent())
             throw new ProfileNotFoundException("Profile not found");
-        }
+
         return profile.get();
     }
 
