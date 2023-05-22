@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Profile.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,14 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileResponseExample;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,20 +36,6 @@ public class ProfileController {
 
     @Autowired
     private ProfileServiceImpl profileService;
-
-    @Operation(summary = "See a list of profiles")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/unpaged")
-    public List<ProfileResponse> seeAllProfiles() {
-        List<Profile> profiles = profileService.getAllProfiles();
-        return ProfileMapper.toProfileResponses(profiles);
-
-    }
-
     @Operation(summary = "See a list of profiles")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
@@ -61,9 +43,7 @@ public class ProfileController {
     })
     @GetMapping("")
     public Page<ProfileResponse> seeAllProfiles(Pageable pageable) {
-        Page<Profile> profiles = profileService.getAllProfiles(pageable);
-        return ProfileMapper.toProfileResponses(profiles, pageable);
-
+        return ProfileMapper.toProfileResponses(profileService.getAllProfiles(pageable), pageable);
     }
 
     @Operation(summary = "See a profile by id")
@@ -73,9 +53,7 @@ public class ProfileController {
     })
     @GetMapping("/{id}")
     public ProfileResponse seeProfileById(@PathVariable Integer id) {
-        Profile profile = profileService.getProfileById(id);
-        return ProfileMapper.toProfileResponse(profile);
-
+        return ProfileMapper.toProfileResponse(profileService.getProfileById(id));
     }
 
     @Operation(summary = "Add profile", description = "Create a profile for a user")
@@ -88,9 +66,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse addProfile(
             @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
-        Profile newProfile = profileService.createProfile(profile);
-        return ProfileMapper.toProfileResponse(newProfile);
-
+        return ProfileMapper.toProfileResponse(profileService.createProfile(profile));
     }
 
     @Operation(summary = "Update an existing profile")
@@ -102,14 +78,7 @@ public class ProfileController {
     @PutMapping("/{id}")
     public ProfileResponse updateProfile(@PathVariable Integer id,
             @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
-        profile.setId(id);
-        Profile profileToUpdate = profileService.getProfileById(id);
-        if (profileToUpdate == null) {
-            throw new ProfileNotFoundException("Profile not found");
-        }
-        Profile updatedProfile = profileService.changeProfile(profile);
-        return ProfileMapper.toProfileResponse(updatedProfile);
-
+        return ProfileMapper.toProfileResponse(profileService.changeProfile(profile, id));
     }
 
     @Operation(summary = "Delete an existing profile")
@@ -120,9 +89,7 @@ public class ProfileController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProfile(@PathVariable Integer id) {
-
         profileService.removeProfile(id);
-
     }
 
     @Operation(summary = "See profile by user")
@@ -132,8 +99,6 @@ public class ProfileController {
     })
     @GetMapping("/user/{userId}")
     public ProfileResponse seeProfileByUser(@PathVariable Integer userId) {
-        Profile profile = profileService.getProfileByUser(userId);
-        return ProfileMapper.toProfileResponse(profile);
-
+        return ProfileMapper.toProfileResponse(profileService.getProfileByUser(userId));
     }
 }
