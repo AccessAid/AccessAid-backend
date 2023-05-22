@@ -54,9 +54,7 @@ public class ProfileController {
     })
     @GetMapping("/{id}")
     public ProfileResponse seeProfileById(@PathVariable Integer id) {
-        Profile profile = profileService.getProfileById(id);
-        return ProfileMapper.toProfileResponse(profile);
-
+        return ProfileMapper.toProfileResponse(profileService.getProfileById(id));
     }
 
     @Operation(summary = "Add profile", description = "Create a profile for a user")
