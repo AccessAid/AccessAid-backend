@@ -1,5 +1,6 @@
 package dev.accessaid.AccessAid.Accessibility.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
+import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.AddressType;
 import com.google.maps.model.OpeningHours;
@@ -44,7 +46,13 @@ public class AccessibilityService {
 
         public AccessibilityResponse getPlaceDetails(String placeId) throws Exception {
 
-                PlaceDetails details = PlacesApi.placeDetails(context, placeId).await();
+                PlaceDetailsRequest request = PlacesApi.placeDetails(context, placeId);
+
+                request.fields(Arrays.stream(PlaceDetailsRequest.FieldMask.values())
+                                .filter(x -> x != PlaceDetailsRequest.FieldMask.SECONDARY_OPENING_HOURS)
+                                .toArray(PlaceDetailsRequest.FieldMask[]::new));
+
+                PlaceDetails details = request.await();
 
                 String name = details.name != null ? details.name : null;
                 String phone = details.formattedPhoneNumber != null ? details.formattedPhoneNumber : null;
@@ -106,7 +114,13 @@ public class AccessibilityService {
 
         public GeolocationResponse getGeolocationResponse(String placeId) throws Exception {
 
-                PlaceDetails details = PlacesApi.placeDetails(context, placeId).await();
+                PlaceDetailsRequest request = PlacesApi.placeDetails(context, placeId);
+
+                request.fields(Arrays.stream(PlaceDetailsRequest.FieldMask.values())
+                                .filter(x -> x != PlaceDetailsRequest.FieldMask.SECONDARY_OPENING_HOURS)
+                                .toArray(PlaceDetailsRequest.FieldMask[]::new));
+
+                PlaceDetails details = request.await();
 
                 double latitud = details.geometry.location.lat;
                 double longitude = details.geometry.location.lng;
