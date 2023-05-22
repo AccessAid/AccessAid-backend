@@ -56,8 +56,8 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Profile changeProfile(Profile profile, Integer profileId) throws ProfileSaveException, ProfileNotFoundException {
-        profile.setId(profileId);
+    public Profile changeProfile(Profile profile, Integer id) throws ProfileSaveException, ProfileNotFoundException {
+        profile.setId(id);
         Optional<Profile> profileToUpdate = profileRepository.findById(profile.getId());
         if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
