@@ -97,9 +97,7 @@ public class ProfileController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProfile(@PathVariable Integer id) {
-
         profileService.removeProfile(id);
-
     }
 
     @Operation(summary = "See profile by user")

@@ -71,13 +71,14 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public Profile removeProfile(Integer id) throws ProfileNotFoundException {
         Optional<Profile> profileToRemove = profileRepository.findById(id);
-        if (!profileToRemove.isPresent()) {
+        if (!profileToRemove.isPresent())
             throw new ProfileNotFoundException("Profile not found");
-        }
+
         Profile deletedProfile = profileToRemove.get();
         User user = deletedProfile.getUser();
         user.setProfile(null);
         profileRepository.deleteById(id);
+
         return profileToRemove.get();
     }
 
