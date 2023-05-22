@@ -2,6 +2,7 @@ package dev.accessaid.AccessAid.security.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,11 +23,12 @@ import dev.accessaid.AccessAid.security.jwt.JwtRequestFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
     private JwtAuthEntryPoint unauthorizedHandler;
 
     @Bean
     public JwtAuthEntryPoint unauthorizedHandler() {
-        return new JwtAuthEntryPoint();
+        return unauthorizedHandler;
     }
 
     @Bean
@@ -59,6 +61,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());
 
