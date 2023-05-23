@@ -10,6 +10,14 @@ AccessAid is an information and accessibility guide platform for public and priv
 - SpringDoc OpenAPI UI
 - Spring Boot Starter Security
 - Spring Boot Starter Validation
+- Google Maps Services
+- SLF4J Simple
+- Spring Boot Starter Mail
+- JSON
+- Mockito Core
+- JJWT API
+- JJWT Implementation
+- JJWT Jackson
 
 ## Building the Project
 To build the project, ensure that Maven is installed on your system. Then navigate to the project directory and run the following command:
@@ -17,28 +25,16 @@ To build the project, ensure that Maven is installed on your system. Then naviga
 ```
 mvn clean install
 ```
-## Connecting to the Database
-This project uses PostgreSQL as the database. To connect to the database locally, create a file named ```application.properties``` in the *src/main/resources* directory and add the following configuration:
+## Connecting to the Database and External Services
+This project requires several environment variables to connect to the external API services, the database, and the email service. To set up these variables locally, create a file named `.env` in the root directory of the project. You can find an example `.env` file in the `.env.example` file provided.
 
-```
-spring.jpa.database=POSTGRESQL
-spring.sql.init.platform=postgres
-spring.datasource.url=jdbc:postgresql://localhost:5432/accessaiddb
-spring.datasource.username=accessaid
-spring.datasource.password=password
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.show-sql = true
-spring.jpa.generate-ddl=true
-spring.jpa.hibernate.ddl-auto = create-drop
-spring.jpa.properties.hibernate.format_sql=true
-spring.mvc.pathmatch.matching-strategy=ant-path-matcher
-spring.sendgrid.api-key=[YOUR_API_KEY]
-app.jwt.secret=[YOUR_SECRET_256-bit]
-api.pagination.default-size=5
+#### Database:
+  This project uses PostgreSQL as the database. Database name, username and password should be added in `.env` file.
+#### External API Services: 
+  This projects uses Google Maps API, and it requires an API Key from Google. To connect to the Google Maps API, obtain an API Key from the Google Cloud Console and add it to the `.env` file.
+#### Email Service Configuration: 
+Configure the necessary variables to connect to the email service in the `.env` file. These variables include the SMTP host, port, username, and password. Consult your email service provider's documentation for the required configuration variables and add them to the `.env` file.
 
-```
-Make sure to replace the username and password with your local database credentials.
 
 ## Running the Application
 To run the application, navigate to the project directory and run the following command:
