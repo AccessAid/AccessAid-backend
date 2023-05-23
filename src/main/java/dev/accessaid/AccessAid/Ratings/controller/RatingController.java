@@ -81,9 +81,7 @@ public class RatingController {
     @ResponseStatus(HttpStatus.CREATED)
     public RatingResponse addRating(
             @RequestBody @Validated @Schema(implementation = RatingRequestExample.class) Rating rating) {
-        Rating newRating = ratingService.createRating(rating);
-        return RatingMapper.toRatingResponse(newRating);
-
+        return RatingMapper.toRatingResponse(ratingService.createRating(rating));
     }
 
     @Operation(summary = "Update an existing rating")
