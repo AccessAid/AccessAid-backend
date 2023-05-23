@@ -28,7 +28,7 @@ public class JwtTokenUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JwtTokenUtil.class);
 
-    @Value("${app.jwt.secret}")
+    @Value("${JWT_SECRET}")
     private String jwtSecret;
 
     private Key getSigningKey() {

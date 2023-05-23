@@ -11,13 +11,13 @@ import lombok.Data;
 @PropertySource("classpath:application.properties")
 public class EmailText {
 
-    @Value("${spring.mail.setTo}")
+    @Value("${EMAIL_SET_TO}")
     private String emailSetToAccessAid;
 
-    @Value("${spring.mail.subject}")
+    @Value("${EMAIL_SUBJECT}")
     private String emailSubject;
 
-    @Value("${spring.mail.text}")
+    @Value("${EMAIL_TEXT}")
     private String emailText;
 
 }
