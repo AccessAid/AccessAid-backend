@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
-import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.response.PlaceResponse;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.Places.utils.PlaceMapper;
