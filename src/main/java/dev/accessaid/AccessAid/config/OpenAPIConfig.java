@@ -9,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
@@ -25,14 +28,14 @@ public class OpenAPIConfig {
         public OpenAPI openAPI() {
 
                 return new OpenAPI()
-                                .info(new io.swagger.v3.oas.models.info.Info()
+                                .info(new Info()
                                                 .title("AccessAid API")
                                                 .description("AccessAid API")
                                                 .version("1.0.0")
-                                                .contact(new io.swagger.v3.oas.models.info.Contact()
+                                                .contact(new Contact()
                                                                 .url("https://github.com/AccessAid")
                                                                 .name("AccessAid Team"))
-                                                .license(new io.swagger.v3.oas.models.info.License()
+                                                .license(new License()
                                                                 .name("Apache 2.0")
                                                                 .url("http://www.apache.org/licenses/LICENSE-2.0")))
                                 .addSecurityItem(new SecurityRequirement()
