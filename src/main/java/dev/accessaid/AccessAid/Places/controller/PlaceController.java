@@ -126,9 +126,7 @@ public class PlaceController {
         @DeleteMapping("/{id}")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<?> deletePlace(@PathVariable Integer id) throws PlaceNotFoundException {
-                Place place = placeService.findPlaceById(id);
-                placeService.removePlace(id);
-                return ResponseEntity.ok(placeMapper.toPlaceResponse(place));
+                return ResponseEntity.ok(placeMapper.toPlaceResponse(placeService.removePlace(id)));
         }
 
         @Operation(summary = "See all ratings for a place")
