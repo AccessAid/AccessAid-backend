@@ -111,22 +111,7 @@ public class RatingController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRating(@PathVariable Integer id) {
-
         ratingService.removeRating(id);
-    }
-
-    @Operation(summary = "See all ratings that a user has made")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-            @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/user/{userId}/unpaged")
-    public List<RatingResponse> seeRatingsByUser(@PathVariable Integer userId) {
-        User user = userService.getUserById(userId);
-        List<Rating> ratings = ratingService.getRatingByUser(user);
-        return RatingMapper.toRatingResponses(ratings);
-
     }
 
     @Operation(summary = "See all ratings that a user has made")
@@ -136,10 +121,7 @@ public class RatingController {
     })
     @GetMapping("/user/{userId}")
     public Page<RatingResponse> seeRatingsByUser(@PathVariable Integer userId, Pageable pageable) {
-        User user = userService.getUserById(userId);
-        Page<Rating> ratings = ratingService.getRatingByUser(user, pageable);
-        return RatingMapper.toRatingResponses(ratings, pageable);
-
+        return RatingMapper.toRatingResponses(ratingService.getRatingByUser(userService.getUserById(userId), pageable), pageable);
     }
 
     @Operation(summary = "See all ratings that have been made for a place")

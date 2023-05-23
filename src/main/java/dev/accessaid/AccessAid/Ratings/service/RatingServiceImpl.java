@@ -110,12 +110,6 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<Rating> getRatingByUser(User user) throws UserNotFoundException {
-        return ratingRepository.findByUser(user);
-
-    }
-
-    @Override
     public Page<Rating> getRatingByUser(User user, Pageable pageable) throws UserNotFoundException {
         return ratingRepository.findByUser(user, pageable);
 

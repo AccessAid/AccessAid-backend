@@ -24,8 +24,6 @@ public interface RatingService {
 
     Rating removeRating(Integer id) throws RatingNotFoundException;
 
-    List<Rating> getRatingByUser(User user) throws UserNotFoundException;
-
     Page<Rating> getRatingByUser(User user, Pageable pageable) throws UserNotFoundException;
 
     List<Rating> getRatingByPlace(Place place) throws PlaceNotFoundException;
