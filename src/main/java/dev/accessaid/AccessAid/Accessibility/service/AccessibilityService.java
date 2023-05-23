@@ -30,7 +30,7 @@ import okhttp3.ResponseBody;
 @Service
 public class AccessibilityService {
 
-        @Value("${spring.sendgrid.api-key}")
+        @Value("${GOOGLE_APIKEY}")
         String apiKey;
 
         @Autowired
@@ -38,7 +38,7 @@ public class AccessibilityService {
 
         private final GeoApiContext context;
 
-        public AccessibilityService(@Value("${spring.sendgrid.api-key}") String apiKey) {
+        public AccessibilityService(@Value("${GOOGLE_APIKEY}") String apiKey) {
                 this.context = new GeoApiContext.Builder()
                                 .apiKey(apiKey)
                                 .build();

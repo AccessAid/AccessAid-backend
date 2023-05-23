@@ -15,7 +15,7 @@ public class GeolocationService {
 
     private final GeoApiContext context;
 
-    public GeolocationService(@Value("${spring.sendgrid.api-key}") String apiKey) {
+    public GeolocationService(@Value("${GOOGLE_APIKEY}") String apiKey) {
         this.context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();

@@ -11,17 +11,20 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class MailConfig {
 
-    @Value("${spring.mail.username}")
+    @Value("${EMAIL_USERNAME}")
     String username;
 
-    @Value("${spring.mail.password}")
+    @Value("${EMAIL_PASSWORD}")
     String password;
 
-    @Value("${spring.mail.host}")
+    @Value("${EMAIL_HOST}")
     String host;
 
-    @Value("${spring.mail.port}")
+    @Value("${EMAIL_PORT}")
     int port;
+
+    @Value("${EMAIL_SMTP_STARTTLS}")
+    String startTls;
 
     @Bean
     public JavaMailSender javaMailSender() throws Exception {
@@ -33,8 +36,8 @@ public class MailConfig {
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.starttls.enable", startTls);
+        props.put("mail.smtp.ssl.trust", host);
         props.put("mail.smtp.ssl.checkserveridentity", "true");
 
         return mailSender;
