@@ -14,9 +14,6 @@ import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 
 public interface RatingService {
-
-    List<Rating> getAllRatings() throws RatingNotFoundException;
-
     Page<Rating> getAllRatings(Pageable pageable) throws RatingNotFoundException;
 
     Rating getRatingById(Integer id) throws RatingNotFoundException;

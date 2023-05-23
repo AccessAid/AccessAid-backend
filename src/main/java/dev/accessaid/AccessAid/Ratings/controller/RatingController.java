@@ -56,24 +56,9 @@ public class RatingController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @Hidden
-    @GetMapping("/unpaged")
-    public List<RatingResponse> seeAllRatings() {
-        List<Rating> ratings = ratingService.getAllRatings();
-        return RatingMapper.toRatingResponses(ratings);
-
-    }
-
-    @Operation(summary = "See a list of ratings")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-    })
     @GetMapping("")
     public Page<RatingResponse> seeAllRatings(Pageable pageable) {
-        Page<Rating> ratings = ratingService.getAllRatings(pageable);
-        return RatingMapper.toRatingResponses(ratings, pageable);
-
+        return RatingMapper.toRatingResponses(ratingService.getAllRatings(pageable), pageable);
     }
 
     @Operation(summary = "See a rating by id")

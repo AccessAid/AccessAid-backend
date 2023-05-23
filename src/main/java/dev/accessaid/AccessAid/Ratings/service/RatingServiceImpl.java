@@ -39,15 +39,8 @@ public class RatingServiceImpl implements RatingService {
     private EntityManager entityManager;
 
     @Override
-    public List<Rating> getAllRatings() {
-        return ratingRepository.findAll();
-
-    }
-
-    @Override
     public Page<Rating> getAllRatings(Pageable pageable) {
         return ratingRepository.findAll(pageable);
-
     }
 
     @Override
