@@ -116,11 +116,6 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<Rating> getRatingByPlace(Place place) throws PlaceNotFoundException {
-        return ratingRepository.findByPlace(place);
-    }
-
-    @Override
     public Page<Rating> getRatingByPlace(Place place, Pageable pageable) throws PlaceNotFoundException {
         return ratingRepository.findByPlace(place, pageable);
     }

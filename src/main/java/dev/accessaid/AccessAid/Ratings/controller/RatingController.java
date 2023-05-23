@@ -123,21 +123,6 @@ public class RatingController {
     public Page<RatingResponse> seeRatingsByUser(@PathVariable Integer userId, Pageable pageable) {
         return RatingMapper.toRatingResponses(ratingService.getRatingByUser(userService.getUserById(userId), pageable), pageable);
     }
-
-    @Operation(summary = "See all ratings that have been made for a place")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-            @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/place/{placeId}/unpaged")
-    public List<RatingResponse> seeRatingsByPlace(@PathVariable Integer placeId) {
-        Place place = placeService.findPlaceById(placeId);
-        List<Rating> places = ratingService.getRatingByPlace(place);
-        return RatingMapper.toRatingResponses(places);
-
-    }
-
     @Operation(summary = "See all ratings that have been made for a place")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
@@ -145,10 +130,7 @@ public class RatingController {
     })
     @GetMapping("/place/{placeId}")
     public Page<RatingResponse> seeRatingsByPlace(@PathVariable Integer placeId, Pageable pageable) {
-        Place place = placeService.findPlaceById(placeId);
-        Page<Rating> places = ratingService.getRatingByPlace(place, pageable);
-        return RatingMapper.toRatingResponses(places, pageable);
-
+        return RatingMapper.toRatingResponses(ratingService.getRatingByPlace(placeService.findPlaceById(placeId), pageable), pageable);
     }
 
 }

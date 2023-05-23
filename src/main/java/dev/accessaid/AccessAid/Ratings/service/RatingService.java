@@ -26,7 +26,5 @@ public interface RatingService {
 
     Page<Rating> getRatingByUser(User user, Pageable pageable) throws UserNotFoundException;
 
-    List<Rating> getRatingByPlace(Place place) throws PlaceNotFoundException;
-
     Page<Rating> getRatingByPlace(Place place, Pageable pageable) throws PlaceNotFoundException;
 }
