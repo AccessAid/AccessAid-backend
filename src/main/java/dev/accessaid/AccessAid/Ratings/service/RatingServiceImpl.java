@@ -47,7 +47,6 @@ public class RatingServiceImpl implements RatingService {
     public Rating getRatingById(Integer id) throws RatingNotFoundException {
         return ratingRepository.findById(id)
                 .orElseThrow(() -> new RatingNotFoundException("Rating with id " + id + " not found"));
-
     }
 
     @Override

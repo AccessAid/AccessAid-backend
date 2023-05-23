@@ -68,9 +68,7 @@ public class RatingController {
     })
     @GetMapping("/{id}")
     public RatingResponse seeRatingById(@PathVariable Integer id) {
-        Rating rating = ratingService.getRatingById(id);
-        return RatingMapper.toRatingResponse(rating);
-
+        return RatingMapper.toRatingResponse(ratingService.getRatingById(id));
     }
 
     @Operation(summary = "Add a new rating for a place")
