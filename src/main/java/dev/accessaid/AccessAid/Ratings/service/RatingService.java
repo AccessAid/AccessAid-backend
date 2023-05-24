@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Ratings.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,7 +18,7 @@ public interface RatingService {
 
     Rating createRating(Rating rating) throws RatingSaveException;
 
-    Rating changeRating(Integer ratingId, Rating rating) throws RatingNotFoundException, RatingSaveException;
+    Rating changeRating(Integer id, Rating rating) throws RatingNotFoundException, RatingSaveException;
 
     Rating removeRating(Integer id) throws RatingNotFoundException;
 
