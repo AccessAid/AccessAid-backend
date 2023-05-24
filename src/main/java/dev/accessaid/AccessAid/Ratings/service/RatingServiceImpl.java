@@ -39,22 +39,14 @@ public class RatingServiceImpl implements RatingService {
     private EntityManager entityManager;
 
     @Override
-    public List<Rating> getAllRatings() {
-        return ratingRepository.findAll();
-
-    }
-
-    @Override
     public Page<Rating> getAllRatings(Pageable pageable) {
         return ratingRepository.findAll(pageable);
-
     }
 
     @Override
     public Rating getRatingById(Integer id) throws RatingNotFoundException {
         return ratingRepository.findById(id)
                 .orElseThrow(() -> new RatingNotFoundException("Rating with id " + id + " not found"));
-
     }
 
     @Override
@@ -99,13 +91,14 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating changeRating(Rating rating) throws RatingNotFoundException {
-        Optional<Rating> ratingToUpdate = ratingRepository.findById(rating.getId());
-        if (!ratingToUpdate.isPresent()) {
-            throw new RatingNotFoundException("Rating with id " + rating.getId() + " not found");
-        }
-        Rating updatedRating = ratingToUpdate.get();
-        return ratingRepository.save(updatedRating);
+    public Rating changeRating(Integer id, Rating rating) throws RatingNotFoundException {
+        Optional<Rating> ratingToUpdate = ratingRepository.findById(id);
+        if (!ratingToUpdate.isPresent())
+            throw new RatingNotFoundException("Rating with id " + id + " not found");
+
+        ratingToUpdate.get().setRating(rating.getRating());
+
+        return ratingRepository.save(ratingToUpdate.get());
     }
 
     @Override
@@ -118,20 +111,9 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<Rating> getRatingByUser(User user) throws UserNotFoundException {
-        return ratingRepository.findByUser(user);
-
-    }
-
-    @Override
     public Page<Rating> getRatingByUser(User user, Pageable pageable) throws UserNotFoundException {
         return ratingRepository.findByUser(user, pageable);
 
-    }
-
-    @Override
-    public List<Rating> getRatingByPlace(Place place) throws PlaceNotFoundException {
-        return ratingRepository.findByPlace(place);
     }
 
     @Override

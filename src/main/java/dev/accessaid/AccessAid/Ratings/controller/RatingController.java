@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Ratings.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,18 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
-import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.service.RatingServiceImpl;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
-import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Ratings.RatingRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Ratings.RatingResponseExample;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,24 +50,9 @@ public class RatingController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @Hidden
-    @GetMapping("/unpaged")
-    public List<RatingResponse> seeAllRatings() {
-        List<Rating> ratings = ratingService.getAllRatings();
-        return RatingMapper.toRatingResponses(ratings);
-
-    }
-
-    @Operation(summary = "See a list of ratings")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-    })
     @GetMapping("")
     public Page<RatingResponse> seeAllRatings(Pageable pageable) {
-        Page<Rating> ratings = ratingService.getAllRatings(pageable);
-        return RatingMapper.toRatingResponses(ratings, pageable);
-
+        return RatingMapper.toRatingResponses(ratingService.getAllRatings(pageable), pageable);
     }
 
     @Operation(summary = "See a rating by id")
@@ -83,9 +62,7 @@ public class RatingController {
     })
     @GetMapping("/{id}")
     public RatingResponse seeRatingById(@PathVariable Integer id) {
-        Rating rating = ratingService.getRatingById(id);
-        return RatingMapper.toRatingResponse(rating);
-
+        return RatingMapper.toRatingResponse(ratingService.getRatingById(id));
     }
 
     @Operation(summary = "Add a new rating for a place")
@@ -98,9 +75,7 @@ public class RatingController {
     @ResponseStatus(HttpStatus.CREATED)
     public RatingResponse addRating(
             @RequestBody @Validated @Schema(implementation = RatingRequestExample.class) Rating rating) {
-        Rating newRating = ratingService.createRating(rating);
-        return RatingMapper.toRatingResponse(newRating);
-
+        return RatingMapper.toRatingResponse(ratingService.createRating(rating));
     }
 
     @Operation(summary = "Update an existing rating")
@@ -112,14 +87,7 @@ public class RatingController {
     @PutMapping("/{id}")
     public RatingResponse updateRating(@PathVariable Integer id,
             @RequestBody @Validated @Schema(example = "{\"rating\": 5.0}") Rating rating) {
-        Rating ratingToUpdate = ratingService.getRatingById(id);
-        if (ratingToUpdate == null) {
-            throw new RatingNotFoundException("Rating not found");
-        }
-        ratingToUpdate.setRating(rating.getRating());
-        Rating udpatedRating = ratingService.changeRating(ratingToUpdate);
-        return RatingMapper.toRatingResponse(udpatedRating);
-
+        return RatingMapper.toRatingResponse(ratingService.changeRating(id, rating));
     }
 
     @Operation(summary = "Delete a rating by id")
@@ -130,22 +98,7 @@ public class RatingController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRating(@PathVariable Integer id) {
-
         ratingService.removeRating(id);
-    }
-
-    @Operation(summary = "See all ratings that a user has made")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-            @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/user/{userId}/unpaged")
-    public List<RatingResponse> seeRatingsByUser(@PathVariable Integer userId) {
-        User user = userService.getUserById(userId);
-        List<Rating> ratings = ratingService.getRatingByUser(user);
-        return RatingMapper.toRatingResponses(ratings);
-
     }
 
     @Operation(summary = "See all ratings that a user has made")
@@ -155,26 +108,8 @@ public class RatingController {
     })
     @GetMapping("/user/{userId}")
     public Page<RatingResponse> seeRatingsByUser(@PathVariable Integer userId, Pageable pageable) {
-        User user = userService.getUserById(userId);
-        Page<Rating> ratings = ratingService.getRatingByUser(user, pageable);
-        return RatingMapper.toRatingResponses(ratings, pageable);
-
+        return RatingMapper.toRatingResponses(ratingService.getRatingByUser(userService.getUserById(userId), pageable), pageable);
     }
-
-    @Operation(summary = "See all ratings that have been made for a place")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
-            @ApiResponse(responseCode = "404", description = "Ratings not found", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/place/{placeId}/unpaged")
-    public List<RatingResponse> seeRatingsByPlace(@PathVariable Integer placeId) {
-        Place place = placeService.findPlaceById(placeId);
-        List<Rating> places = ratingService.getRatingByPlace(place);
-        return RatingMapper.toRatingResponses(places);
-
-    }
-
     @Operation(summary = "See all ratings that have been made for a place")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
@@ -182,10 +117,7 @@ public class RatingController {
     })
     @GetMapping("/place/{placeId}")
     public Page<RatingResponse> seeRatingsByPlace(@PathVariable Integer placeId, Pageable pageable) {
-        Place place = placeService.findPlaceById(placeId);
-        Page<Rating> places = ratingService.getRatingByPlace(place, pageable);
-        return RatingMapper.toRatingResponses(places, pageable);
-
+        return RatingMapper.toRatingResponses(ratingService.getRatingByPlace(placeService.findPlaceById(placeId), pageable), pageable);
     }
 
 }
