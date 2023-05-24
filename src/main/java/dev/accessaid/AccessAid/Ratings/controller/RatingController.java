@@ -87,7 +87,7 @@ public class RatingController {
     @PutMapping("/{id}")
     public RatingResponse updateRating(@PathVariable Integer id,
             @RequestBody @Validated @Schema(example = "{\"rating\": 5.0}") Rating rating) {
-        return RatingMapper.toRatingResponse(ratingService.changeRating(ratingId, rating));
+        return RatingMapper.toRatingResponse(ratingService.changeRating(id, rating));
     }
 
     @Operation(summary = "Delete a rating by id")
