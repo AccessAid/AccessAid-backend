@@ -1,6 +1,14 @@
 version: '3.9'
 
 services:
+  accessaid_frontend:
+    container_name: accessaid_frontend
+    image: accessaid_frontend:1.0.0
+    build: ../AccessAid-frontend/
+    ports:
+      - 5173:5173
+    depends_on:
+      - accessaid
   accessaid:
     container_name: accessaid
     image: accessaid_app:1.0.0
