@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.response.UserResponse;
 import dev.accessaid.AccessAid.User.service.UserServiceImpl;
@@ -60,10 +61,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PutMapping("/{userId}")
+    @PutMapping("/{id}")
     public UserResponse updateUser(@RequestBody @Schema(implementation = UserRequestExample.class) User user,
-                                   @PathVariable Integer userId) {
-        return UserMapper.toUserResponse(userService.changeUser(user, userId));
+            @PathVariable Integer id) {
+        return UserMapper.toUserResponse(userService.changeUser(user, id));
     }
 
     @Operation(summary = "Delete an existing user")
