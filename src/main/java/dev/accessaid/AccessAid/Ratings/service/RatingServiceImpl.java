@@ -91,13 +91,14 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating changeRating(Rating rating) throws RatingNotFoundException {
-        Optional<Rating> ratingToUpdate = ratingRepository.findById(rating.getId());
-        if (!ratingToUpdate.isPresent()) {
-            throw new RatingNotFoundException("Rating with id " + rating.getId() + " not found");
-        }
-        Rating updatedRating = ratingToUpdate.get();
-        return ratingRepository.save(updatedRating);
+    public Rating changeRating(Integer ratingId, Rating rating) throws RatingNotFoundException {
+        Optional<Rating> ratingToUpdate = ratingRepository.findById(ratingId);
+        if (!ratingToUpdate.isPresent())
+            throw new RatingNotFoundException("Rating with id " + ratingId + " not found");
+
+        ratingToUpdate.get().setRating(rating.getRating());
+
+        return ratingRepository.save(ratingToUpdate.get());
     }
 
     @Override

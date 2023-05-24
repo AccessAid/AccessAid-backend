@@ -90,17 +90,10 @@ public class RatingController {
             @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PutMapping("/{id}")
-    public RatingResponse updateRating(@PathVariable Integer id,
+    @PutMapping("/{ratingId}")
+    public RatingResponse updateRating(@PathVariable Integer ratingId,
             @RequestBody @Validated @Schema(example = "{\"rating\": 5.0}") Rating rating) {
-        Rating ratingToUpdate = ratingService.getRatingById(id);
-        if (ratingToUpdate == null) {
-            throw new RatingNotFoundException("Rating not found");
-        }
-        ratingToUpdate.setRating(rating.getRating());
-        Rating udpatedRating = ratingService.changeRating(ratingToUpdate);
-        return RatingMapper.toRatingResponse(udpatedRating);
-
+        return RatingMapper.toRatingResponse(ratingService.changeRating(ratingId, rating));
     }
 
     @Operation(summary = "Delete a rating by id")
