@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Ratings.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,18 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.Ratings.exceptions.RatingNotFoundException;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
 import dev.accessaid.AccessAid.Ratings.response.RatingResponse;
 import dev.accessaid.AccessAid.Ratings.service.RatingServiceImpl;
 import dev.accessaid.AccessAid.Ratings.utils.RatingMapper;
-import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Ratings.RatingRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Ratings.RatingResponseExample;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -90,8 +85,8 @@ public class RatingController {
             @ApiResponse(responseCode = "404", description = "Rating not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PutMapping("/{ratingId}")
-    public RatingResponse updateRating(@PathVariable Integer ratingId,
+    @PutMapping("/{id}")
+    public RatingResponse updateRating(@PathVariable Integer id,
             @RequestBody @Validated @Schema(example = "{\"rating\": 5.0}") Rating rating) {
         return RatingMapper.toRatingResponse(ratingService.changeRating(ratingId, rating));
     }
