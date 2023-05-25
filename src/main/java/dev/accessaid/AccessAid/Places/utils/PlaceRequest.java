@@ -1,6 +1,7 @@
 package dev.accessaid.AccessAid.Places.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,8 @@ public class PlaceRequest {
 
     @JsonProperty("longitude")
     private Double longitude;
+
+    @JsonProperty("apiPlaceId")
+    private String apiPlaceId;
 
 }

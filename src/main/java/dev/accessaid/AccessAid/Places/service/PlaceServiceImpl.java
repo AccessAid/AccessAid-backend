@@ -69,7 +69,10 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Place createPlace(PlaceRequest request) throws PlaceSaveException {
-        GeolocationResponse response = geolocationUtils.getGeolocationByAddressOrCoordinates(request);
+        GeolocationResponse response = request.getApiPlaceId() != null
+                ? accessibilityUtils.getGeolocationResponseByApiPlaceId(request.getApiPlaceId())
+                : geolocationUtils.getGeolocationByAddressOrCoordinates(request);
+
         Optional<Place> existingPlace = placeRepository.findByLatitudeAndLongitude(response.getLatitude(),
                 response.getLongitude());
         if (existingPlace.isPresent()) {

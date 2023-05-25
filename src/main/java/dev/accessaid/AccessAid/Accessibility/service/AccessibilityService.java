@@ -76,7 +76,7 @@ public class AccessibilityService {
         public PlaceAndNearbyPlacesResponse getNearbyPlaces(Double lat, Double lng, String address, String type)
                         throws Exception {
 
-                PlaceRequest placeRequest = new PlaceRequest(address, lat, lng);
+                PlaceRequest placeRequest = new PlaceRequest(address, lat, lng, null);
 
                 GeolocationResponse geolocationResponse = geolocationUtils
                                 .getGeolocationByAddressOrCoordinates(placeRequest);
