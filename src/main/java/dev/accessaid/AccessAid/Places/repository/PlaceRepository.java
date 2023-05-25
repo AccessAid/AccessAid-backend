@@ -45,4 +45,6 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
 
     Optional<Place> findByLatitudeAndLongitude(double latitude, double longitude);
 
+    Optional<Place> findPlaceByApiPlaceId(String apiPlaceId);
+
 }
