@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
@@ -89,14 +88,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment changeComment(Comment comment) throws CommentNotFoundException {
-        Optional<Comment> commentToUpdate = commentRepository.findById(comment.getId());
-        if (!commentToUpdate.isPresent()) {
+    public Comment changeComment(Integer id, Comment comment) throws CommentNotFoundException {
+        Optional<Comment> commentToUpdate = commentRepository.findById(id);
+        if (!commentToUpdate.isPresent())
             throw new CommentNotFoundException("Comment not found");
 
-        }
-        Comment updatedComment = commentToUpdate.get();
-        return commentRepository.save(updatedComment);
+        commentToUpdate.get().setComment(comment.getComment());
+
+        return commentRepository.save(commentToUpdate.get());
 
     }
 

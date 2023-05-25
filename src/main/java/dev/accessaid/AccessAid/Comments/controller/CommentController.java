@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.service.CommentServiceImpl;
@@ -88,14 +86,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public CommentResponse updateComment(@PathVariable Integer id,
             @RequestBody @Schema(example = "{\"comment\": \"Nice Place!\"}") Comment comment) {
-        Comment existingComment = commentService.getCommentById(id);
-        if (existingComment == null) {
-            throw new CommentNotFoundException("Comment not found with id: " + id);
-        }
-        existingComment.setComment(comment.getComment());
-        Comment updatedComment = commentService.changeComment(existingComment);
-        return CommentMapper.toCommentResponse(updatedComment);
-
+        return CommentMapper.toCommentResponse(commentService.changeComment(id, comment));
     }
 
     @Operation(summary = "Delete an existing comment")

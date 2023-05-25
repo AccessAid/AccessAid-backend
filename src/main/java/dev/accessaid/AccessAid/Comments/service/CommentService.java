@@ -2,7 +2,6 @@ package dev.accessaid.AccessAid.Comments.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
@@ -17,7 +16,7 @@ public interface CommentService {
 
     Comment createComment(Comment comment) throws CommentSaveException;
 
-    Comment changeComment(Comment comment) throws CommentNotFoundException;
+    Comment changeComment(Integer id, Comment comment) throws CommentNotFoundException;
 
     Comment removeComment(Integer id) throws CommentNotFoundException;
 
