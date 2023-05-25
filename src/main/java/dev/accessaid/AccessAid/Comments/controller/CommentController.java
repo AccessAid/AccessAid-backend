@@ -81,8 +81,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponse addComment(
             @RequestBody @Validated @Schema(implementation = CommentRequestExample.class) Comment comment) {
-        Comment createdComment = commentService.createComment(comment);
-        return CommentMapper.toCommentResponse(createdComment);
+        return CommentMapper.toCommentResponse(commentService.createComment(comment));
     }
 
     @Operation(summary = "Update an existing comment")
