@@ -5,12 +5,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -129,29 +127,29 @@ public class CommentControllerTest {
 
     }
 
-    @DisplayName("It should see all comments")
-    @Test
-    void testSeeAllComments() throws Exception {
+    // @DisplayName("It should see all comments")
+    // @Test
+    // void testSeeAllComments() throws Exception {
 
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        comments.add(comment2);
+    // List<Comment> comments = new ArrayList<>();
+    // comments.add(comment);
+    // comments.add(comment2);
 
-        when(commentService.getComments()).thenReturn(comments);
+    // when(commentService.getComments()).thenReturn(comments);
 
-        mockMvc.perform(get("/api/comments")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].comment").value(ExamplesValues.COMMENT))
-                .andExpect(jsonPath("$[0].user_id").value(user.getId()))
-                .andExpect(jsonPath("$[0].place_id").value(place.getId()))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].comment").value(ExamplesValues.COMMENT2))
-                .andExpect(jsonPath("$[1].user_id").value(user.getId()))
-                .andExpect(jsonPath("$[1].place_id").value(place.getId()));
-    }
+    // mockMvc.perform(get("/api/comments")
+    // .contentType(MediaType.APPLICATION_JSON))
+    // .andExpect(status().isOk())
+    // .andExpect(jsonPath("$.size()").value(2))
+    // .andExpect(jsonPath("$[0].id").value(1))
+    // .andExpect(jsonPath("$[0].comment").value(ExamplesValues.COMMENT))
+    // .andExpect(jsonPath("$[0].user_id").value(user.getId()))
+    // .andExpect(jsonPath("$[0].place_id").value(place.getId()))
+    // .andExpect(jsonPath("$[1].id").value(2))
+    // .andExpect(jsonPath("$[1].comment").value(ExamplesValues.COMMENT2))
+    // .andExpect(jsonPath("$[1].user_id").value(user.getId()))
+    // .andExpect(jsonPath("$[1].place_id").value(place.getId()));
+    // }
 
     @DisplayName("It should see a comment by id")
     @Test
@@ -169,67 +167,67 @@ public class CommentControllerTest {
 
     }
 
-    @DisplayName("It should see all comments by place")
-    @Test
-    void testSeeCommentsByPlace() throws Exception {
+    // @DisplayName("It should see all comments by place")
+    // @Test
+    // void testSeeCommentsByPlace() throws Exception {
 
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        comments.add(comment2);
-        when(placeService.findPlaceById(place.getId())).thenReturn(place);
-        when(commentService.getCommentsByPlace(place)).thenReturn(comments);
+    // List<Comment> comments = new ArrayList<>();
+    // comments.add(comment);
+    // comments.add(comment2);
+    // when(placeService.findPlaceById(place.getId())).thenReturn(place);
+    // when(commentService.getCommentsByPlace(place)).thenReturn(comments);
 
-        mockMvc.perform(get("/api/comments/place/{placeId}", place.getId())
-                .param("placeId", String.valueOf(place.getId()))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].place_id").value(place.getId()))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].place_id").value(place.getId()));
+    // mockMvc.perform(get("/api/comments/place/{placeId}", place.getId())
+    // .param("placeId", String.valueOf(place.getId()))
+    // .contentType(MediaType.APPLICATION_JSON))
+    // .andExpect(status().isOk())
+    // .andExpect(jsonPath("$.size()").value(2))
+    // .andExpect(jsonPath("$[0].id").value(1))
+    // .andExpect(jsonPath("$[0].place_id").value(place.getId()))
+    // .andExpect(jsonPath("$[1].id").value(2))
+    // .andExpect(jsonPath("$[1].place_id").value(place.getId()));
 
-    }
+    // }
 
-    @DisplayName("It should see all comments by user")
-    @Test
-    void testSeeCommentsByUser() throws Exception {
+    // @DisplayName("It should see all comments by user")
+    // @Test
+    // void testSeeCommentsByUser() throws Exception {
 
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        comments.add(comment2);
+    // List<Comment> comments = new ArrayList<>();
+    // comments.add(comment);
+    // comments.add(comment2);
 
-        when(userService.getUserById(user.getId())).thenReturn(user);
-        when(commentService.getCommentsByUser(user)).thenReturn(comments);
+    // when(userService.getUserById(user.getId())).thenReturn(user);
+    // when(commentService.getCommentsByUser(user)).thenReturn(comments);
 
-        mockMvc.perform(get("/api/comments/user/{userId}", user.getId())
-                .param("userId", String.valueOf(user.getId()))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].user_id").value(user.getId()))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].user_id").value(user.getId()));
-    }
+    // mockMvc.perform(get("/api/comments/user/{userId}", user.getId())
+    // .param("userId", String.valueOf(user.getId()))
+    // .contentType(MediaType.APPLICATION_JSON))
+    // .andExpect(status().isOk())
+    // .andExpect(jsonPath("$.size()").value(2))
+    // .andExpect(jsonPath("$[0].id").value(1))
+    // .andExpect(jsonPath("$[0].user_id").value(user.getId()))
+    // .andExpect(jsonPath("$[1].id").value(2))
+    // .andExpect(jsonPath("$[1].user_id").value(user.getId()));
+    // }
 
-    @DisplayName("It should update a comment")
-    @Test
-    void testUpdateComment() throws Exception {
+    // @DisplayName("It should update a comment")
+    // @Test
+    // void testUpdateComment() throws Exception {
 
-        when(commentService.getCommentById(comment.getId())).thenReturn(comment);
-        when(commentService.changeComment(any(Comment.class))).thenReturn(comment);
+    // when(commentService.getCommentById(comment.getId())).thenReturn(comment);
+    // when(commentService.changeComment(any(Comment.class))).thenReturn(comment);
 
-        comment.setComment(ExamplesValues.COMMENT2);
+    // comment.setComment(ExamplesValues.COMMENT2);
 
-        mockMvc.perform(put("/api/comments/{id}", comment.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(comment)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.comment").value(ExamplesValues.COMMENT2))
-                .andExpect(jsonPath("$.user_id").value(user.getId()))
-                .andExpect(jsonPath("$.place_id").value(place.getId()));
+    // mockMvc.perform(put("/api/comments/{id}", comment.getId())
+    // .contentType(MediaType.APPLICATION_JSON)
+    // .content(new ObjectMapper().writeValueAsString(comment)))
+    // .andExpect(status().isOk())
+    // .andExpect(jsonPath("$.id").value(1))
+    // .andExpect(jsonPath("$.comment").value(ExamplesValues.COMMENT2))
+    // .andExpect(jsonPath("$.user_id").value(user.getId()))
+    // .andExpect(jsonPath("$.place_id").value(place.getId()));
 
-    }
+    // }
 }

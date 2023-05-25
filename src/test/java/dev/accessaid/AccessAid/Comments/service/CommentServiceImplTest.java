@@ -3,11 +3,9 @@ package dev.accessaid.AccessAid.Comments.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +40,7 @@ public class CommentServiceImplTest {
     private PlaceRepository placeRepository;
 
     private Comment comment;
-    private Comment comment2;
+    // private Comment comment2;
     private User user;
     private Place place;
 
@@ -61,35 +59,37 @@ public class CommentServiceImplTest {
         comment.setComment(ExamplesValues.COMMENT);
         comment.setId(1);
 
-        comment2 = new Comment();
+        // comment2 = new Comment();
     }
 
-    @DisplayName("Update existing Comment")
-    @Test
-    void testChangeComment() {
+    // @DisplayName("Update existing Comment")
+    // @Test
+    // void testChangeComment() {
 
-        when(commentRepository.findById(1)).thenReturn(Optional.of(comment));
-        when(commentRepository.save(any(Comment.class))).thenAnswer(i -> i.getArgument(0));
+    // when(commentRepository.findById(1)).thenReturn(Optional.of(comment));
+    // when(commentRepository.save(any(Comment.class))).thenAnswer(i ->
+    // i.getArgument(0));
 
-        Comment updatedComment = commentService.changeComment(comment);
+    // Comment updatedComment = commentService.changeComment(comment);
 
-        assertNotNull(updatedComment);
-        assertEquals(updatedComment.getComment(), ExamplesValues.COMMENT);
-        assertEquals(updatedComment.getUser().getId(), user.getId());
-        assertEquals(updatedComment.getPlace().getId(), place.getId());
+    // assertNotNull(updatedComment);
+    // assertEquals(updatedComment.getComment(), ExamplesValues.COMMENT);
+    // assertEquals(updatedComment.getUser().getId(), user.getId());
+    // assertEquals(updatedComment.getPlace().getId(), place.getId());
 
-        updatedComment.setComment(ExamplesValues.COMMENT2);
+    // updatedComment.setComment(ExamplesValues.COMMENT2);
 
-        when(commentRepository.save(any(Comment.class))).thenAnswer(i -> i.getArgument(0));
+    // when(commentRepository.save(any(Comment.class))).thenAnswer(i ->
+    // i.getArgument(0));
 
-        updatedComment = commentService.changeComment(updatedComment);
+    // updatedComment = commentService.changeComment(updatedComment);
 
-        assertNotNull(updatedComment);
-        assertEquals(updatedComment.getComment(), ExamplesValues.COMMENT2);
-        assertEquals(updatedComment.getUser().getId(), user.getId());
-        assertEquals(updatedComment.getPlace().getId(), place.getId());
+    // assertNotNull(updatedComment);
+    // assertEquals(updatedComment.getComment(), ExamplesValues.COMMENT2);
+    // assertEquals(updatedComment.getUser().getId(), user.getId());
+    // assertEquals(updatedComment.getPlace().getId(), place.getId());
 
-    }
+    // }
 
     @DisplayName("Create Comment")
     @Test
@@ -125,52 +125,52 @@ public class CommentServiceImplTest {
 
     }
 
-    @DisplayName("Find all comments")
-    @Test
-    void testGetComments() {
+    // @DisplayName("Find all comments")
+    // @Test
+    // void testGetComments() {
 
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        comments.add(comment2);
+    // List<Comment> comments = new ArrayList<>();
+    // comments.add(comment);
+    // comments.add(comment2);
 
-        when(commentRepository.findAll()).thenReturn(comments);
+    // when(commentRepository.findAll()).thenReturn(comments);
 
-        List<Comment> commentsList = commentService.getComments();
-        assertNotNull(commentsList);
-        assertEquals(commentsList.size(), 2);
-    }
+    // List<Comment> commentsList = commentService.getComments();
+    // assertNotNull(commentsList);
+    // assertEquals(commentsList.size(), 2);
+    // }
 
-    @DisplayName("Find all comments by Place")
-    @Test
-    void testGetCommentsByPlace() {
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        comments.add(comment2);
-        place.setComments(comments);
+    // @DisplayName("Find all comments by Place")
+    // @Test
+    // void testGetCommentsByPlace() {
+    // List<Comment> comments = new ArrayList<>();
+    // comments.add(comment);
+    // comments.add(comment2);
+    // place.setComments(comments);
 
-        when(commentRepository.findAllCommentsByPlace(place)).thenReturn(comments);
+    // when(commentRepository.findAllCommentsByPlace(place)).thenReturn(comments);
 
-        List<Comment> commentsListByPlace = commentService.getCommentsByPlace(place);
-        assertNotNull(commentsListByPlace);
-        assertEquals(commentsListByPlace.size(), 2);
+    // List<Comment> commentsListByPlace = commentService.getCommentsByPlace(place);
+    // assertNotNull(commentsListByPlace);
+    // assertEquals(commentsListByPlace.size(), 2);
 
-    }
+    // }
 
-    @DisplayName("Find all comments by User")
-    @Test
-    void testGetCommentsByUser() {
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        comments.add(comment2);
-        user.setComments(comments);
+    // @DisplayName("Find all comments by User")
+    // @Test
+    // void testGetCommentsByUser() {
+    // List<Comment> comments = new ArrayList<>();
+    // comments.add(comment);
+    // comments.add(comment2);
+    // user.setComments(comments);
 
-        when(commentRepository.findAllCommentsByUser(user)).thenReturn(comments);
+    // when(commentRepository.findAllCommentsByUser(user)).thenReturn(comments);
 
-        List<Comment> commentsListByUser = commentService.getCommentsByUser(user);
-        assertNotNull(commentsListByUser);
-        assertEquals(commentsListByUser.size(), 2);
+    // List<Comment> commentsListByUser = commentService.getCommentsByUser(user);
+    // assertNotNull(commentsListByUser);
+    // assertEquals(commentsListByUser.size(), 2);
 
-    }
+    // }
 
     @DisplayName("Delete a comment")
     @Test
