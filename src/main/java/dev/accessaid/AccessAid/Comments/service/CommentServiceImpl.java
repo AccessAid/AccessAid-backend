@@ -154,11 +154,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByPlace(Place place) throws PlaceNotFoundException {
-        return commentRepository.findAllCommentsByPlace(place);
-    }
-
-    @Override
     public Page<Comment> getCommentsByPlace(Place place, Pageable pageable) throws PlaceNotFoundException {
         return commentRepository.findAllCommentsByPlace(place, pageable);
     }

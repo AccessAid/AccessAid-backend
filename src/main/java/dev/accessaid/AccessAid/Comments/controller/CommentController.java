@@ -22,7 +22,6 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.service.CommentServiceImpl;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
-import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
@@ -111,23 +110,7 @@ public class CommentController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Integer id) {
-
         commentService.removeComment(id);
-
-    }
-
-    @Operation(summary = "See all comments that have been made about a place")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
-            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
-    })
-    @Hidden
-    @GetMapping("/place/{placeId}/unpaged")
-    public List<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId) {
-        Place place = placeService.findPlaceById(placeId);
-        List<Comment> placesComments = commentService.getCommentsByPlace(place);
-        return CommentMapper.toCommentResponses(placesComments);
-
     }
 
     @Operation(summary = "See all comments that have been made about a place")
@@ -138,10 +121,7 @@ public class CommentController {
     @GetMapping("/place/{placeId}")
     public Page<CommentResponse> seeCommentsByPlace(@PathVariable Integer placeId,
             Pageable pageable) {
-        Place place = placeService.findPlaceById(placeId);
-        Page<Comment> placesComments = commentService.getCommentsByPlace(place, pageable);
-        return CommentMapper.toCommentResponses(placesComments, pageable);
-
+        return CommentMapper.toCommentResponses(commentService.getCommentsByPlace(placeService.findPlaceById(placeId), pageable), pageable);
     }
 
     @Operation(summary = "See all comments that a user has made")

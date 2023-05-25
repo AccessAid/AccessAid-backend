@@ -23,8 +23,6 @@ public interface CommentService {
 
     Comment removeComment(Integer id) throws CommentNotFoundException;
 
-    List<Comment> getCommentsByPlace(Place place) throws CommentNotFoundException;
-
     Page<Comment> getCommentsByPlace(Place place, Pageable pageable) throws CommentNotFoundException;
 
     List<Comment> getCommentsByUser(User user) throws CommentNotFoundException;
