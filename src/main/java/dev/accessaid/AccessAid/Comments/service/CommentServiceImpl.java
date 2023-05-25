@@ -1,13 +1,10 @@
 package dev.accessaid.AccessAid.Comments.service;
 
-import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import dev.accessaid.AccessAid.Comments.exceptions.CommentNotFoundException;
 import dev.accessaid.AccessAid.Comments.exceptions.CommentSaveException;
 import dev.accessaid.AccessAid.Comments.model.Comment;
@@ -39,12 +36,6 @@ public class CommentServiceImpl implements CommentService {
     private EntityManager entityManager;
 
     @Override
-    public List<Comment> getComments() throws CommentNotFoundException {
-        return commentRepository.findAll();
-
-    }
-
-    @Override
     public Page<Comment> getComments(Pageable pageable) {
         return commentRepository.findAll(pageable);
     }
@@ -53,7 +44,6 @@ public class CommentServiceImpl implements CommentService {
     public Comment getCommentById(Integer id) throws CommentNotFoundException {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
-
     }
 
     @Override
@@ -98,14 +88,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment changeComment(Comment comment) throws CommentNotFoundException {
-        Optional<Comment> commentToUpdate = commentRepository.findById(comment.getId());
-        if (!commentToUpdate.isPresent()) {
+    public Comment changeComment(Integer id, Comment comment) throws CommentNotFoundException {
+        Optional<Comment> commentToUpdate = commentRepository.findById(id);
+        if (!commentToUpdate.isPresent())
             throw new CommentNotFoundException("Comment not found");
 
-        }
-        Comment updatedComment = commentToUpdate.get();
-        return commentRepository.save(updatedComment);
+        commentToUpdate.get().setComment(comment.getComment());
+
+        return commentRepository.save(commentToUpdate.get());
 
     }
 
@@ -161,18 +151,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByPlace(Place place) throws PlaceNotFoundException {
-        return commentRepository.findAllCommentsByPlace(place);
-    }
-
-    @Override
     public Page<Comment> getCommentsByPlace(Place place, Pageable pageable) throws PlaceNotFoundException {
         return commentRepository.findAllCommentsByPlace(place, pageable);
-    }
-
-    @Override
-    public List<Comment> getCommentsByUser(User user) throws UserNotFoundException {
-        return commentRepository.findAllCommentsByUser(user);
     }
 
     @Override
