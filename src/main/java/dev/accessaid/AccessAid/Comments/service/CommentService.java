@@ -13,8 +13,6 @@ import dev.accessaid.AccessAid.User.model.User;
 
 public interface CommentService {
 
-    List<Comment> getComments() throws CommentNotFoundException;
-
     Page<Comment> getComments(Pageable pageable) throws CommentNotFoundException;
 
     Comment getCommentById(Integer id) throws CommentNotFoundException;

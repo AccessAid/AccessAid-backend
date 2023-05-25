@@ -56,22 +56,9 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @Hidden
-    @GetMapping("/uppaged")
-    public List<CommentResponse> seeAllComments() {
-        List<Comment> comments = commentService.getComments();
-        return CommentMapper.toCommentResponses(comments);
-    }
-
-    @Operation(summary = "See a list of comments")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-    })
     @GetMapping("")
     public Page<CommentResponse> seeAllComments(Pageable pageable) {
-        Page<Comment> comments = commentService.getComments(pageable);
-        return CommentMapper.toCommentResponses(comments, pageable);
+        return CommentMapper.toCommentResponses(commentService.getComments(pageable), pageable);
     }
 
     @Operation(summary = "See a comment by id")

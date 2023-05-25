@@ -39,12 +39,6 @@ public class CommentServiceImpl implements CommentService {
     private EntityManager entityManager;
 
     @Override
-    public List<Comment> getComments() throws CommentNotFoundException {
-        return commentRepository.findAll();
-
-    }
-
-    @Override
     public Page<Comment> getComments(Pageable pageable) {
         return commentRepository.findAll(pageable);
     }
