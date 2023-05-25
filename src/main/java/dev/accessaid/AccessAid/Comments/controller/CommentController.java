@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Comments.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +21,9 @@ import dev.accessaid.AccessAid.Comments.response.CommentResponse;
 import dev.accessaid.AccessAid.Comments.service.CommentServiceImpl;
 import dev.accessaid.AccessAid.Comments.utils.CommentMapper;
 import dev.accessaid.AccessAid.Places.service.PlaceServiceImpl;
-import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Comments.CommentResponseExample;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -129,27 +125,10 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
             @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
     })
-    @Hidden
-    @GetMapping("/user/{userId}/unpaged")
-    public List<CommentResponse> seeCommentsByUser(@PathVariable Integer userId) {
-        User user = userService.getUserById(userId);
-        List<Comment> comments = commentService.getCommentsByUser(user);
-        return CommentMapper.toCommentResponses(comments);
-
-    }
-
-    @Operation(summary = "See all comments that a user has made")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseExample.class)))),
-            @ApiResponse(responseCode = "404", description = "Comments not found", content = @Content)
-    })
     @GetMapping("/user/{userId}")
     public Page<CommentResponse> seeCommentsByUser(@PathVariable Integer userId,
             Pageable pageable) {
-        User user = userService.getUserById(userId);
-        Page<Comment> comments = commentService.getCommentsByUser(user, pageable);
-        return CommentMapper.toCommentResponses(comments, pageable);
-
+        return CommentMapper.toCommentResponses(commentService.getCommentsByUser(userService.getUserById(userId), pageable), pageable);
     }
 
 }

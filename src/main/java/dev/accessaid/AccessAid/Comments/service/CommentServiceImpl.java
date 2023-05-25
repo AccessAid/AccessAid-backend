@@ -1,8 +1,6 @@
 package dev.accessaid.AccessAid.Comments.service;
 
-import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -156,11 +154,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Page<Comment> getCommentsByPlace(Place place, Pageable pageable) throws PlaceNotFoundException {
         return commentRepository.findAllCommentsByPlace(place, pageable);
-    }
-
-    @Override
-    public List<Comment> getCommentsByUser(User user) throws UserNotFoundException {
-        return commentRepository.findAllCommentsByUser(user);
     }
 
     @Override

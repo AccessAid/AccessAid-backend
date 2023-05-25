@@ -1,7 +1,5 @@
 package dev.accessaid.AccessAid.Comments.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,8 +22,6 @@ public interface CommentService {
     Comment removeComment(Integer id) throws CommentNotFoundException;
 
     Page<Comment> getCommentsByPlace(Place place, Pageable pageable) throws CommentNotFoundException;
-
-    List<Comment> getCommentsByUser(User user) throws CommentNotFoundException;
 
     Page<Comment> getCommentsByUser(User user, Pageable pageable) throws CommentNotFoundException;
 };
