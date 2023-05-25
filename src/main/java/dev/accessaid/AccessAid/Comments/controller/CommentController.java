@@ -68,9 +68,7 @@ public class CommentController {
     })
     @GetMapping("/{id}")
     public CommentResponse seeCommentById(@PathVariable Integer id) {
-        Comment comment = commentService.getCommentById(id);
-        return CommentMapper.toCommentResponse(comment);
-
+        return CommentMapper.toCommentResponse(commentService.getCommentById(id));
     }
 
     @Operation(summary = "Add comment", description = "Create a comment for a place", tags = { "Comments" })

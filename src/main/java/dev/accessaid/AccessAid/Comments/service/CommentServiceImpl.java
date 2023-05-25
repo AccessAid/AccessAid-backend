@@ -47,7 +47,6 @@ public class CommentServiceImpl implements CommentService {
     public Comment getCommentById(Integer id) throws CommentNotFoundException {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
-
     }
 
     @Override
