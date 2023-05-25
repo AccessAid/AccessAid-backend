@@ -1,6 +1,5 @@
 package dev.accessaid.AccessAid.Places.service;
 
-import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -9,6 +8,7 @@ import dev.accessaid.AccessAid.Accessibility.controller.AccessibilityController;
 import dev.accessaid.AccessAid.Accessibility.response.AccessibilityResponse;
 import dev.accessaid.AccessAid.Accessibility.service.AccessibilityService;
 import dev.accessaid.AccessAid.Geolocation.Response.GeolocationResponse;
+import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 
 @Component
 public class AccessibilityUtils {
@@ -25,7 +25,7 @@ public class AccessibilityUtils {
         AccessibilityResponse response = (AccessibilityResponse) placeDetails.getBody();
 
         return response;
-    }
+    };
 
     public GeolocationResponse getGeolocationResponseByApiPlaceId(String placeId) {
         try {
