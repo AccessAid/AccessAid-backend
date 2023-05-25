@@ -1,5 +1,6 @@
 package dev.accessaid.AccessAid.Places.service;
 
+import dev.accessaid.AccessAid.Places.exceptions.PlaceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class AccessibilityUtils {
             GeolocationResponse response = accessibilityService.getGeolocationResponse(placeId);
             return response;
         } catch (Exception e) {
-            return null;
+            throw new PlaceNotFoundException("no geolocation found");
         }
     }
 };
