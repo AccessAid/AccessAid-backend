@@ -16,4 +16,7 @@ public class PlaceRequestExample {
     @Schema(description = "Longitude of the place", example = ExamplesValues.LONGITUDE)
     private Double longitude;
 
+    @Schema(description = "ApiPlaceId of the place", example = ExamplesValues.API_PLACE_ID)
+    private String apiPlaceId;
+
 }
