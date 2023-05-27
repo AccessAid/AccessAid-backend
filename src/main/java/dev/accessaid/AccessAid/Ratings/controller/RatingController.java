@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Ratings", description = "Ratings of the places")
 @RestController
@@ -74,7 +75,7 @@ public class RatingController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public RatingResponse addRating(
-            @RequestBody @Validated @Schema(implementation = RatingRequestExample.class) Rating rating) {
+            @Valid @RequestBody @Schema(implementation = RatingRequestExample.class) Rating rating) {
         return RatingMapper.toRatingResponse(ratingService.createRating(rating));
     }
 
@@ -108,8 +109,10 @@ public class RatingController {
     })
     @GetMapping("/user/{userId}")
     public Page<RatingResponse> seeRatingsByUser(@PathVariable Integer userId, Pageable pageable) {
-        return RatingMapper.toRatingResponses(ratingService.getRatingByUser(userService.getUserById(userId), pageable), pageable);
+        return RatingMapper.toRatingResponses(ratingService.getRatingByUser(userService.getUserById(userId), pageable),
+                pageable);
     }
+
     @Operation(summary = "See all ratings that have been made for a place")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = RatingResponseExample.class)))),
@@ -117,7 +120,8 @@ public class RatingController {
     })
     @GetMapping("/place/{placeId}")
     public Page<RatingResponse> seeRatingsByPlace(@PathVariable Integer placeId, Pageable pageable) {
-        return RatingMapper.toRatingResponses(ratingService.getRatingByPlace(placeService.findPlaceById(placeId), pageable), pageable);
+        return RatingMapper.toRatingResponses(
+                ratingService.getRatingByPlace(placeService.findPlaceById(placeId), pageable), pageable);
     }
 
 }

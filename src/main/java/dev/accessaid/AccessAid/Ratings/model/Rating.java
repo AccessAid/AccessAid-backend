@@ -11,8 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,9 +33,9 @@ public class Rating {
     Integer id;
 
     @Schema(example = "4.5", description = "")
-    @NotNull(message="must not be null")
-    @Min(value = 1, message= "should be between one and five")
-    @Max(value = 5, message = "should be between one and five")
+    @NotNull(message = "must not be null")
+    @DecimalMin(value = "0.25", message = "should be between zero and five")
+    @DecimalMax(value = "5", message = "should be between one and five")
     Double rating;
 
     @ManyToOne

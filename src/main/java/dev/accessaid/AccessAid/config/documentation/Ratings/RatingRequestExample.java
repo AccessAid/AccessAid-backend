@@ -5,8 +5,8 @@ import dev.accessaid.AccessAid.User.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -15,8 +15,8 @@ public class RatingRequestExample {
 
     @Schema(example = "4.5", description = "")
     @NotNull
-    @Min(1)
-    @Max(5)
+    @DecimalMin("0.25")
+    @DecimalMax("5")
     Double rating;
 
     @ManyToOne
