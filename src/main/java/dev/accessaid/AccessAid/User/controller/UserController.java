@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.accessaid.AccessAid.User.model.User;
+import dev.accessaid.AccessAid.User.request.UserRequest;
 import dev.accessaid.AccessAid.User.response.UserResponse;
 import dev.accessaid.AccessAid.User.service.UserServiceImpl;
 import dev.accessaid.AccessAid.User.utils.UserMapper;
@@ -62,7 +62,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @PutMapping("/{id}")
-    public UserResponse updateUser(@RequestBody @Schema(implementation = UserRequestExample.class) User user,
+    public UserResponse updateUser(@RequestBody @Schema(implementation = UserRequestExample.class) UserRequest user,
             @PathVariable Integer id) {
         return UserMapper.toUserResponse(userService.changeUser(user, id));
     }
