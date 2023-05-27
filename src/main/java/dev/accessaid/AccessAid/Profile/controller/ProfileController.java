@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.accessaid.AccessAid.Profile.model.Profile;
+import dev.accessaid.AccessAid.Profile.request.ProfileRequest;
 import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
@@ -36,6 +37,7 @@ public class ProfileController {
 
     @Autowired
     private ProfileServiceImpl profileService;
+
     @Operation(summary = "See a list of profiles")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProfileResponseExample.class)))),
@@ -77,7 +79,7 @@ public class ProfileController {
     })
     @PutMapping("/{id}")
     public ProfileResponse updateProfile(@PathVariable Integer id,
-            @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
+            @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) ProfileRequest profile) {
         return ProfileMapper.toProfileResponse(profileService.changeProfile(profile, id));
     }
 
