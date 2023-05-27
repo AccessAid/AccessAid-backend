@@ -66,6 +66,10 @@ public class ProfileServiceImpl implements ProfileService {
             throws ProfileSaveException, ProfileNotFoundException {
         Profile updatedProfile = new Profile();
         updatedProfile.setId(id);
+        Optional<Profile> profileToUpdate = profileRepository.findById(updatedProfile.getId());
+        if (!profileToUpdate.isPresent())
+            throw new ProfileNotFoundException("Profile not found");
+
         ProfileUtils.updateProfileFieldsFromProfileRequest(updatedProfile, profile);
         String username = profile.getUsername();
         String email = profile.getEmail();
@@ -75,9 +79,6 @@ public class ProfileServiceImpl implements ProfileService {
         User user = userService.getUserById(profile.getUserId());
         Integer userId = user.getId();
         userService.changeUser(new UserRequest(username, email, oldPassword, newPassword), userId);
-        Optional<Profile> profileToUpdate = profileRepository.findById(updatedProfile.getId());
-        if (!profileToUpdate.isPresent())
-            throw new ProfileNotFoundException("Profile not found");
 
         Profile existingProfile = profileToUpdate.get();
         ProfileUtils.updateProfileFields(existingProfile, updatedProfile);
