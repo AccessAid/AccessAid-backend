@@ -76,10 +76,6 @@ public class ProfileServiceImpl implements ProfileService {
         Integer userId = user.getId();
         userService.changeUser(new UserRequest(username, email, oldPassword, newPassword), userId);
         Optional<Profile> profileToUpdate = profileRepository.findById(updatedProfile.getId());
-
-        // profile.setId(id);
-        // Optional<Profile> profileToUpdate =
-        // profileRepository.findById(profile.getId());
         if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
 
