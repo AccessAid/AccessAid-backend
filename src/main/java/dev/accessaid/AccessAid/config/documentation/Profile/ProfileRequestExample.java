@@ -1,10 +1,7 @@
 package dev.accessaid.AccessAid.config.documentation.Profile;
 
-import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.config.documentation.ExamplesValues;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Data
@@ -37,9 +34,19 @@ public class ProfileRequestExample {
     @Schema(example = ExamplesValues.ABOUT, description = "")
     String about;
 
-    @Schema(description = "user", example = "{\"id\":1}")
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    @Schema(description = "user", example = "1")
+    Integer userId;
+
+    @Schema(example = ExamplesValues.EMAIL, description = "")
+    String email;
+
+    @Schema(example = ExamplesValues.PASSWORD, description = "")
+    String oldPassword;
+
+    @Schema(example = ExamplesValues.PASSWORD, description = "")
+    String newPassword;
+
+    @Schema(example = ExamplesValues.USERNAME, description = "")
+    String username;
 
 }
