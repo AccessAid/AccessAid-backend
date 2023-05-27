@@ -20,6 +20,7 @@ import dev.accessaid.AccessAid.Profile.request.ProfileRequest;
 import dev.accessaid.AccessAid.Profile.response.ProfileResponse;
 import dev.accessaid.AccessAid.Profile.service.ProfileServiceImpl;
 import dev.accessaid.AccessAid.Profile.utils.ProfileMapper;
+import dev.accessaid.AccessAid.config.documentation.Profile.ProfileCreateRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Profile.ProfileResponseExample;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +61,7 @@ public class ProfileController {
 
     @Operation(summary = "Add profile", description = "Create a profile for a user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Profile created successfully", content = @Content(schema = @Schema(implementation = ProfileResponseExample.class))),
+            @ApiResponse(responseCode = "201", description = "Profile created successfully", content = @Content(schema = @Schema(implementation = ProfileCreateRequestExample.class))),
             @ApiResponse(responseCode = "400", description = "Error saving profile", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
