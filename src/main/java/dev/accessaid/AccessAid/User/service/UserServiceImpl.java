@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
         if (user.getUsername() != null)
             existingUser.setUsername(user.getUsername());
 
-        if (user.getNewPassword() != null)
+        if (user.getNewPassword() != null && user.getNewPassword() != "")
             if (encoder.matches(user.getOldPassword(), existingUser.getPassword())) {
 
                 existingUser.setPassword(encoder.encode(user.getNewPassword()));
