@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
 
                 existingUser.setPassword(encoder.encode(user.getNewPassword()));
             } else {
-                throw new UserSaveException("passwords don't match");
+                throw new UserSaveException("oldPassword doesn't match with your current password.");
             }
         return userRepository.save(existingUser);
     }
