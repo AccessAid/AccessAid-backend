@@ -68,7 +68,7 @@ public class ProfileController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse addProfile(
-            @RequestBody @Validated @Schema(implementation = ProfileRequestExample.class) Profile profile) {
+            @RequestBody @Validated @Schema(implementation = ProfileCreateRequestExample.class) Profile profile) {
         return ProfileMapper.toProfileResponse(profileService.createProfile(profile));
     }
 
