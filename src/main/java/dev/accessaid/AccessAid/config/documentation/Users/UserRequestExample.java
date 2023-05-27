@@ -14,5 +14,8 @@ public class UserRequestExample {
     private String email;
 
     @Schema(example = ExamplesValues.PASSWORD)
-    private String password;
+    private String oldPassword;
+
+    @Schema(example = ExamplesValues.PASSWORD)
+    private String newPassword;
 }
