@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class UserRequestExample {
+public class UserRegisterRequestExample {
 
     @Schema(example = ExamplesValues.USERNAME)
     private String username;
@@ -14,8 +14,5 @@ public class UserRequestExample {
     private String email;
 
     @Schema(example = ExamplesValues.PASSWORD)
-    private String oldPassword;
-
-    @Schema(example = ExamplesValues.PASSWORD)
-    private String newPassword;
+    private String password;
 }

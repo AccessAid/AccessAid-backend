@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.accessaid.AccessAid.User.service.UserService;
 import dev.accessaid.AccessAid.config.documentation.Users.LoginRequestExample;
 import dev.accessaid.AccessAid.config.documentation.Users.MessageResponseAUTHExample;
-import dev.accessaid.AccessAid.config.documentation.Users.UserRequestExample;
+import dev.accessaid.AccessAid.config.documentation.Users.UserRegisterRequestExample;
 import dev.accessaid.AccessAid.security.payload.JwtResponse;
 import dev.accessaid.AccessAid.security.payload.LoginRequest;
 import dev.accessaid.AccessAid.security.payload.MessageResponse;
@@ -45,7 +45,7 @@ public class UserAuthController {
         })
         @PostMapping("/register")
         public ResponseEntity<MessageResponse> registerUser(
-                        @Valid @RequestBody @Schema(implementation = UserRequestExample.class) RegisterRequest signUpRequest) {
+                        @Valid @RequestBody @Schema(implementation = UserRegisterRequestExample.class) RegisterRequest signUpRequest) {
                 return userService.registerUser(signUpRequest);
         }
 

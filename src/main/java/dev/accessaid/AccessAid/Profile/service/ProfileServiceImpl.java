@@ -11,10 +11,13 @@ import dev.accessaid.AccessAid.Profile.exceptions.ProfileNotFoundException;
 import dev.accessaid.AccessAid.Profile.exceptions.ProfileSaveException;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
+import dev.accessaid.AccessAid.Profile.request.ProfileRequest;
 import dev.accessaid.AccessAid.Profile.utils.ProfileUtils;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
+import dev.accessaid.AccessAid.User.request.UserRequest;
+import dev.accessaid.AccessAid.User.service.UserServiceImpl;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -25,6 +28,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserServiceImpl userService;
 
     @Override
     public Page<Profile> getAllProfiles(Pageable pageable) {
@@ -56,14 +62,26 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Profile changeProfile(Profile profile, Integer id) throws ProfileSaveException, ProfileNotFoundException {
-        profile.setId(id);
-        Optional<Profile> profileToUpdate = profileRepository.findById(profile.getId());
+    public Profile changeProfile(ProfileRequest profile, Integer id)
+            throws ProfileSaveException, ProfileNotFoundException {
+        Profile updatedProfile = new Profile();
+        updatedProfile.setId(id);
+        Optional<Profile> profileToUpdate = profileRepository.findById(updatedProfile.getId());
         if (!profileToUpdate.isPresent())
             throw new ProfileNotFoundException("Profile not found");
 
+        ProfileUtils.updateProfileFieldsFromProfileRequest(updatedProfile, profile);
+        String username = profile.getUsername();
+        String email = profile.getEmail();
+        String oldPassword = profile.getOldPassword();
+        String newPassword = profile.getNewPassword();
+
+        User user = userService.getUserById(profile.getUserId());
+        Integer userId = user.getId();
+        userService.changeUser(new UserRequest(username, email, oldPassword, newPassword), userId);
+
         Profile existingProfile = profileToUpdate.get();
-        ProfileUtils.updateProfileFields(existingProfile, profile);
+        ProfileUtils.updateProfileFields(existingProfile, updatedProfile);
 
         return profileRepository.save(existingProfile);
     }

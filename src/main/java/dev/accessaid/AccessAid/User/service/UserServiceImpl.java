@@ -23,6 +23,7 @@ import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
 import dev.accessaid.AccessAid.User.exceptions.UserSaveException;
 import dev.accessaid.AccessAid.User.model.User;
 import dev.accessaid.AccessAid.User.repository.UserRepository;
+import dev.accessaid.AccessAid.User.request.UserRequest;
 import dev.accessaid.AccessAid.security.exceptions.TokenRefreshException;
 import dev.accessaid.AccessAid.security.jwt.JwtTokenUtil;
 import dev.accessaid.AccessAid.security.model.RefreshToken;
@@ -110,7 +111,8 @@ public class UserServiceImpl implements UserService {
 
                     RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
-                    return ResponseEntity.ok(new TokenRefreshResponse(token, refreshToken.getToken(), expirationCET.toString()));
+                    return ResponseEntity
+                            .ok(new TokenRefreshResponse(token, refreshToken.getToken(), expirationCET.toString()));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
@@ -131,8 +133,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changeUser(User user, Integer userId) throws UserNotFoundException, UserSaveException {
-        user.setId(userId);
+    public User changeUser(UserRequest user, Integer userId) throws UserNotFoundException, UserSaveException {
+
         Optional<User> userToChange = userRepository.findById(userId);
         if (!userToChange.isPresent())
             throw new UserNotFoundException("User not found");
@@ -151,9 +153,13 @@ public class UserServiceImpl implements UserService {
         if (user.getUsername() != null)
             existingUser.setUsername(user.getUsername());
 
-        if (user.getPassword() != null)
-            existingUser.setPassword(encoder.encode(user.getPassword()));
+        if (user.getNewPassword() != null)
+            if (encoder.matches(user.getOldPassword(), existingUser.getPassword())) {
 
+                existingUser.setPassword(encoder.encode(user.getNewPassword()));
+            } else {
+                throw new UserSaveException("passwords don't match");
+            }
         return userRepository.save(existingUser);
     }
 
