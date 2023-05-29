@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<Profile> profileToDelete = profileRepository.findByUser(userToDelete.get());
         if (profileToDelete.isPresent())
-            profileRepository.delete(profileToDelete.get());
+            profileRepository.delete(profileToDelete.get());        
 
         return userToDelete.get();
     }

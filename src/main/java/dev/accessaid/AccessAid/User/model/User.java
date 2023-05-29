@@ -8,6 +8,7 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.security.model.RefreshToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -54,17 +55,20 @@ public class User {
     @NotNull(message = "password is required")
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "users")
     private List<Place> places;
 
-    @ManyToMany(mappedBy = "user")
+    @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RefreshToken> refreshTokens;
 
     public void updateFields(User updatedUser) {
 
