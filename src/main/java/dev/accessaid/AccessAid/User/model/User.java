@@ -8,6 +8,7 @@ import dev.accessaid.AccessAid.Comments.model.Comment;
 import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Ratings.model.Rating;
+import dev.accessaid.AccessAid.security.model.RefreshToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -65,6 +66,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RefreshToken> refreshTokens;
 
     public void updateFields(User updatedUser) {
 
