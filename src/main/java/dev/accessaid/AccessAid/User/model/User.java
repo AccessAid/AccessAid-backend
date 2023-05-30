@@ -55,7 +55,7 @@ public class User {
     @NotNull(message = "password is required")
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "users")
