@@ -61,7 +61,7 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<Place> places;
 
-    @ManyToMany(mappedBy = "user")
+    @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

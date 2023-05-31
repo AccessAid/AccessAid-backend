@@ -3,6 +3,7 @@ package dev.accessaid.AccessAid.User.service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dev.accessaid.AccessAid.Comments.model.Comment;
+import dev.accessaid.AccessAid.Comments.repository.CommentRepository;
+import dev.accessaid.AccessAid.Comments.service.CommentServiceImpl;
+import dev.accessaid.AccessAid.Places.model.Place;
 import dev.accessaid.AccessAid.Profile.model.Profile;
 import dev.accessaid.AccessAid.Profile.repository.ProfileRepository;
 import dev.accessaid.AccessAid.User.exceptions.UserNotFoundException;
@@ -56,6 +61,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private CommentServiceImpl commentService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Override
     public ResponseEntity<MessageResponse> registerUser(RegisterRequest signUpRequest) {
@@ -169,6 +180,16 @@ public class UserServiceImpl implements UserService {
         Optional<User> userToDelete = userRepository.findById(id);
         if (!userToDelete.isPresent())
             throw new UserNotFoundException("User not found");
+
+        List<Comment> commentsToDelete = commentRepository.findAllCommentsByUser(userToDelete.get());
+        for (Comment comment : commentsToDelete) {
+            commentService.removeComment(comment.getId());
+        }
+
+        List<Place> places = userToDelete.get().getPlaces();
+        for (Place place : places) {
+            place.getUsers().remove(userToDelete.get());
+        }
 
         userRepository.deleteById(id);
 

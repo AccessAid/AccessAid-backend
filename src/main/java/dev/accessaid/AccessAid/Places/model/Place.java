@@ -62,7 +62,7 @@ public class Place {
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<Comment> comments;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_place", joinColumns = {
             @JoinColumn(name = "place_id") }, inverseJoinColumns = { @JoinColumn(name = "user_id") })
     private List<User> users;
