@@ -1,4 +1,4 @@
-package dev.accessaid.AccessAid.Geolocation.Response;
+package dev.accessaid.AccessAid.Geolocation.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
